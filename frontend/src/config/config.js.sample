@@ -1,0 +1,7 @@
+const config = {
+  URL_APPLICATION: 'URL_BACKEND',
+  ID_APPLICATION: 'ID_APP',
+  URL_GT_API: 'URL_GEOTREK_API_V2'
+};
+
+export { config };
