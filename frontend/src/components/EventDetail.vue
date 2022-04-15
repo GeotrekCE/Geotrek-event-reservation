@@ -8,6 +8,7 @@
         <v-card-text>
           <div v-if="event.type"><strong> Type : </strong> {{event.type.type}}</div>
           <div><strong> Massif : </strong> {{event.massif}}</div>
+          <gt-event-detail :id="id"></gt-event-detail>
         </v-card-text>
       </v-card>
     <v-data-table
@@ -173,9 +174,12 @@
 
 <script>
 import { getColorRemplissage } from '@/utils';
-import { getApiData, postApiData, deleteApiData } from '@/services/api'
+import { getOneEvent, deleteOneReservation, postOneReservation } from '@/services/appli_api'
+
+import GtEventDetail from '@/components/GtEventDetail.vue'
 
 export default {
+  components: { GtEventDetail },
   data() {
     return {
       valid: true,
@@ -191,7 +195,7 @@ export default {
       openSnackbar: false,
       userMgstext: '',
       loading: true,
-      id: this.$route.params.id,
+      id: parseInt(this.$route.params.id, 0),
       event: {},
       dialog: false,
       dialogDelete: false,
@@ -262,7 +266,7 @@ export default {
   methods: {
     getColorRemplissage,
     getEvent() {
-      getApiData(`events/${this.id}`).then((data) => {
+      getOneEvent(this.id).then((data) => {
         this.event = data;
         this.loading = false;
       }).catch((error) => {
@@ -287,8 +291,7 @@ export default {
     },
 
     deleteItemConfirm() {
-      const url = `reservations/${this.editedItem.id_reservation}`
-      deleteApiData(url).then((data) => {
+      deleteOneReservation(this.editedItem.id_reservation).then((data) => {
         this.userMgstext = 'Donnée supprimée';
         this.openSnackbar = true;
         this.getEvent();
@@ -315,7 +318,7 @@ export default {
     },
 
     save() {
-      postApiData('reservations', this.editedItem).then((data) => {
+      postOneReservation(this.editedItem).then((data) => {
         this.userMgstext = 'Données sauvegardées';
         this.openSnackbar = true;
         this.getEvent();

@@ -1,5 +1,5 @@
 <template>
-  <v-container-fuild name="event-detail">
+  <div name="event-detail">
     <h1 style="text-align: center;">Animations du Parc national des Cévennes</h1>
     <v-container  name="event-search">
       <v-card>
@@ -11,22 +11,42 @@
             lazy-validation
           >
           <v-row>
-          <v-text-field
-            v-model="filters.search_name"
-            append-icon="mdi-magnify"
-            label="Nom animations"
-            single-line
-            hide-details
-          ></v-text-field>
+            <v-col cols="12" lg="12">
+              <v-text-field
+                v-model="filters.search_name"
+                append-icon="mdi-magnify"
+                label="Nom animations"
+                single-line
+                hide-details
+              ></v-text-field>
+            </v-col>
           </v-row>
           <v-row>
             <v-col cols="12" lg="6">
-            <datepicker label="Date de début" :dateValue="filters.begin_date"
-              @input="filters.begin_date=$event"></datepicker>
+            <date-picker label="Date de début" :dateValue="filters.begin_date"
+              @input="filters.begin_date=$event"></date-picker>
             </v-col>
             <v-col cols="12" lg="6">
-            <datepicker label="Date de fin" :dateValue="filters.end_date"
-              @input="filters.end_date=$event"></datepicker>
+            <date-picker label="Date de fin" :dateValue="filters.end_date"
+              @input="filters.end_date=$event"></date-picker>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="12" lg="6">
+              <v-select
+                v-model="filters.massif"
+                :items="districts"
+                label="Massifs"
+              ></v-select>
+            </v-col>
+            <v-col cols="12" lg="6">
+              <v-select
+                v-model="filters.type_id"
+                :items="eventtypes"
+                item-text="name"
+                item-value="id"
+                label="Type"
+              ></v-select>
             </v-col>
           </v-row>
             <v-row>
@@ -72,17 +92,18 @@
       </template>
 
     </v-data-table>
-  </v-container-fuild>
+  </div>
 </template>
 
 <script>
 
 import { getColorRemplissage } from '@/utils';
-import { getApiData } from '@/services/api';
+import { getEvents } from '@/services/appli_api';
+import { getDistricts, getTouristiceventType } from '@/services/gta_api';
 import DatePicker from './DatePicker.vue';
 
 export default {
-  components: { PiDatePickerng },
+  components: { DatePicker },
   name: 'DatatableComponent',
   data() {
     return {
@@ -107,6 +128,8 @@ export default {
         { text: 'Attente', value: 'sum_participants_liste_attente' },
         { text: 'id', value: 'id' },
       ],
+      districts: [],
+      eventtypes: []
     };
   },
   watch: {
@@ -139,9 +162,8 @@ export default {
         page: pageNumber,
       };
       params = { ...params, ...this.filters }
-      getApiData('events', params).then(
+      getEvents(params).then(
         (data) => {
-          console.log(data);
           this.loading = false;
           this.events = data.results;
           this.totalEvents = data.total;
@@ -156,6 +178,16 @@ export default {
   },
   mounted() {
     this.getEvents();
+    getDistricts().then(
+      (data) => {
+        this.districts = data.results.map((item) => item.name);
+      }
+    );
+    getTouristiceventType().then(
+      (data) => {
+        this.eventtypes = data.results.map((item) => item.name);
+      }
+    );
   },
 };
 </script>
