@@ -1,7 +1,7 @@
-import { config } from '@/config/config';
+import { config } from '@/config/config'
 
-const buildGetUrl = (urlRelative, params = {}) => {
-  const url = new URL(`${config.URL_APPLICATION}/${urlRelative}`);
+const buildGetUrl = (baseUrl, urlRelative, params = {}) => {
+  const url = new URL(`${baseUrl}/${urlRelative}`);
   Object.keys(params)
     .filter((key) => ![null, undefined].includes(params[key]))
     .forEach(
@@ -12,13 +12,19 @@ const buildGetUrl = (urlRelative, params = {}) => {
 
 const callFetchApi = (methode, url, optionsHeaders = {}) => {
   const baseParams = {
-    method: methode,
-    credentials: 'include',
+    method: methode
   }
   const fetchParams = { ...baseParams, ...optionsHeaders }
 
   return new Promise((resolve, reject) => {
-    fetch(url, fetchParams).then((response) => response.json())
+    fetch(url, fetchParams).then(
+      (response) => {
+        if (response.status === 404) {
+          return [];
+        }
+        return response.json();
+      }
+    )
       .then((data) => {
         resolve(data);
       })
@@ -29,20 +35,24 @@ const callFetchApi = (methode, url, optionsHeaders = {}) => {
   })
 }
 
-const getApiData = (route, params) => {
-  const url = buildGetUrl(route, params);
-
-  return callFetchApi('GET', url);
+const getApiData = (baseUrl, route, params) => {
+  const url = buildGetUrl(baseUrl, route, params);
+  let optionsHeaders = {}
+  if (baseUrl === config.URL_APPLICATION) {
+    optionsHeaders = { credentials: 'include' }
+  }
+  return callFetchApi('GET', url, optionsHeaders);
 }
 
-const deleteApiData = (route) => {
-  const url = buildGetUrl(route);
-  return callFetchApi('DELETE', url);
+const deleteApiData = (baseUrl, route) => {
+  const url = buildGetUrl(baseUrl, route);
+  return callFetchApi('DELETE', url, { credentials: 'include' });
 }
 
-const postApiData = (route, postData) => {
+const postApiData = (baseUrl, route, postData) => {
   const fetchParams = {
     method: 'POST',
+    credentials: 'include',
     headers: {
       Accept: 'application/json, text/plain, */*',
       'Content-Type': 'application/json',
@@ -50,7 +60,7 @@ const postApiData = (route, postData) => {
     body: JSON.stringify(postData),
   }
 
-  const url = buildGetUrl(route);
+  const url = buildGetUrl(baseUrl, route);
   return callFetchApi('POST', url, fetchParams);
 }
 
