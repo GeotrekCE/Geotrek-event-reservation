@@ -21,12 +21,12 @@
           </v-row>
           <v-row>
             <v-col cols="12" lg="6">
-            <ping label="Date de début" :dateValue="filters.begin_date"
-              @input="filters.begin_date=$event"></ping>
+            <datepicker label="Date de début" :dateValue="filters.begin_date"
+              @input="filters.begin_date=$event"></datepicker>
             </v-col>
             <v-col cols="12" lg="6">
-            <ping label="Date de fin" :dateValue="filters.end_date"
-              @input="filters.end_date=$event"></ping>
+            <datepicker label="Date de fin" :dateValue="filters.end_date"
+              @input="filters.end_date=$event"></datepicker>
             </v-col>
           </v-row>
             <v-row>
@@ -79,10 +79,10 @@
 
 import { getColorRemplissage } from '@/utils';
 import { getApiData } from '@/services/api';
-import Ping from './Ping.vue';
+import DatePicker from './DatePicker.vue';
 
 export default {
-  components: { Ping },
+  components: { PiDatePickerng },
   name: 'DatatableComponent',
   data() {
     return {
