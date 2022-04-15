@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import store from '@/store';
-import Ping from '../components/Ping.vue';
 import EventDetail from '../components/EventDetail.vue';
 import Login from '../components/Login.vue';
 import Events from '../components/Events.vue';
@@ -24,12 +23,7 @@ const routes = [
     name: 'event',
     component: EventDetail,
     meta: { requiresAuth: true },
-  },
-  {
-    path: '/ping',
-    name: 'Ping',
-    component: Ping,
-  },
+  }
 ];
 
 const router = new VueRouter({
