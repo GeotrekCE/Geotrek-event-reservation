@@ -26,9 +26,9 @@ def get_events():
 
     events = GTEvents.query
 
-    events = events.filter_properties( query_params)
+    events = events.filter_properties(query_params)
 
-    events = events.order_by(GTEvents.begin_date.asc(),GTEvents.id.asc()).paginate(page=page, per_page=limit)
+    events = events.order_by(GTEvents.begin_date.desc(), GTEvents.id.asc()).paginate(page=page, per_page=limit)
 
     results = GTEventsSchema(many=True, only=fields).dump(events.items)
     return jsonify({
@@ -39,6 +39,7 @@ def get_events():
         'has_prev': events.has_prev,
         'results': results
     })
+
 
 @app_routes.route('/events/<id>')
 @fnauth.check_auth(1)
