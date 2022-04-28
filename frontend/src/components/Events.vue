@@ -83,12 +83,14 @@
         </router-link>
       </template>
       <template v-slot:item.remplissage="{ item }">
-        <v-chip
-          :color="getColorRemplissage(item.sum_participants, item.participant_number)"
-          dark
-        >
-          {{ item.sum_participants }} / {{ item.participant_number }}
-        </v-chip>
+
+          <reservation-progress
+            :reservation-nb="item.sum_participants"
+            :participant-nb="item.participant_number"
+            :attente-nb="item.sum_participants_liste_attente"
+          >
+          </reservation-progress>
+
       </template>
 
     </v-data-table>
@@ -96,17 +98,17 @@
 </template>
 
 <script>
-
-import { getColorRemplissage } from '@/utils';
 import { getEvents } from '@/services/appli_api';
 import { getDistricts, getTouristiceventType } from '@/services/gta_api';
-import DatePicker from './DatePicker.vue';
+import DatePicker from './subcomponents/DatePicker.vue';
+import ReservationProgress from './subcomponents/ReservationProgress.vue';
 
 export default {
-  components: { DatePicker },
+  components: { DatePicker, ReservationProgress },
   name: 'DatatableComponent',
   data() {
     return {
+      power: 78,
       page: 1,
       totalEvents: 0,
       numberOfPages: 0,
@@ -140,8 +142,9 @@ export default {
     },
     deep: true,
   },
+  computed: {
+  },
   methods: {
-    getColorRemplissage,
     clear() {
       this.filters = {
         begin_date: undefined,

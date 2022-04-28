@@ -1,7 +1,15 @@
+// URL_APPLICATION: Url de l'application backend
+// ID_APPLICATION: Id application requis pour l'authentification avec usershub
+// URL_GTA: url de l'application geotrek admin
+// DAY_BEFORE_RESA: nombre de jours avant la date de debut de l'animation ou l'inscription est possible (si -1 aucune limitation de date)
+// RESA_NB_DELTA: nombre de participants surnuméraire acepté en plus du nombre de participants spécifiés dans geotrek
+
 const config = {
   URL_APPLICATION: 'URL_BACKEND',
   ID_APPLICATION: 'ID_APP',
-  URL_GT_API: 'URL_GEOTREK_API_V2'
+  URL_GTA: 'URL_GEOTREK_ADMIN'
+  DAY_BEFORE_RESA: 15,
+  RESA_NB_DELTA: 3
 };
 
 export { config };

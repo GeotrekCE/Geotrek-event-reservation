@@ -8,9 +8,28 @@
         <v-card-text>
           <div v-if="event.type"><strong> Type : </strong> {{event.type.type}}</div>
           <div><strong> Massif : </strong> {{event.massif}}</div>
-          <gt-event-detail :id="id"></gt-event-detail>
+          <div><strong> Date début : </strong> {{event.begin_date}}</div>
+          <div><strong> Date fin : </strong> {{event.end_date}}</div>
+            <div class="text-center">
+              <v-btn
+                :href="URL_GTR + '/event/' + event.id"
+                target="_blank"
+                class="mr-2"
+                color="cyan"
+              >
+                <v-icon>mdi-open-in-new</v-icon> Destination cévennes
+              </v-btn>
+              <v-btn
+                :href="URL_GTA + '/touristicevent/' + event.id"
+                target="_blank"
+                color="pink"
+              >
+                <v-icon>mdi-open-in-new</v-icon> Geotrek admin
+              </v-btn>
+            </div>
         </v-card-text>
       </v-card>
+    <gt-event-detail class="mb-10" :id="id"></gt-event-detail>
     <v-data-table
       :headers="headers"
       :items="event.reservations"
@@ -23,12 +42,12 @@
         flat
       >
         <v-toolbar-title>Réservations
-          <v-chip
-            :color="getColorRemplissage(event.sum_participants , event.participant_number)"
-            dark
+          <reservation-progress
+            :reservation-nb="event.sum_participants"
+            :participant-nb="event.participant_number"
+            :attente-nb="event.sum_participants_liste_attente"
           >
-          {{ event.sum_participants }} / {{ event.participant_number }}
-          </v-chip> + {{event.sum_participants_liste_attente}}
+          </reservation-progress>
         </v-toolbar-title>
         <v-divider class="mx-4" inset vertical ></v-divider>
         <v-spacer></v-spacer>
@@ -49,12 +68,13 @@
           </template>
           <v-card>
             <v-card-title>
-              <span class="text-h5">{{ formTitle }}<v-chip
-            :color="getColorRemplissage(event.sum_participants , event.participant_number)"
-            dark
-          >
-          {{ event.sum_participants }} / {{ event.participant_number }}
-          </v-chip> + {{event.sum_participants_liste_attente}} + {{addCalculateParticipant}}
+              <span class="text-h5">{{ formTitle }}
+                <reservation-progress
+                :reservation-nb="event.sum_participants"
+                :participant-nb="event.participant_number"
+                :attente-nb="event.sum_participants_liste_attente"
+              >
+              </reservation-progress>
           </span>
             </v-card-title>
             <v-card-text>
@@ -173,19 +193,20 @@
 </template>
 
 <script>
-import { getColorRemplissage } from '@/utils';
+import { config } from '@/config/config';
 import { getOneEvent, deleteOneReservation, postOneReservation } from '@/services/appli_api'
 
-import GtEventDetail from '@/components/GtEventDetail.vue'
+import GtEventDetail from '@/components/subcomponents/GtEventDetail.vue'
+import ReservationProgress from '@/components/subcomponents/ReservationProgress.vue';
 
 export default {
-  components: { GtEventDetail },
+  components: { GtEventDetail, ReservationProgress },
   data() {
     return {
-      valid: true,
+      valid: false,
       rules: {
         required: (value) => !!value || 'Champ obligatoire.',
-        integer: (value) => !Number.isNaN(Number(value)) || 'Uniquement des chiffres',
+        integer: (value) => (!Number.isNaN(Number(value)) && value !== '') || 'Uniquement des chiffres',
         email: (value) => {
           const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
           return pattern.test(value) || 'Invalid e-mail.'
@@ -216,6 +237,8 @@ export default {
         { text: 'Actions', value: 'actions', sortable: false },
       ],
       editedItem: {},
+      URL_GTR: config.URL_GTR,
+      URL_GTA: config.URL_GTA
     };
   },
   computed: {
@@ -237,12 +260,27 @@ export default {
     },
     addCalculateParticipant() {
       if (this.editedItem.liste_attente === true) return false;
+      let nbInit = 0;
+
+      // Si c'est une modification il faut soustraire le nombre de participants initial
+      if (this.editedItem.id_reservation !== undefined) {
+        const resa = this.event.reservations.filter(
+          (item) => item.id_reservation === this.editedItem.id_reservation
+        )[0];
+        nbInit = this.liste_champs_nb.reduce(
+          (total, nb) => (
+            total + (parseInt(resa[nb], 0) || 0)
+          ), 0
+        )
+      }
       const sumP = this.liste_champs_nb.reduce(
         (total, nb) => (
           total + (parseInt(this.editedItem[nb], 0) || 0)
         ), 0
-      ) + this.event.sum_participants
-      return sumP > parseInt(this.event.participant_number, 0) + 1
+      ) + this.event.sum_participants - nbInit;
+
+      // Faux si la sum des participant est supérieur au nb de place + delta défini dans la config
+      return sumP > parseInt(this.event.participant_number, 0) + config.RESA_NB_DELTA
     },
   },
   watch: {
@@ -264,7 +302,6 @@ export default {
     }, 2000);
   },
   methods: {
-    getColorRemplissage,
     getEvent() {
       getOneEvent(this.id).then((data) => {
         this.event = data;
@@ -281,13 +318,13 @@ export default {
     },
 
     editItem(item) {
-      this.editedItem = item
-      this.dialog = true
+      this.editedItem = { ...item };
+      this.dialog = true;
     },
 
     deleteItem(item) {
       this.editedItem = item;
-      this.dialogDelete = true
+      this.dialogDelete = true;
     },
 
     deleteItemConfirm() {

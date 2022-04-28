@@ -1,10 +1,12 @@
 import { config } from '@/config/config';
 import { getApiData } from '@/services/api';
 
-const getDistricts = () => getApiData(config.URL_GT_API, 'district/', { fields: 'id,name' })
+const URL_GT_API = `${config.URL_GTA}/api/v2`
 
-const getTouristiceventType = () => getApiData(config.URL_GT_API, 'touristicevent_type/', {})
+const getDistricts = () => getApiData(URL_GT_API, 'district/', { fields: 'id,name' })
 
-const getTouristicEventDetail = (id) => getApiData(config.URL_GT_API, `touristicevent/${id}`, {})
+const getTouristiceventType = () => getApiData(URL_GT_API, 'touristicevent_type/', {})
+
+const getTouristicEventDetail = (id) => getApiData(URL_GT_API, `touristicevent/${id}/`, {})
 
 export { getDistricts, getTouristiceventType, getTouristicEventDetail };
