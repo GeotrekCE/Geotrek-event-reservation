@@ -32,6 +32,9 @@ class GTEventsQuery(BaseQuery):
             if hasattr(GTEvents, param):
                 self = self.filter(getattr(GTEvents, param) == filters.get(param))
 
+        # Filter not deleted
+        self = self.filter(GTEvents.deleted != True)
+
         return self
 
 
@@ -49,6 +52,7 @@ class GTEvents(db.Model):
     end_date = db.Column(db.Date)
     type_id = db.Column(db.Integer, db.ForeignKey('public.tourism_touristiceventtype.id'))
     published = db.Column(db.Boolean)
+    deleted = db.Column(db.Boolean)
 
     reservations = db.relationship('TReservations', lazy='joined', backref=db.backref('event', lazy='joined'))
     type = db.relationship('GTEventType', lazy='joined')
