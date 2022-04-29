@@ -27,7 +27,7 @@ import { getTouristicEventDetail } from '@/services/gta_api';
 export default {
   data() {
     return {
-      gtevent: { },
+      gtevent: undefined,
       apiFields: {
         booking: { label: 'Reservation' },
         contact: { label: 'Contact' },
@@ -54,6 +54,9 @@ export default {
       type: Number,
       required: true,
     },
+    published: {
+      type: Boolean
+    },
   },
   computed: {
   },
@@ -66,14 +69,16 @@ export default {
     }
   },
   created() {
-    getTouristicEventDetail(this.id).then(
-      (data) => {
-        this.gtevent = data;
-        console.log(data)
-      }
-    ).catch((error) => {
-      this.gtevent = undefined;
-    });
+    if (this.published) {
+      getTouristicEventDetail(this.id).then(
+        (data) => {
+          this.gtevent = data;
+          console.log(data)
+        }
+      ).catch((error) => {
+        this.gtevent = undefined;
+      });
+    }
   }
 }
 </script>

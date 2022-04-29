@@ -16,6 +16,7 @@
                 target="_blank"
                 class="mr-2"
                 color="cyan"
+                :disabled="event.published !== true"
               >
                 <v-icon>mdi-open-in-new</v-icon> Destination cévennes
               </v-btn>
@@ -29,7 +30,7 @@
             </div>
         </v-card-text>
       </v-card>
-    <gt-event-detail class="mb-10" :id="id"></gt-event-detail>
+    <gt-event-detail class="mb-10" :id="id" :published="event.published"></gt-event-detail>
     <v-data-table
       :headers="headers"
       :items="event.reservations"

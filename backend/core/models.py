@@ -48,6 +48,7 @@ class GTEvents(db.Model):
     begin_date = db.Column(db.Date)
     end_date = db.Column(db.Date)
     type_id = db.Column(db.Integer, db.ForeignKey('public.tourism_touristiceventtype.id'))
+    published = db.Column(db.Boolean)
 
     reservations = db.relationship('TReservations', lazy='joined', backref=db.backref('event', lazy='joined'))
     type = db.relationship('GTEventType', lazy='joined')
