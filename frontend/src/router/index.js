@@ -4,6 +4,8 @@ import store from '@/store';
 import EventDetail from '../components/EventDetail.vue';
 import Login from '../components/Login.vue';
 import Events from '../components/Events.vue';
+import Informations from '../components/Informations.vue';
+import Bilans from '../components/Bilans.vue';
 
 Vue.use(VueRouter);
 
@@ -22,6 +24,16 @@ const routes = [
     path: '/event/:id',
     name: 'event',
     component: EventDetail,
+    meta: { requiresAuth: true },
+  }, {
+    path: '/infos',
+    name: 'informations',
+    component: Informations,
+    meta: { requiresAuth: true },
+  }, {
+    path: '/bilans',
+    name: 'bilans',
+    component: Bilans,
     meta: { requiresAuth: true },
   }
 ];
