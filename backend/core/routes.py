@@ -1,3 +1,4 @@
+import pdb
 from flask import Flask, jsonify, request, current_app, Blueprint
 from core.models import db, GTEvents, TReservations
 from core.schemas import GTEventsSchema, TReservationsSchema
@@ -15,6 +16,7 @@ def get_events():
 
     if "fields" in request.args:
         fields = request.args.getlist('fields', None)
+        fields =  fields[0].split(',') + fields [1:]
     else:
         fields = None
 
