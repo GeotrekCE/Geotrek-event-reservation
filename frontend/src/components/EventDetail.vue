@@ -23,20 +23,24 @@
               <v-btn
                 :href="URL_GTA + '/touristicevent/' + event.id"
                 target="_blank"
-                color="pink"
+                color="light-green lighten-1"
               >
                 <v-icon>mdi-open-in-new</v-icon> Geotrek admin
               </v-btn>
             </div>
         </v-card-text>
       </v-card>
-    <gt-event-detail class="mb-10" :id="id" :published="event.published"></gt-event-detail>
+    <div
+      v-if="event.published === true"
+    >
+      <gt-event-detail class="mb-10" :id="id" :published="event.published"></gt-event-detail>
+    </div>
     <v-data-table
       :headers="headers"
       :items="event.reservations"
       sort-by="nb"
       class="elevation-1"
-      v-if="{loading}"
+      :v-if="loading"
     >
     <template v-slot:top >
       <v-toolbar
@@ -57,15 +61,24 @@
 
         >
           <template v-slot:activator="{ editedItem }">
-            <v-btn
+             <v-btn
               color="primary"
               dark
               class="mb-2"
               v-bind="editedItem"
               @click="addItem"
+              v-show="reservationOpened"
+              key="res_open"
             >
               Nouvelle réservation
             </v-btn>
+            <div
+              v-show="!reservationOpened" >
+             <span
+              class="grey lighten-2 text-center px-2">
+              Réservation non ouverte
+            </span>
+            </div>
           </template>
           <v-card>
             <v-card-title>
@@ -243,6 +256,26 @@ export default {
     };
   },
   computed: {
+    reservationOpened() {
+      // Define if reservation is open
+
+      // If event is happened
+      if (new Date() >= new Date(this.event.begin_date)) {
+        return false
+      }
+
+      // If event in reservation period (control by DAY_BEFORE_RESA)
+      if ((config.DAY_BEFORE_RESA || -1) !== -1) {
+        const resaBeginDate = new Date(this.event.begin_date);
+        resaBeginDate.setDate(resaBeginDate.getDate() - config.DAY_BEFORE_RESA);
+        if (new Date() >= resaBeginDate) {
+          return true;
+        }
+        return false;
+      }
+
+      return true;
+    },
     defaultItem() {
       const fieldsnb = this.liste_champs_nb.reduce((o, key) => ({ ...o, [key]: 0 }), {})
       return {
