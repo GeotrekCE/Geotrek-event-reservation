@@ -3,7 +3,7 @@
       :v-model="[0]">
     <v-expansion-panel>
       <v-expansion-panel-header
-      color="pink darken-1">
+      color="light-green lighten-1">
          <h2>Détail geotrek</h2>
       </v-expansion-panel-header>
       <v-expansion-panel-content>
@@ -73,7 +73,6 @@ export default {
       getTouristicEventDetail(this.id).then(
         (data) => {
           this.gtevent = data;
-          console.log(data)
         }
       ).catch((error) => {
         this.gtevent = undefined;
