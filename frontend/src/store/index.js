@@ -8,6 +8,7 @@ export default new Vuex.Store({
     user: {},
     _redirectOnLogin: '/',
   },
+
   mutations: {
     /**
      * Set user
@@ -48,5 +49,8 @@ export default new Vuex.Store({
     },
   },
   actions: {
+    saveUserData(context, userData) {
+      context.commit('setuser', userData);
+    }
   },
 })

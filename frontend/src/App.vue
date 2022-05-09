@@ -43,6 +43,8 @@
 
 <script>
 
+import { mapGetters } from 'vuex';
+
 export default {
   name: 'App',
 
@@ -50,9 +52,7 @@ export default {
 
   }),
   computed: {
-    user() {
-      return this.$store.getters.user
-    },
+    ...mapGetters(['user'])
   },
 };
 </script>

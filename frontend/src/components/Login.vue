@@ -39,6 +39,7 @@
 
 <script>
 import { config } from '@/config/config';
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
   components: {},
@@ -50,13 +51,17 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['redirectOnLogin']),
+
     valid() {
       return (this.identifiant !== '' && this.password !== '');
     },
   },
   methods: {
+    ...mapActions(['saveUserData']),
+
     logout() {
-      this.$store.commit('setuser', {});
+      this.saveUserData({});
     },
     login() {
       fetch(`${config.URL_APPLICATION}/auth/login`,
@@ -79,9 +84,9 @@ export default {
           throw new Error('Something went wrong');
         }).then((res) => {
           const user = { ...res.user, expires: res.expires };
-          this.$store.commit('setuser', user);
-          if (this.$store.getters.redirectOnLogin !== undefined) {
-            this.$router.push({ path: this.$store.getters.redirectOnLogin });
+          this.saveUserData(user);
+          if (this.redirectOnLogin !== undefined) {
+            this.$router.push({ path: this.redirectOnLogin });
           } else {
             this.$router.push({ path: '/' });
           }
