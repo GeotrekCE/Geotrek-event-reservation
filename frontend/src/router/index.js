@@ -1,11 +1,11 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import store from '@/store';
-import EventDetail from '../components/EventDetail.vue';
-import Login from '../components/Login.vue';
-import Events from '../components/Events.vue';
-import Informations from '../components/Informations.vue';
-import Bilans from '../components/Bilans.vue';
+import EventDetail from '../views/EventDetail.vue';
+import Login from '../views/Login.vue';
+import Events from '../views/Events.vue';
+import Informations from '../views/Informations.vue';
+import Bilans from '../views/Bilans.vue';
 
 Vue.use(VueRouter);
 
