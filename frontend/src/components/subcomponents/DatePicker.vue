@@ -18,7 +18,7 @@
           v-on="on"
         ></v-text-field>
       </template>
-      <v-date-picker v-model="date" no-title @input="menu2 = false"
+      <v-date-picker v-model="dateValue" no-title @input="menu2 = false"
         v-on:input="$emit('input', $event)" ></v-date-picker>
     </v-menu>
 </template>
@@ -26,7 +26,6 @@
 export default {
   data() {
     return {
-      date: this.dateValue,
       dateFormatted: '',
       menu2: false,
     };
@@ -42,13 +41,13 @@ export default {
   },
   computed: {
     computedDateFormatted() {
-      return this.formatDate(this.date);
+      return this.formatDate(this.dateValue);
     },
   },
   methods: {
     handleInput(e) {
       const { value } = e.target.value;
-      this.date = value;
+      this.dateValue = value;
       this.$emit('input', value);
     },
     formatDate(dateValue) {
