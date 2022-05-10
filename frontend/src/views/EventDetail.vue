@@ -210,8 +210,8 @@
 import { config } from '@/config/config';
 import { getOneEvent, deleteOneReservation, postOneReservation } from '@/services/appli_api'
 
-import GtEventDetail from '@/components/subcomponents/GtEventDetail.vue'
-import ReservationProgress from '@/components/subcomponents/ReservationProgress.vue';
+import GtEventDetail from '@/components/GtEventDetail.vue'
+import ReservationProgress from '@/components/ReservationProgress.vue';
 
 export default {
   components: { GtEventDetail, ReservationProgress },

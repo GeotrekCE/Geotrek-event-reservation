@@ -2,7 +2,7 @@
   <div name="event-detail">
     <h1 style="text-align: center;">Animations du Parc national des Cévennes</h1>
     <v-container>
-      <events-filters @search="(newAddress) => {getEvents()}"/>
+      <events-filters @search="(filters) => {getEvents()}"/>
     </v-container>
     <v-data-table
       :page="page"
@@ -41,8 +41,8 @@
 
 <script>
 import { getEvents } from '@/services/appli_api';
-import ReservationProgress from './subcomponents/ReservationProgress.vue';
-import EventsFilters from './subcomponents/EventsFilters.vue';
+import ReservationProgress from '../components/ReservationProgress.vue';
+import EventsFilters from '../components/EventsFilters.vue';
 
 export default {
   components: { ReservationProgress, EventsFilters },

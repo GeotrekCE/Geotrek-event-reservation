@@ -33,6 +33,23 @@
 
         </v-form>
       </v-card>
+
+    <v-snackbar
+      v-model="openSnackbar"
+      color="error"
+    >
+      {{ loginMessage }}
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          text
+          v-bind="attrs"
+          @click="openSnackbar = false"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
+
   </v-container>
 
 </template>
@@ -48,6 +65,8 @@ export default {
       identifiant: '',
       password: '',
       showpass: false,
+      loginMessage: 'Success',
+      openSnackbar: false
     }
   },
   computed: {
@@ -78,20 +97,29 @@ export default {
           }),
         })
         .then((res) => {
-          if (res.ok) {
-            return res.json();
+          if ((res.ok) || (res.status === 490)) {
+            return res.json().then((data) => ({
+              status: res.status,
+              data
+            }))
           }
-          throw new Error('Something went wrong');
         }).then((res) => {
-          const user = { ...res.user, expires: res.expires };
-          this.saveUserData(user);
-          if (this.redirectOnLogin !== undefined) {
-            this.$router.push({ path: this.redirectOnLogin });
+          const { status, data } = res;
+          if (status === 200) {
+            const user = { ...data.user, expires: data.expires };
+            this.saveUserData(user);
+            if (this.redirectOnLogin !== undefined) {
+              this.$router.push({ path: this.redirectOnLogin });
+            } else {
+              this.$router.push({ path: '/' });
+            }
           } else {
-            this.$router.push({ path: '/' });
+            this.loginMessage = data.msg;
+            this.openSnackbar = true;
           }
         }).catch((error) => {
-          console.log('error');
+          this.loginMessage = error;
+          this.openSnackbar = true;
         });
     },
   },
