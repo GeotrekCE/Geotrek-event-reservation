@@ -26,13 +26,33 @@ def get_events():
         if query_params.get(p, None):
             query_params.pop(p)
 
-    events = GTEvents.query
 
-    events = events.filter_properties(query_params)
+    try:
+        sort_col = query_params.pop("sortBy")
+    except KeyError:
+        sort_col = "begin_date"
 
-    events = events.order_by(GTEvents.begin_date.desc(), GTEvents.id.asc()).paginate(page=page, per_page=limit)
+    sort_order = "desc"
+    try:
+        sort_order_param = query_params.pop("sortDesc")
+        if sort_order_param == "false":
+            sort_order = "asc"
+    except KeyError:
+        sort_order = "desc"
+
+    events = GTEvents.query.filter_properties(query_params)
+
+    # Ordonancement
+    if hasattr(GTEvents, sort_col):
+        events = events.order_by(
+            getattr(getattr(GTEvents, sort_col), sort_order)(),
+            GTEvents.id.asc()
+        )
+
+    events = events.paginate(page=page, per_page=limit)
 
     results = GTEventsSchema(many=True, only=fields).dump(events.items)
+
     return jsonify({
         'page': page,
         'limit': limit,
