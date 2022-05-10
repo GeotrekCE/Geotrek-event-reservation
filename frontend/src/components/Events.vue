@@ -1,69 +1,8 @@
 <template>
   <div name="event-detail">
     <h1 style="text-align: center;">Animations du Parc national des Cévennes</h1>
-    <v-container  name="event-search">
-      <v-card>
-        <v-card-title> Rechercher </v-card-title>
-        <v-spacer></v-spacer>
-        <v-form  class="pa-md-4 mx-lg-auto"
-            ref="form"
-            @submit.prevent="search"
-            lazy-validation
-          >
-          <v-row>
-            <v-col cols="12" lg="12">
-              <v-text-field
-                v-model="filters.search_name"
-                append-icon="mdi-magnify"
-                label="Nom animations"
-                single-line
-                hide-details
-              ></v-text-field>
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col cols="12" lg="6">
-            <date-picker label="Date de début" :dateValue="filters.begin_date"
-              @input="filters.begin_date=$event"></date-picker>
-            </v-col>
-            <v-col cols="12" lg="6">
-            <date-picker label="Date de fin" :dateValue="filters.end_date"
-              @input="filters.end_date=$event"></date-picker>
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col cols="12" lg="6">
-              <v-select
-                v-model="filters.massif"
-                :items="districts"
-                label="Massifs"
-              ></v-select>
-            </v-col>
-            <v-col cols="12" lg="6">
-              <v-select
-                v-model="filters.type_id"
-                :items="eventtypes"
-                item-text="name"
-                item-value="id"
-                label="Type"
-              ></v-select>
-            </v-col>
-          </v-row>
-            <v-row>
-              <v-btn
-              class="mr-4"
-              type="submit"
-              color="primary"
-            >
-              Rechercher
-            </v-btn>
-            <v-btn @click="clear">
-              Réinitialiser
-            </v-btn>
-
-            </v-row>
-        </v-form>
-      </v-card>
+    <v-container>
+      <events-filters @search="(newAddress) => {getEvents()}"/>
     </v-container>
     <v-data-table
       :page="page"
@@ -102,30 +41,23 @@
 
 <script>
 import { getEvents } from '@/services/appli_api';
-import { getDistricts, getTouristiceventType } from '@/services/gta_api';
-import DatePicker from './subcomponents/DatePicker.vue';
 import ReservationProgress from './subcomponents/ReservationProgress.vue';
+import EventsFilters from './subcomponents/EventsFilters.vue';
 
 export default {
-  components: { DatePicker, ReservationProgress },
+  components: { ReservationProgress, EventsFilters },
   name: 'DatatableComponent',
   data() {
     return {
-      power: 78,
       page: 1,
       totalEvents: 0,
       numberOfPages: 0,
       events: [],
       loading: true,
       options: {},
-      filters: {
-        begin_date: undefined,
-        end_date: undefined,
-        search_name: undefined,
-      },
       headers: [
-        { text: 'Détail', value: 'id' },
-        { text: 'Remplissage', value: 'remplissage' },
+        { text: 'Détail', value: 'id', sortable: false },
+        { text: 'Remplissage', value: 'remplissage', sortable: false },
         { text: 'Publié', value: 'published' },
         { text: 'Nom', value: 'name' },
         { text: 'Date début', value: 'begin_date' },
@@ -133,8 +65,6 @@ export default {
         { text: 'Type', value: 'type.type' },
         { text: 'Massif', value: 'massif' },
       ],
-      districts: [],
-      eventtypes: []
     };
   },
   watch: {
@@ -148,26 +78,23 @@ export default {
   computed: {
   },
   methods: {
-    clear() {
-      this.filters = {
-        begin_date: undefined,
-        end_date: undefined,
-        search_name: undefined,
-      }
-    },
     search() {
       this.options.page = 1;
       this.getEvents();
     },
     getEvents() {
       this.loading = true;
-      const { page, itemsPerPage } = this.options;
+      const {
+        page, itemsPerPage, sortBy, sortDesc
+      } = this.options;
       const pageNumber = page;
       let params = {
         limit: itemsPerPage,
         page: pageNumber,
+        sortBy,
+        sortDesc
       };
-      params = { ...params, ...this.filters }
+      params = { ...params, ...this.$store.state.events.filters }
       getEvents(params).then(
         (data) => {
           this.loading = false;
@@ -184,16 +111,6 @@ export default {
   },
   mounted() {
     this.getEvents();
-    getDistricts().then(
-      (data) => {
-        this.districts = data.results.map((item) => item.name);
-      }
-    );
-    getTouristiceventType().then(
-      (data) => {
-        this.eventtypes = data.results.map((item) => item.name);
-      }
-    );
   },
 };
 </script>
