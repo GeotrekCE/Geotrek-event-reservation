@@ -54,7 +54,10 @@ export default {
       numberOfPages: 0,
       events: [],
       loading: true,
-      options: {},
+      options: {
+        sortBy: ['begin_date'],
+        sortDesc: [true],
+      },
       headers: [
         { text: 'Détail', value: 'id', sortable: false },
         { text: 'Remplissage', value: 'remplissage', sortable: false },
