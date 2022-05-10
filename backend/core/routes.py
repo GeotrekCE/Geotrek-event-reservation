@@ -21,16 +21,17 @@ def get_events():
         fields = None
 
     query_params = request.args.to_dict()
+
     # Clean query params
     for p in ("limit", "page", "fields") :
         if query_params.get(p, None):
             query_params.pop(p)
 
 
-    try:
+    # Ordonancement
+    sort_col = "begin_date"
+    if "sortBy" in request.args:
         sort_col = query_params.pop("sortBy")
-    except KeyError:
-        sort_col = "begin_date"
 
     sort_order = "desc"
     try:
@@ -40,14 +41,17 @@ def get_events():
     except KeyError:
         sort_order = "desc"
 
-    events = GTEvents.query.filter_properties(query_params)
 
-    # Ordonancement
+    events = GTEvents.query.filter_properties(query_params)
     if hasattr(GTEvents, sort_col):
-        events = events.order_by(
-            getattr(getattr(GTEvents, sort_col), sort_order)(),
-            GTEvents.id.asc()
-        )
+        model_sort_col = getattr(GTEvents, sort_col)
+    else:
+        model_sort_col = GTEvents.begin_date
+
+    events = events.order_by(
+        getattr(model_sort_col, sort_order)(),
+        GTEvents.id.asc()
+    )
 
     events = events.paginate(page=page, per_page=limit)
 
