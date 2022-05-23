@@ -23,6 +23,10 @@
           <div><strong> Info pratique (privée) : </strong>
             <span v-html="event.practical_info_en"></span>
           </div>
+          <div><strong> Public visé : </strong>
+            <span v-html="event.target_audience"></span>
+          </div>
+
           <div class="text-center">
             <v-btn
               :href="URL_GTR + '/event/' + event.id"

@@ -43,7 +43,7 @@ export default {
         'practical_info.fr': { label: 'Info pratique publique' },
         'practical_info.en': { label: 'Info pratique privé' },
         speaker: { label: 'Intervenant' },
-        target_audience: { label: 'Cible' },
+        target_audience: { label: 'Public visé' },
       }
     }
   },

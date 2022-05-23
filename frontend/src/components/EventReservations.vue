@@ -56,10 +56,15 @@
                 </reservation-progress></span>
             </v-card-title>
             <v-card-text>
-              <v-row cols="12" v-if="numerisateurName">
-                    Réservation effectuée par {{numerisateurName}}
-              </v-row >
               <v-container name="reservation-form">
+                <v-alert
+                text
+                dense
+                icon="mdi-information-outline"
+                border="left"
+              >
+              <strong> Public visé : </strong><span v-html="event.target_audience"></span>
+              </v-alert>
                 <v-form
                   ref="reservation_form"
                   v-model="valid"
@@ -69,12 +74,6 @@
                 v-model="openPanels"
                 multiple
                 >
-                <v-row>
-                   <v-checkbox
-                      v-model="editedItem.liste_attente"
-                      label="Liste attente"
-                    ></v-checkbox>
-                </v-row>
                 <v-expansion-panel>
                   <v-expansion-panel-header>
                     Informations personnelles
@@ -117,6 +116,12 @@
                   >
                     Trop de participants
                   </v-alert>
+                </v-row>
+                <v-row>
+                   <v-checkbox
+                      v-model="editedItem.liste_attente"
+                      label="Liste attente"
+                    ></v-checkbox>
                 </v-row>
                 <v-row>
                   <v-col cols="12" sm="6" md="6" v-for="(field, index) in liste_champs_nb"

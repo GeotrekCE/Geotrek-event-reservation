@@ -68,6 +68,7 @@ class GTEvents(db.Model):
     participant_number = db.Column(db.Unicode)
     practical_info_fr = db.Column(db.Unicode)
     practical_info_en = db.Column(db.Unicode)
+    target_audience = db.Column(db.Unicode)
     begin_date = db.Column(db.Date)
     end_date = db.Column(db.Date)
     type_id = db.Column(db.Integer, db.ForeignKey("public.tourism_touristiceventtype.id"))
