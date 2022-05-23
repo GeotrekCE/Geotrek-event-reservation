@@ -21,8 +21,8 @@
       <template v-slot:extension v-if="user.identifiant">
         <v-tabs align-with-title>
           <v-tab to="/">Animations</v-tab>
-          <v-tab to="/bilans">Bilans</v-tab>
           <v-tab to="/infos">Informations</v-tab>
+          <v-tab to="/stats">Stats</v-tab>
         </v-tabs>
       </template>
       <v-spacer></v-spacer>

@@ -5,7 +5,7 @@ import EventDetail from '../views/EventDetail.vue';
 import Login from '../views/Login.vue';
 import Events from '../views/Events.vue';
 import Informations from '../views/Informations.vue';
-import Bilans from '../views/Bilans.vue';
+import BilanStats from '../views/BilanStats.vue';
 
 Vue.use(VueRouter);
 
@@ -31,9 +31,9 @@ const routes = [
     component: Informations,
     meta: { requiresAuth: true },
   }, {
-    path: '/bilans',
-    name: 'bilans',
-    component: Bilans,
+    path: '/stats',
+    name: 'stats',
+    component: BilanStats,
     meta: { requiresAuth: true },
   }
 ];
