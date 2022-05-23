@@ -4,15 +4,13 @@
     <v-expansion-panel>
       <v-expansion-panel-header
       color="light-green lighten-1">
-         <h2>Détail geotrek</h2>
+         <h2>Détail animation</h2>
       </v-expansion-panel-header>
       <v-expansion-panel-content>
-        <div v-if="this.gtevent === undefined">
-          L'événement n'est pas publié sur geotrek. Les détails ne sont pas disponibles
-        </div>
-        <div v-else>
+        <div v-if="this.gtevent">
           <div v-for="(field, index) in apiFields" :key="index">
           <b>{{field.label}} </b>: <span v-html="getFieldValue(index)"></span>
+          <v-divider></v-divider>
           </div>
         </div>
         </v-expansion-panel-content>
@@ -43,7 +41,7 @@ export default {
         organizer: { label: 'Organisateur' },
         participant_number: { label: 'Nb participants' },
         'practical_info.fr': { label: 'Info pratique publique' },
-        'practical_info.en': { label: 'Info pratique' },
+        'practical_info.en': { label: 'Info pratique privé' },
         speaker: { label: 'Intervenant' },
         target_audience: { label: 'Cible' },
       }
