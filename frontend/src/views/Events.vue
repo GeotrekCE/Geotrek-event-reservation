@@ -1,6 +1,5 @@
 <template>
   <div name="event-detail">
-    <h1 style="text-align: center;">Animations du Parc national des Cévennes</h1>
     <v-container>
       <events-filters @search="(filters) => {getEvents()}"/>
     </v-container>
@@ -9,16 +8,19 @@
       :pageCount="numberOfPages"
       :headers="headers"
       :items="events"
+      :item-class= "row_classes"
       :options.sync="options"
       :server-items-length="totalEvents"
       :loading="loading"
       class="elevation-1"
     >
+
       <template v-slot:item.id="{ item }">
         <router-link :to="{ name: 'event', params: { id: item.id }}">
           <v-btn icon color="blue" >
-            <v-icon>mdi-text-box-multiple</v-icon>
-          </v-btn>
+              <v-icon  v-if="(item.bilan || {}).annulation">mdi-text-box-remove</v-icon>
+              <v-icon v-else>mdi-text-box</v-icon>
+            </v-btn>
         </router-link>
       </template>
       <template v-slot:item.remplissage="{ item }">
@@ -81,6 +83,11 @@ export default {
   computed: {
   },
   methods: {
+    row_classes(item) {
+      if ((item.bilan || {}).annulation) {
+        return 'red lighten-3';
+      }
+    },
     search() {
       this.options.page = 1;
       this.getEvents();
@@ -117,3 +124,9 @@ export default {
   },
 };
 </script>
+
+<style>
+#red {
+  background-color: aquamarine;
+}
+</style>

@@ -4,6 +4,7 @@ export default ({
       begin_date: undefined,
       end_date: undefined,
       search_name: undefined,
+      'bilan.annulation': undefined
     },
   },
   getters: {},

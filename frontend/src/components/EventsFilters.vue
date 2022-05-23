@@ -13,7 +13,7 @@
               <v-text-field
                 v-model="filters.search_name"
                 append-icon="mdi-magnify"
-                label="Nom animations"
+                label="Nom animation"
                 single-line
                 hide-details
               ></v-text-field>
@@ -30,14 +30,20 @@
             </v-col>
           </v-row>
           <v-row>
-            <v-col cols="12" lg="6">
+            <v-col cols="12" lg="4">
+              <v-checkbox
+                v-model="filters['bilan.annulation']"
+                label="Annulés"
+              ></v-checkbox>
+            </v-col>
+            <v-col cols="12" lg="4">
               <v-select
                 v-model="filters.massif"
                 :items="districts"
                 label="Massifs"
               ></v-select>
             </v-col>
-            <v-col cols="12" lg="6">
+            <v-col cols="12" lg="4">
               <v-select
                 v-model="filters.type_id"
                 :items="eventtypes"
@@ -76,7 +82,7 @@ export default {
   components: { DatePicker },
   data() {
     return {
-      filters: {},
+      filters: { },
       districts: [],
       eventtypes: []
     }

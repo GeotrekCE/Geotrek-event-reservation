@@ -1,7 +1,7 @@
-import pdb
+import json
 from flask import Flask, jsonify, request, current_app, Blueprint
-from core.models import db, GTEvents, TReservations
-from core.schemas import GTEventsSchema, TReservationsSchema
+from core.models import TAnimationsBilans, db, GTEvents, TReservations
+from core.schemas import GTEventsSchema, TReservationsSchema, TAnimationsBilansSchema
 from pypnusershub import routes as fnauth
 
 
@@ -40,7 +40,6 @@ def get_events():
             sort_order = "asc"
     except KeyError:
         sort_order = "desc"
-
 
     events = GTEvents.query.filter_properties(query_params)
     if hasattr(GTEvents, sort_col):
@@ -89,10 +88,23 @@ def post_reservations():
     })
 
 
+@app_routes.route('/bilans', methods=['POST'])
+@fnauth.check_auth(1)
+def post_bilans():
+    post_data = request.get_json()
+    bilan = TAnimationsBilansSchema().load(post_data, session=db.session)
+
+    db.session.add(bilan)
+    db.session.commit()
+    db.session.close()
+    return jsonify({
+        'msg': "OK"
+    })
+
+
 @app_routes.route('/reservations/<id_reservation>', methods=['DELETE'])
 @fnauth.check_auth(1)
 def delete_reservations(id_reservation):
-    print(id_reservation)
     reservation = TReservations.query.get_or_404(id_reservation)
     db.session.delete(reservation)
     db.session.commit()

@@ -15,7 +15,8 @@ const getEvents = (params) => {
         'name',
         'massif',
         'end_date',
-        'published'
+        'published',
+        'bilan.annulation'
       ]
     }
   }
@@ -28,6 +29,8 @@ const deleteOneReservation = (id) => deleteApiData(config.URL_APPLICATION, `rese
 
 const postOneReservation = (data) => postApiData(config.URL_APPLICATION, 'reservations', data);
 
+const postOneBilan = (data) => postApiData(config.URL_APPLICATION, 'bilans', data);
+
 export {
-  getEvents, getOneEvent, deleteOneReservation, postOneReservation
+  getEvents, getOneEvent, deleteOneReservation, postOneReservation, postOneBilan
 };
