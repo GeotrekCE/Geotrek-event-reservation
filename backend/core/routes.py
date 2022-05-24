@@ -84,7 +84,7 @@ def post_reservations():
     db.session.commit()
     db.session.close()
     return jsonify({
-        'msg': "OK"
+        'msg': "Données sauvegardées"
     })
 
 
@@ -98,7 +98,7 @@ def post_bilans():
     db.session.commit()
     db.session.close()
     return jsonify({
-        'msg': "OK"
+        'msg': "Données sauvegardées"
     })
 
 
@@ -109,5 +109,5 @@ def delete_reservations(id_reservation):
     db.session.delete(reservation)
     db.session.commit()
     return jsonify({
-        'msg': "OK"
+        'msg': "Données supprimées"
     })
