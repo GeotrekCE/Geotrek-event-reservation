@@ -52,11 +52,24 @@
     >
       <gt-event-detail class="mb-10" :id="id" :published="event.published"></gt-event-detail>
     </div>
-
-    <event-reservations
+    <v-tabs v-model="tab">
+      <v-tab value="resa">Reservations</v-tab>
+      <v-tab value="bilan">Bilan</v-tab>
+    </v-tabs>
+    <span v-if="tab == 0">
+      <event-reservations
       :event="event"
       v-on:reloadEvent="getEvent()"
-    ></event-reservations>
+      :v-if="tab === 0"
+      >
+      </event-reservations>
+    </span>
+    <span v-if="tab == 1">
+      <event-bilan
+      :event="event"
+      >
+      </event-bilan>
+    </span>
     </v-container>
 </template>
 
@@ -68,15 +81,20 @@ import { getOneEvent } from '@/services/appli_api'
 
 import GtEventDetail from '@/components/GtEventDetail.vue'
 import EventReservations from '@/components/EventReservations.vue'
+import EventBilan from '@/components/EventBilan.vue'
 import EventCancelForm from '@/components/EventCancelForm.vue'
 
 export default {
-  components: { GtEventDetail, EventReservations, EventCancelForm },
+  components: {
+    GtEventDetail, EventReservations, EventCancelForm, EventBilan
+  },
   data() {
     return {
       loading: true,
       id: parseInt(this.$route.params.id, 0),
       event: {},
+
+      tab: 'resa',
 
       URL_GTR: config.URL_GTR,
       URL_GTA: config.URL_GTA

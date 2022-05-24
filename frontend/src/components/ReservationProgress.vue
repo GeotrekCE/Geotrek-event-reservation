@@ -3,6 +3,7 @@
       :value="tauxRemplissage"
       :color="colorRemplissage"
       height="25"
+      style="min-width: 60px;"
     >{{ reservationNb }} / {{ participantNb }} + ({{ attenteNb }})
     </v-progress-linear>
 </template>

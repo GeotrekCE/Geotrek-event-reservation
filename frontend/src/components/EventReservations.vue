@@ -1,5 +1,6 @@
 <template>
     <v-container name="event-list">
+
     <v-data-table
       :headers="headers"
       :items="event.reservations"
@@ -11,14 +12,13 @@
       <v-toolbar
         flat
       >
-        <v-toolbar-title>Réservations
-          <reservation-progress
-            :reservation-nb="event.sum_participants"
-            :participant-nb="event.participant_number"
-            :attente-nb="event.sum_participants_liste_attente"
-          >
-          </reservation-progress>
-        </v-toolbar-title>
+        <reservation-progress
+          :reservation-nb="event.sum_participants"
+          :participant-nb="event.participant_number"
+          :attente-nb="event.sum_participants_liste_attente"
+          style="width=25%"
+        >
+        </reservation-progress>
         <v-divider class="mx-4" inset vertical ></v-divider>
         <v-spacer></v-spacer>
         <v-dialog
