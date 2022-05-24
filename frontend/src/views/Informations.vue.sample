@@ -1,6 +1,0 @@
-<template>
-  <v-contaner>
-    <h1>Informations pratiques</h1>
-    Mettre ici les informations pratiques
-  </v-contaner>
-</template>
