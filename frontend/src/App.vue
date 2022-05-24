@@ -38,14 +38,17 @@
     <v-main>
       <router-view/>
     </v-main>
+   <api-snackbar></api-snackbar>
   </v-app>
 </template>
 
 <script>
 
 import { mapGetters } from 'vuex';
+import ApiSnackbar from './components/ApiSnackbar.vue';
 
 export default {
+  components: { ApiSnackbar },
   name: 'App',
 
   data: () => ({
@@ -53,6 +56,9 @@ export default {
   }),
   computed: {
     ...mapGetters(['user'])
+  },
+  methods: {
+
   },
 };
 </script>

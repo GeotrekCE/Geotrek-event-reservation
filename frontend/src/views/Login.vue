@@ -33,30 +33,14 @@
 
         </v-form>
       </v-card>
-
-    <v-snackbar
-      v-model="openSnackbar"
-      color="error"
-    >
-      {{ loginMessage }}
-      <template v-slot:action="{ attrs }">
-        <v-btn
-          text
-          v-bind="attrs"
-          @click="openSnackbar = false"
-        >
-          Close
-        </v-btn>
-      </template>
-    </v-snackbar>
-
   </v-container>
 
 </template>
 
 <script>
-import { config } from '@/config/config';
 import { mapGetters, mapActions } from 'vuex';
+import { config } from '@/config/config'
+import { postLogin, postOneReservation } from '@/services/appli_api'
 
 export default {
   components: {},
@@ -77,54 +61,34 @@ export default {
     },
   },
   methods: {
-    ...mapActions(['saveUserData']),
+    ...mapActions(['saveUserData', 'snackbarSaveInfo']),
 
     logout() {
       this.saveUserData({});
     },
     login() {
-      fetch(`${config.URL_APPLICATION}/auth/login`,
-        {
-          method: 'POST',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            login: this.identifiant,
-            password: this.password,
-            id_application: config.ID_APPLICATION,
-          }),
-        })
-        .then((res) => {
-          if ((res.ok) || (res.status === 490)) {
-            return res.json().then((data) => ({
-              status: res.status,
-              data
-            }))
-          }
-        }).then((res) => {
-          const { status, data } = res;
-          if (status === 200) {
-            const user = { ...data.user, expires: data.expires };
-            this.saveUserData(user);
-            if (this.redirectOnLogin !== undefined) {
-              this.$router.push({ path: this.redirectOnLogin });
-            } else {
-              this.$router.push({ path: '/' });
-            }
-          } else {
-            this.loginMessage = data.msg;
-            this.openSnackbar = true;
-          }
-        }).catch((error) => {
-          this.loginMessage = error;
-          this.openSnackbar = true;
-        });
+      const userData = {
+        login: this.identifiant,
+        password: this.password,
+        id_application: config.ID_APPLICATION,
+      };
+
+      postLogin(userData).then((data) => {
+        const user = { ...data.user, expires: data.expires };
+        this.saveUserData(user);
+        if (this.redirectOnLogin !== undefined) {
+          this.$router.push({ path: this.redirectOnLogin });
+        } else {
+          this.$router.push({ path: '/' });
+        }
+      });
     },
   },
   created() {
     this.logout();
+  },
+  mounted() {
+
   }
 }
 </script>

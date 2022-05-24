@@ -29,8 +29,15 @@ const deleteOneReservation = (id) => deleteApiData(config.URL_APPLICATION, `rese
 
 const postOneReservation = (data) => postApiData(config.URL_APPLICATION, 'reservations', data);
 
+const postLogin = (data) => postApiData(config.URL_APPLICATION, 'auth/login', data, false);
+
 const postOneBilan = (data) => postApiData(config.URL_APPLICATION, 'bilans', data);
 
 export {
-  getEvents, getOneEvent, deleteOneReservation, postOneReservation, postOneBilan
+  postLogin,
+  getEvents,
+  getOneEvent,
+  deleteOneReservation,
+  postOneReservation,
+  postOneBilan
 };

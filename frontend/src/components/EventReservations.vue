@@ -196,22 +196,6 @@
       <v-icon small @click="deleteItem(item)">mdi-delete</v-icon>
     </template>
   </v-data-table>
-    <v-snackbar
-      v-model="snackbarInfo.show"
-      :color="snackbarInfo.color"
-    >
-      {{ snackbarInfo.message }}
-      <template v-slot:action="{ attrs }">
-        <v-btn
-          text
-          v-bind="attrs"
-          @click="snackbarInfo.show = false"
-        >
-          Close
-        </v-btn>
-      </template>
-    </v-snackbar>
-
     </v-container>
 </template>
 
@@ -239,11 +223,6 @@ export default {
         },
       },
       liste_champs_nb: ['nb_adultes', 'nb_moins_6_ans', 'nb_6_8_ans', 'nb_9_12_ans', 'nb_plus_12_ans'],
-      snackbarInfo: {
-        show: false,
-        message: '',
-        color: 'orange'
-      },
       userMgstext: '',
       loading: true,
       id: parseInt(this.$route.params.id, 0),
@@ -376,13 +355,9 @@ export default {
 
     deleteItemConfirm() {
       deleteOneReservation(this.editedItem.id_reservation).then((data) => {
-        this.userMgstext = 'Donnée supprimée';
-        this.openSnackbar = true;
         this.getEvent();
       }).catch((error) => {
         console.error('There was an error!', error);
-        this.userMgstext = 'Erreur dans la suppression';
-        this.openSnackbar = true;
       });
       this.closeDelete()
     },
@@ -406,20 +381,8 @@ export default {
       this.editedItem.id_numerisateur = this.user.id_role;
 
       postOneReservation(this.editedItem).then((data) => {
-        this.snackbarInfo = {
-          message: 'Données sauvegardées',
-          color: 'success',
-          show: true
-        };
         this.$emit('reloadEvent');
-      }).catch((error) => {
-        this.snackbarInfo = {
-          message: 'Erreur dans la sauvegarde',
-          color: 'error',
-          show: true
-        }
-        console.error('There was an error!', error);
-      });
+      })
       this.close()
     },
   },

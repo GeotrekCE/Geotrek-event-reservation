@@ -16,8 +16,8 @@ export default {
       if (Number.isNaN(intPraticipantNb)) return 'blue-grey';
 
       if (this.reservationNb / intPraticipantNb > 1) return 'red';
-      if (this.reservationNb / intPraticipantNb === 1) return 'orange';
-      if (this.reservationNb / intPraticipantNb > 0.5) return 'indigo';
+      if (this.reservationNb / intPraticipantNb > 0.75) return 'lime accent-4';
+      if (this.reservationNb / intPraticipantNb > 0.5) return 'lime';
       return 'green';
     },
     tauxRemplissage() {

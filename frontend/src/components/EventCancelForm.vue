@@ -83,30 +83,16 @@ export default {
       }
       this.editedItem.annulation = !this.canceled;
       this.dialogCancel = true;
-      console.log(this.bilan, this.editedItem);
     },
 
     cancelAnimation() {
       // Set digitizer
       this.editedItem.id_numerisateur = this.user.id_role;
       this.editedItem.id_event = this.id_event;
-      console.log(this.editedItem);
       postOneBilan(this.editedItem).then((data) => {
-        // this.snackbarInfo = {
-        //   message: 'Données sauvegardées',
-        //   color: 'success',
-        //   show: true
-        // };
         this.$emit('reloadEvent');
-      }).catch((error) => {
-        // this.snackbarInfo = {
-        //   message: 'Erreur dans la sauvegarde',
-        //   color: 'error',
-        //   show: true
-        // }
-        console.error('There was an error!', error);
       });
-      console.log('cancel');
+
       this.dialogCancel = false
     },
   },
