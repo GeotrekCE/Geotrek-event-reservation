@@ -146,7 +146,7 @@ class TAnimationsBilans(db.Model):
     __tablename__ = "t_animations_bilans"
     __table_args__ = {"schema": "animations"}
     id_bilan = db.Column(db.Integer, primary_key=True)
-    annulation = db.Column(db.Boolean)
+    annulation = db.Column(db.Boolean, default=False)
     raison_annulation = db.Column(db.Unicode)
     nb_adultes = db.Column(db.Integer, default=0)
     nb_moins_6_ans = db.Column(db.Integer, default=0)

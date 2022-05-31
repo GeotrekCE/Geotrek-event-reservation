@@ -67,6 +67,7 @@
     <span v-if="tab == 1">
       <event-bilan
       :event="event"
+      v-on:reloadEvent="getEvent()"
       >
       </event-bilan>
     </span>

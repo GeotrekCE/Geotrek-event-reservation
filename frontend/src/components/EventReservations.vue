@@ -126,7 +126,7 @@
                 <v-row>
                   <v-col cols="12" sm="6" md="6" v-for="(field, index) in liste_champs_nb"
                   :key="index">
-                    <v-text-field v-model="editedItem[field]"
+                    <v-text-field v-model="editedItem[index]"
                       min="0"
                       :rules="[rules.integer]"
                       :label="field">
@@ -203,6 +203,8 @@
 import { mapGetters } from 'vuex';
 
 import { config } from '@/config/config';
+import { fieldsClasseAge, rulesFct } from '@/utils/fields.js'
+
 import { deleteOneReservation, postOneReservation } from '@/services/appli_api'
 
 import ReservationProgress from '@/components/ReservationProgress.vue';
@@ -214,15 +216,6 @@ export default {
     return {
       openPanels: [0, 1, 2],
       valid: false,
-      rules: {
-        required: (value) => !!value || 'Champ obligatoire.',
-        integer: (value) => (!Number.isNaN(Number(value)) && value !== '') || 'Uniquement des chiffres',
-        email: (value) => {
-          const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-          return pattern.test(value) || 'Invalid e-mail.'
-        },
-      },
-      liste_champs_nb: ['nb_adultes', 'nb_moins_6_ans', 'nb_6_8_ans', 'nb_9_12_ans', 'nb_plus_12_ans'],
       userMgstext: '',
       loading: true,
       id: parseInt(this.$route.params.id, 0),
@@ -252,6 +245,12 @@ export default {
   computed: {
     ...mapGetters(['user']),
 
+    liste_champs_nb() {
+      return fieldsClasseAge;
+    },
+    rules() {
+      return rulesFct;
+    },
     reservationOpened() {
       // Define if reservation is open
 
@@ -273,7 +272,9 @@ export default {
       return true;
     },
     defaultItem() {
-      const fieldsnb = this.liste_champs_nb.reduce((o, key) => ({ ...o, [key]: 0 }), {})
+      const fieldsnb = Object.keys(
+        this.liste_champs_nb
+      ).reduce((o, key) => ({ ...o, [key]: 0 }), {})
       return {
         ...{
           nom: '',
@@ -298,13 +299,17 @@ export default {
         const resa = this.event.reservations.filter(
           (item) => item.id_reservation === this.editedItem.id_reservation
         )[0];
-        nbInit = this.liste_champs_nb.reduce(
+        nbInit = Object.keys(
+          this.liste_champs_nb
+        ).reduce(
           (total, nb) => (
             total + (parseInt(resa[nb], 0) || 0)
           ), 0
         )
       }
-      const sumP = this.liste_champs_nb.reduce(
+      const sumP = Object.keys(
+        this.liste_champs_nb
+      ).reduce(
         (total, nb) => (
           total + (parseInt(this.editedItem[nb], 0) || 0)
         ), 0
