@@ -5,7 +5,7 @@ export default ({
       end_date: undefined,
       search_name: undefined,
       'bilan.annulation': undefined,
-      published: true
+      published: undefined,
     },
   },
   getters: {},
