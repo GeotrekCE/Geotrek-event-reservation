@@ -1,7 +1,7 @@
 export default ({
   state: {
     filters: {
-      begin_date: undefined,
+      begin_date: `01-01-${new Date().getFullYear()}`,
       end_date: undefined,
       search_name: undefined,
       'bilan.annulation': undefined,
