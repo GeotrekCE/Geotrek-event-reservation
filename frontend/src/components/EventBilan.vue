@@ -2,16 +2,16 @@
   <v-container name="event-list">
     <v-card>
       <v-card-title>
-          Bilan de l'animation
-          <v-spacer></v-spacer>
-          <v-btn color="primary" @click="dialogBilan = true">{{ btnTitle }}</v-btn>
+        Bilan de l'animation
+        <v-spacer></v-spacer>
+        <v-btn color="primary" @click="dialogBilan = true">{{ btnTitle }}</v-btn>
       </v-card-title>
       <v-card-text>
+        <v-alert text dense icon="mdi-information-outline" border="left">
+          <strong>Réservé à l'animateur</strong>
+        </v-alert>
         <div v-if="event.bilan">
-          <div
-            v-for="(field, index) in liste_champs_nb"
-            :key="index"
-          >
+          <div v-for="(field, index) in liste_champs_nb" :key="index">
             <strong>{{ field }}</strong> : {{ event.bilan[index] }}
           </div>
           <div><strong>Commentaire</strong> : {{ event.bilan.commentaire }}</div>
@@ -20,38 +20,33 @@
     </v-card>
 
     <v-dialog v-model="dialogBilan" max-width="500px">
-          <v-card>
-            <v-card-title class="text-h5">
-              Bilan
-            </v-card-title>
-            <v-card-text>
-              <v-form>
-                <v-row>
-                  <v-col
-                    cols="12" sm="6" md="6"
-                    v-for="(field, index) in liste_champs_nb"
-                    :key="index">
-                    <v-text-field v-model="editedItem[index]"
-                      min="0"
-                      :rules="[rules.integer]"
-                      :label="field">
-                    </v-text-field>
-                  </v-col>
-                </v-row>
-                <v-row>
-                    <v-textarea outlined v-model="editedItem.commentaire" label="Commentaire">
-                    </v-textarea>
-                </v-row>
-              </v-form>
-            </v-card-text>
-            <v-spacer></v-spacer>
-            <v-card-actions>
-              <v-btn color="blue darken-1" text @click="closeModal">Cancel</v-btn>
-              <v-btn color="blue darken-1" text @click="save">OK</v-btn>
-              <v-spacer></v-spacer>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
+      <v-card>
+        <v-card-title class="text-h5">
+          Bilan
+        </v-card-title>
+        <v-card-text>
+          <v-form>
+            <v-row>
+              <v-col cols="12" sm="6" md="6" v-for="(field, index) in liste_champs_nb" :key="index">
+                <v-text-field v-model="editedItem[index]" min="0" :rules="[rules.integer]"
+                  :label="field">
+                </v-text-field>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-textarea outlined v-model="editedItem.commentaire" label="Commentaire">
+              </v-textarea>
+            </v-row>
+          </v-form>
+        </v-card-text>
+        <v-spacer></v-spacer>
+        <v-card-actions>
+          <v-btn color="blue darken-1" text @click="closeModal">Cancel</v-btn>
+          <v-btn color="blue darken-1" text @click="save">OK</v-btn>
+          <v-spacer></v-spacer>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 

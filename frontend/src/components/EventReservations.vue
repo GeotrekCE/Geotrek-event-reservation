@@ -1,202 +1,163 @@
 <template>
-    <v-container name="event-list">
-
-    <v-data-table
-      :headers="headers"
-      :items="event.reservations"
-      sort-by="nb"
-      class="elevation-1"
-      :v-if="loading"
-    >
-    <template v-slot:top >
-      <v-toolbar
-        flat
-      >
-        <reservation-progress
-          :reservation-nb="event.sum_participants"
-          :participant-nb="event.participant_number"
-          :attente-nb="event.sum_participants_liste_attente"
-          style="width=25%"
-        >
-        </reservation-progress>
-        <v-divider class="mx-4" inset vertical ></v-divider>
-        <v-spacer></v-spacer>
-        <v-dialog
-          v-model="dialog"
-
-        >
-          <template v-slot:activator="{ editedItem }">
-             <v-btn
-              color="primary"
-              dark
-              class="mb-2"
-              v-bind="editedItem"
-              @click="addItem"
-              v-show="reservationOpened"
-              key="res_open"
-            >
-              Nouvelle réservation
-            </v-btn>
-            <div
-              v-show="!reservationOpened" >
-             <span
-              class="grey lighten-2 text-center px-2">
-              Réservation non ouverte
-            </span>
-            </div>
-          </template>
-          <v-card>
-            <v-card-title>
-                <span class="text-h5">{{ formTitle }}
-                <reservation-progress
-                :reservation-nb="event.sum_participants"
-                :participant-nb="event.participant_number"
-                :attente-nb="event.sum_participants_liste_attente"
-                >
-                </reservation-progress></span>
-            </v-card-title>
-            <v-card-text>
-              <v-container name="reservation-form">
-                <v-alert
-                text
-                dense
-                icon="mdi-information-outline"
-                border="left"
-              >
-              <strong> Public visé : </strong><span v-html="event.target_audience"></span>
-              </v-alert>
-                <v-form
-                  ref="reservation_form"
-                  v-model="valid"
-                  lazy-validation
-                >
-              <v-expansion-panels
-                v-model="openPanels"
-                multiple
-                >
-                <v-expansion-panel>
-                  <v-expansion-panel-header>
-                    Informations personnelles
-                  </v-expansion-panel-header>
-                  <v-expansion-panel-content>
-                    <v-row>
-                        <v-col cols="12" sm="12" md="6">
-                          <v-text-field v-model="editedItem.nom" label="Nom"
-                            :rules="[rules.required]"></v-text-field>
-                        </v-col>
-                        <v-col cols="12" sm="12" md="6">
-                          <v-text-field v-model="editedItem.prenom" label="Prénom"
-                            :rules="[rules.required]"></v-text-field>
-                        </v-col>
-                    </v-row>
-                    <v-row>
-                      <v-col cols="12" sm="12" md="6">
-                          <v-text-field v-model="editedItem.tel" label="Téléphone">
-                          </v-text-field>
-                        </v-col>
-                      <v-col cols="12" sm="12" md="6">
-                        <v-text-field v-model="editedItem.num_departement" label="Département">
-                        </v-text-field>
-                      </v-col>
-                    </v-row>
-                  </v-expansion-panel-content>
-                </v-expansion-panel>
-
-                <v-expansion-panel>
-                  <v-expansion-panel-header>
-                    Nombres participants
-                  </v-expansion-panel-header>
-                  <v-expansion-panel-content>
-                <v-row>
-                   <v-alert
-                    :value="true"
-                    type="error"
-                    width="100%"
-                    v-if="addCalculateParticipant"
-                  >
-                    Trop de participants
+  <div name="event-reservation-list">
+    <v-data-table :headers="headers" :items="event.reservations" :expanded.sync="expanded"
+      show-expand item-key="id_reservation" sort-by="nb" class="elevation-1" :v-if="loading">
+      <template v-slot:top>
+        <v-toolbar flat>
+          <reservation-progress :reservation-nb="event.sum_participants"
+            :participant-nb="event.participant_number"
+            :attente-nb="event.sum_participants_liste_attente" style="width=25%">
+          </reservation-progress>
+          <v-divider class="mx-4" inset vertical></v-divider>
+          <v-spacer></v-spacer>
+          <v-dialog v-model="dialog">
+            <template v-slot:activator="{ editedItem }">
+              <v-btn color="primary" dark class="mb-2" v-bind="editedItem" @click="addItem"
+                v-show="reservationOpened" key="res_open">
+                Nouvelle réservation
+              </v-btn>
+              <div v-show="!reservationOpened">
+                <span class="grey lighten-2 text-center px-2">
+                  Réservation non ouverte
+                </span>
+              </div>
+            </template>
+            <v-card>
+              <v-card-title>
+                <span class="text-h5">{{ formTitle }} - {{ event.name }}
+                </span>
+                <reservation-progress :reservation-nb="event.sum_participants"
+                  :participant-nb="event.participant_number"
+                  :attente-nb="event.sum_participants_liste_attente">
+                </reservation-progress>
+              </v-card-title>
+              <v-card-text>
+                <v-container name="reservation-form">
+                  <v-alert text dense icon="mdi-information-outline" border="left">
+                    <strong> Public visé : </strong><span v-html="event.target_audience"></span>
                   </v-alert>
-                </v-row>
-                <v-row>
-                   <v-checkbox
-                      v-model="editedItem.liste_attente"
-                      label="Liste attente"
-                    ></v-checkbox>
-                </v-row>
-                <v-row>
-                  <v-col cols="12" sm="6" md="6" v-for="(field, index) in liste_champs_nb"
-                  :key="index">
-                    <v-text-field v-model="editedItem[index]"
-                      min="0"
-                      :rules="[rules.integer]"
-                      :label="field">
-                    </v-text-field>
-                  </v-col>
-                </v-row>
-                  </v-expansion-panel-content>
-                </v-expansion-panel>
-                <v-expansion-panel>
-                  <v-expansion-panel-header>
-                    Autre
-                  </v-expansion-panel-header>
-                  <v-expansion-panel-content>
-                <v-row>
-                    <v-text-field
-                      outlined
-                      v-model="editedItem.commentaire_numerisateur"
-                      label="Numérisation"
-                    >
-                    </v-text-field>
-                </v-row>
-                <v-row>
-                    <v-textarea outlined v-model="editedItem.commentaire" label="Commentaire">
-                    </v-textarea>
-                </v-row>
-                  </v-expansion-panel-content>
-                </v-expansion-panel>
-              </v-expansion-panels>
-              </v-form>
-              </v-container>
-            </v-card-text>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="close">
-                Annuler
-              </v-btn>
-              <v-btn color="blue darken-1" text @click="save"
-                :disabled="!valid || addCalculateParticipant">
-                Enregistrer
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-        <v-dialog v-model="dialogDelete" max-width="500px">
-          <v-card>
-            <v-card-title class="text-h5">
-              Etes vous sur de supprimer cette réservation
-            </v-card-title>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
-              <v-btn color="blue darken-1" text @click="deleteItemConfirm">OK</v-btn>
-              <v-spacer></v-spacer>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-      </v-toolbar>
-    </template>
-    <template v-slot:item.liste_attente="{ item }">
-        <v-simple-checkbox
-          v-model="item.liste_attente"
-          disabled
-        ></v-simple-checkbox>
+                  <v-form ref="reservation_form" v-model="valid" lazy-validation>
+                    <v-expansion-panels v-model="openPanels" multiple>
+                      <v-expansion-panel>
+                        <v-expansion-panel-header>
+                          Informations personnelles
+                        </v-expansion-panel-header>
+                        <v-expansion-panel-content>
+                          <v-row>
+                            <v-col cols="12" sm="12" md="6">
+                              <v-text-field v-model="editedItem.nom" label="Nom"
+                                :rules="[rules.required]"></v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="12" md="6">
+                              <v-text-field v-model="editedItem.prenom" label="Prénom"
+                                :rules="[rules.required]"></v-text-field>
+                            </v-col>
+                          </v-row>
+                          <v-row>
+                            <v-col cols="12" sm="12" md="6">
+                              <v-text-field v-model="editedItem.tel" label="Téléphone"
+                                :rules="[rules.required]">
+                              </v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="12" md="6">
+                              <v-text-field v-model="editedItem.num_departement"
+                                label="Département">
+                              </v-text-field>
+                            </v-col>
+                          </v-row>
+                        </v-expansion-panel-content>
+                      </v-expansion-panel>
+                      <v-expansion-panel>
+                        <v-expansion-panel-header>
+                          Nombres participants
+                        </v-expansion-panel-header>
+                        <v-expansion-panel-content>
+                          <v-row>
+                            <v-alert :value="true" type="error" width="100%"
+                              v-if="addCalculateParticipant">
+                              Trop de participants
+                            </v-alert>
+                          </v-row>
+                          <v-row>
+                            <v-checkbox v-model="editedItem.liste_attente" label="Liste attente">
+                            </v-checkbox>
+                          </v-row>
+                          <v-row>
+                            <v-col cols="12" sm="6" md="6" v-for="(field, index) in liste_champs_nb"
+                              :key="index">
+                              <v-text-field v-model="editedItem[index]" min="0"
+                                :rules="[rules.integer]" :label="field">
+                              </v-text-field>
+                            </v-col>
+                          </v-row>
+                        </v-expansion-panel-content>
+                      </v-expansion-panel>
+                      <v-expansion-panel>
+                        <v-expansion-panel-header>
+                          Autre
+                        </v-expansion-panel-header>
+                        <v-expansion-panel-content>
+                          <v-row>
+                            <v-text-field outlined v-model="editedItem.commentaire_numerisateur"
+                              :rules="[rules.required]"
+                              label="Nom personne ayant réalisée l'inscription">
+                            </v-text-field>
+                          </v-row>
+                          <v-row>
+                            <v-textarea outlined v-model="editedItem.commentaire"
+                              label="Commentaire">
+                            </v-textarea>
+                          </v-row>
+                        </v-expansion-panel-content>
+                      </v-expansion-panel>
+                    </v-expansion-panels>
+                  </v-form>
+                </v-container>
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="blue darken-1" text @click="close">
+                  Annuler
+                </v-btn>
+                <v-btn color="blue darken-1" text @click="save"
+                  :disabled="!valid || addCalculateParticipant">
+                  Enregistrer
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+          <v-dialog v-model="dialogDelete" max-width="500px">
+            <v-card>
+              <v-card-title class="text-h5">
+                Etes vous sur de supprimer cette réservation
+              </v-card-title>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
+                <v-btn color="blue darken-1" text @click="deleteItemConfirm">OK</v-btn>
+                <v-spacer></v-spacer>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+        </v-toolbar>
       </template>
-    <template v-slot:item.actions="{ item }">
-      <v-icon small class="mr-2" @click="editItem(item)">mdi-pencil</v-icon>
-      <v-icon small @click="deleteItem(item)">mdi-delete</v-icon>
-    </template>
-  </v-data-table>
-    </v-container>
+      <template v-slot:item.liste_attente="{ item }">
+        <v-simple-checkbox v-model="item.liste_attente" disabled></v-simple-checkbox>
+      </template>
+      <template v-slot:item.actions="{ item }">
+        <v-icon small class="mr-2" @click="editItem(item)">mdi-pencil</v-icon>
+        <v-icon small @click="deleteItem(item)">mdi-delete</v-icon>
+      </template>
+      <template v-slot:expanded-item="{ headers, item }">
+        <td :colspan="headers.length">
+          <div><strong> Téléphone : </strong> {{ item.tel }}</div>
+          <div><strong> Département : </strong> {{ item.num_departement }}</div>
+          <div><strong> Commentaire : </strong> {{ item.commentaire }}</div>
+          <div><strong> Numérisateur : </strong> {{ item.commentaire_numerisateur }}</div>
+        </td>
+      </template>
+    </v-data-table>
+  </div>
 </template>
 
 <script>
@@ -221,10 +182,10 @@ export default {
       id: parseInt(this.$route.params.id, 0),
       dialog: false,
       dialogDelete: false,
+      expanded: [],
       headers: [
         { text: 'nom', value: 'nom' },
         { text: 'prenom', value: 'prenom' },
-        { text: 'tel', value: 'tel' },
         { text: 'total', value: 'sum_participants' },
         { text: 'total_attente', value: 'sum_participants_liste_attente' },
         { text: 'nb_adultes', value: 'nb_adultes' },
@@ -232,9 +193,9 @@ export default {
         { text: 'nb_6_8_ans', value: 'nb_6_8_ans' },
         { text: 'nb_9_12_ans', value: 'nb_9_12_ans' },
         { text: 'nb_plus_12_ans', value: 'nb_plus_12_ans' },
-        { text: 'num_departement', value: 'num_departement' },
         { text: 'liste_attente', value: 'liste_attente' },
         { text: 'Actions', value: 'actions', sortable: false },
+        { text: '', value: 'data-table-expand' },
       ],
       editedItem: {},
       numerisateurName: undefined,
@@ -360,7 +321,7 @@ export default {
 
     deleteItemConfirm() {
       deleteOneReservation(this.editedItem.id_reservation).then((data) => {
-        this.getEvent();
+        this.$emit('reloadEvent');
       }).catch((error) => {
         console.error('There was an error!', error);
       });
