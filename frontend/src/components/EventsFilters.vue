@@ -23,12 +23,6 @@
           </v-col>
         </v-row>
         <v-row>
-          <v-col cols="12" lg="2">
-            <v-checkbox v-model="filters['published']" label="Publiées"></v-checkbox>
-          </v-col>
-          <v-col cols="12" lg="2">
-            <v-checkbox v-model="filters['bilan.annulation']" label="Annulés"></v-checkbox>
-          </v-col>
           <v-col cols="12" lg="4">
             <v-select v-model="filters.massif" :items="districts" label="Massifs"></v-select>
           </v-col>
@@ -36,6 +30,12 @@
             <v-select v-model="filters.type_id" :items="eventtypes" item-text="name" item-value="id"
               label="Type">
             </v-select>
+          </v-col>
+          <v-col cols="12" lg="2">
+            <v-checkbox v-model="filters['published']" label="Publiées"></v-checkbox>
+          </v-col>
+          <v-col cols="12" lg="2">
+            <v-checkbox v-model="filters['bilan.annulation']" label="Annulés"></v-checkbox>
           </v-col>
         </v-row>
         <v-row>
