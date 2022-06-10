@@ -1,11 +1,11 @@
 export default ({
   state: {
     filters: {
-      begin_date: `01-01-${new Date().getFullYear()}`,
+      begin_date: undefined,
       end_date: undefined,
       search_name: undefined,
       'bilan.annulation': undefined,
-      published: undefined,
+      published: true,
     },
   },
   getters: {},
@@ -17,6 +17,7 @@ export default ({
       Object.keys(state.filters).forEach((key) => {
         state.filters[key] = undefined
       });
+      state.filters.published = true;
     }
   },
   actions: {

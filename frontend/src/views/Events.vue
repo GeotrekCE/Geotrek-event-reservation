@@ -50,7 +50,7 @@ export default {
       loading: true,
       options: {
         sortBy: ['begin_date'],
-        sortDesc: [true],
+        sortDesc: [false],
       },
       headers: [
         { text: 'Détail', value: 'id', sortable: false },
