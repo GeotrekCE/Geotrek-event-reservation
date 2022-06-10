@@ -47,12 +47,21 @@ class GTEventsQuery(BaseQuery):
 
         # Généric filters
         for param in filters:
-            if hasattr(GTEvents, param):
-                self = self.filter(getattr(GTEvents, param) == filters.get(param))
+            if hasattr(GTEvents, param) and filters.get(param):
+                # Split multi choice
+                if len(filters.get(param).split(',')) > 1:
+                    self = self.filter(
+                        getattr(GTEvents, param).in_(
+                            filters.get(param).split(',')
+                        )
+                    )
+                else:
+                    self = self.filter(
+                        getattr(GTEvents, param) == filters.get(param)
+                    )
 
         # Filter not deleted
         self = self.filter(GTEvents.deleted != True)
-
         return self
 
 

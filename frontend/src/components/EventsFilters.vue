@@ -24,11 +24,12 @@
         </v-row>
         <v-row>
           <v-col cols="12" lg="4">
-            <v-select v-model="filters.massif" :items="districts" label="Massifs"></v-select>
+            <v-select multiple chips v-model="filters.massif" :items="districts" label="Massifs">
+            </v-select>
           </v-col>
           <v-col cols="12" lg="4">
-            <v-select v-model="filters.type_id" :items="eventtypes" item-text="name" item-value="id"
-              label="Type">
+            <v-select multiple chips v-model="filters.type_id" :items="eventtypes" item-text="name"
+              item-value="id" label="Type">
             </v-select>
           </v-col>
           <v-col cols="12" lg="2">
