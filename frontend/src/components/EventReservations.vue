@@ -34,7 +34,11 @@
               <v-card-text>
                 <v-container name="reservation-form">
                   <v-alert text dense icon="mdi-information-outline" border="left">
-                    <strong> Public visé : </strong><span v-html="event.target_audience"></span>
+                    <div><strong> Public visé : </strong><span
+                        v-html="event.target_audience"></span></div>
+                    <div v-if="numerisateurName">
+                      <strong> Réservation réalisée par :</strong><span>{{numerisateurName}}</span>
+                    </div>
                   </v-alert>
                   <v-form ref="reservation_form" v-model="valid" lazy-validation>
                     <v-expansion-panels v-model="openPanels" multiple>
@@ -153,7 +157,10 @@
           <div><strong> Téléphone : </strong> {{ item.tel }}</div>
           <div><strong> Département : </strong> {{ item.num_departement }}</div>
           <div><strong> Commentaire : </strong> {{ item.commentaire }}</div>
-          <div><strong> Numérisateur : </strong> {{ item.commentaire_numerisateur }}</div>
+          <div><strong> Numérisateur : </strong>
+            <span v-if="item.numerisateur">{{ item.numerisateur.identifiant }} - </span>
+            {{item.commentaire_numerisateur }}
+          </div>
         </td>
       </template>
     </v-data-table>
@@ -235,15 +242,14 @@ export default {
     defaultItem() {
       const fieldsnb = Object.keys(
         this.liste_champs_nb
-      ).reduce((o, key) => ({ ...o, [key]: 0 }), {})
+      ).reduce((o, key) => ({ ...o, [key]: 0 }), {});
       return {
         ...{
           nom: '',
           prenom: '',
           commentaire: '',
           event: this.$route.params.id,
-          liste_attente: false,
-          id_numerisateur: this.user.id_role
+          liste_attente: false
         },
         ...fieldsnb
       }
@@ -309,8 +315,6 @@ export default {
       this.numerisateurName = item.numerisateur
         ? item.numerisateur.identifiant
         : undefined;
-
-      this.editedItem.id_numerisateur = this.user.id_role;
       this.dialog = true;
     },
 
@@ -345,7 +349,6 @@ export default {
     save() {
       // Set digitizer
       this.editedItem.id_numerisateur = this.user.id_role;
-
       postOneReservation(this.editedItem).then((data) => {
         this.$emit('reloadEvent');
       })
