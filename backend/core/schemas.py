@@ -23,6 +23,7 @@ class TReservationsSchema(SQLAlchemyAutoSchema):
         model = TReservations
         include_relationships = True
         load_instance = True
+        include_fk = True
         unknown = EXCLUDE
     sum_participants = fields.Integer(dump_only=True)
     sum_participants_liste_attente  = fields.Integer(dump_only=True)
