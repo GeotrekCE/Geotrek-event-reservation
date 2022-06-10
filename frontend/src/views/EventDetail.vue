@@ -1,14 +1,21 @@
 <template>
   <v-container name="event-list">
     <v-card class="mb-10" elevation="2" :loading="loading">
-      <v-card-title :class="{ red: canceled }">
+      <v-card-title>
         {{ event.name }}
-        <span v-if="canceled === true"> - Annulé</span>
         <v-spacer></v-spacer>
         <event-cancel-form :bilan="event.bilan" :canceled="canceled" :id_event="id"
           v-on:reloadEvent="getEvent()"></event-cancel-form>
       </v-card-title>
       <v-card-text>
+        <v-alert v-if="canceled === true" dense outlined type="error">
+          <h2>Animation annulée</h2>
+          <div>
+            <strong> Raison: </strong>
+            <span>{{ event.bilan.raison_annulation }}</span>
+          </div>
+        </v-alert>
+
         <div v-html='event.description_teaser'></div>
         <div v-if="event.type"><strong> Type : </strong> {{ event.type.type }}</div>
         <div><strong> Massif : </strong> {{ event.massif }}</div>
@@ -53,8 +60,13 @@
       </event-reservations>
     </span>
     <span v-if="tab == 1">
-      <event-bilan :event="event" v-on:reloadEvent="getEvent()">
+      <event-bilan v-if="!canceled" :event="event" v-on:reloadEvent="getEvent()">
       </event-bilan>
+      <div v-else>
+        <v-alert text dense icon="mdi-information-outline" border="left">
+          L'animation a été annulée, il n'y a pas de bilan à saisir
+        </v-alert>
+      </div>
     </span>
   </v-container>
 </template>
