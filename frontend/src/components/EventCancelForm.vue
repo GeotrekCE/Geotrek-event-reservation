@@ -12,7 +12,7 @@
       </v-card-title>
       <v-card-text>
         <v-container v-if="!this.canceled">
-          <v-form ref="cancel_form" v-model="formValid" lazy-validation>
+          <v-form ref="form" v-model="formValid" lazy-validation>
             <v-row>
               <v-col cols="12">
                 <v-textarea outlined label="Raison annulation"
@@ -49,7 +49,7 @@ export default {
     return {
       dialogCancel: false,
       editedItem: {},
-      formValid: false,
+      formValid: true
     };
   },
   props: ['bilan', 'canceled', 'id_event'],
@@ -63,14 +63,9 @@ export default {
     },
     rules() {
       return rulesFct;
-    }
+    },
   },
   mounted() {
-    setTimeout(() => {
-      if (this.$refs.cancel_form) {
-        (this.$refs.cancel_form).validate();
-      }
-    }, 2000);
   },
   methods: {
     editItem(item) {
@@ -78,6 +73,11 @@ export default {
         this.editedItem = { ...this.bilan };
       }
       this.editedItem.annulation = !this.canceled;
+      if (this.editedItem.annulation) {
+        setTimeout(() => {
+          (this.$refs.form).validate();
+        }, 500);
+      }
       this.dialogCancel = true;
     },
 
@@ -85,7 +85,6 @@ export default {
       // Set digitizer
       this.editedItem.id_numerisateur = this.user.id_role;
       this.editedItem.id_event = this.id_event;
-      console.log(this.editedItem.canceled)
       if (this.editedItem.annulation === false) {
         this.editedItem.raison_annulation = '';
       }

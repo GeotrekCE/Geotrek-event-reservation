@@ -308,6 +308,9 @@ export default {
       this.editedItem = { ...this.defaultItem };
       this.numerisateurName = undefined;
       this.dialog = true;
+      setTimeout(() => {
+        (this.$refs.reservation_form).validate();
+      }, 500);
     },
 
     editItem(item) {
@@ -316,6 +319,9 @@ export default {
         ? item.numerisateur.identifiant
         : undefined;
       this.dialog = true;
+      setTimeout(() => {
+        (this.$refs.reservation_form).validate();
+      }, 500);
     },
 
     deleteItem(item) {
