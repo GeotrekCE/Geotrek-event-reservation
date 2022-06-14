@@ -133,6 +133,8 @@ class TReservations(db.Model):
     id_numerisateur = db.Column(db.Integer, db.ForeignKey('utilisateurs.t_roles.id_role'))
     commentaire_numerisateur = db.Column(db.Unicode)
     liste_attente = db.Column(db.Boolean)
+    meta_create_date = db.Column(db.DateTime)
+    meta_update_date = db.Column(db.DateTime)
     id_event = db.Column(db.Integer, db.ForeignKey('public.tourism_touristicevent.id'))
 
     numerisateur = db.relationship("User", lazy="joined", uselist=False)
@@ -164,4 +166,6 @@ class TAnimationsBilans(db.Model):
     nb_plus_12_ans = db.Column(db.Integer, default=0)
     id_numerisateur = db.Column(db.Integer)
     commentaire = db.Column(db.Unicode)
+    meta_create_date = db.Column(db.DateTime)
+    meta_update_date = db.Column(db.DateTime)
     id_event = db.Column(db.Integer, db.ForeignKey('public.tourism_touristicevent.id'))

@@ -161,6 +161,11 @@
             <span v-if="item.numerisateur">{{ item.numerisateur.identifiant }} - </span>
             {{item.commentaire_numerisateur }}
           </div>
+          <div><strong> Enregistré le : </strong> {{ item.meta_create_date }}
+            <span v-if="item.meta_update_date">
+              <strong> Modifié le : </strong> {{ item.meta_update_date }}
+            </span>
+          </div>
         </td>
       </template>
     </v-data-table>
