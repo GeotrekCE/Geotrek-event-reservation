@@ -1,21 +1,21 @@
 import pytest
 import json
-from flask import url_for
+from flask import url_for, current_app
 
 from cookies import Cookie
 
-from app import create_app
 
-#TODO use config
-LOGIN="admin"
-PASSWORD="admin"
-ID_APP=14
+from app import create_app
+from config.conftest import LOGIN, PASSWORD, ID_APP
 
 @pytest.fixture()
 def app():
     app = create_app()
     app.config.update({
         "TESTING": True,
+        "LOGIN": LOGIN,
+        "PASSWORD": PASSWORD,
+        "ID_APP": ID_APP,
     })
 
     # other setup can go here
@@ -37,12 +37,13 @@ def runner(app):
 mimetype = "application/json"
 headers = {"Content-Type": mimetype, "Accept": mimetype}
 
-def get_token(client, login="admin", password="admin"):
+def get_token(client):
     data = {
-        "login": login,
-        "password": password,
-        "id_application": ID_APP,
+      "login": current_app.config.get("LOGIN"),
+      "password": current_app.config.get("PASSWORD"),
+      "id_app": current_app.config.get("ID_APP")
     }
+
     response = client.post(url_for("auth.login"), data=json.dumps(data), headers=headers)
     try:
         token = Cookie.from_string(response.headers["Set-Cookie"])

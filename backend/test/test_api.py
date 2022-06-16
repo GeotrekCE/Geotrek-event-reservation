@@ -1,5 +1,5 @@
-from flask import url_for
-from .conftest import get_token, json_of_response, post_json, LOGIN, PASSWORD
+from flask import url_for, current_app
+from .conftest import get_token, json_of_response, post_json
 import pytest
 import json
 import logging
@@ -34,24 +34,22 @@ TEST_BILAN = {
 
 @pytest.mark.usefixtures('client_class')
 class TestAPI:
-
   def test_get_events(self):
-    token = get_token(self.client, login=LOGIN, password=PASSWORD)
+    token = get_token(self.client)
     self.client.set_cookie("/", "token", token)
     response =  self.client.get(url_for("app_routes.get_events"))
     assert response.status_code == 200
 
 
-
   def test_get_one_event(self):
-    token = get_token(self.client, login=LOGIN, password=PASSWORD)
+    token = get_token(self.client)
     self.client.set_cookie("/", "token", token)
     data = GTEvents.query.limit(1).one()
     assert self.client.get(url_for("app_routes.get_one_event", id=data.id)).status_code == 200
 
 
   def test_post_and_delete_one_reservation(self):
-    token = get_token(self.client, login=LOGIN, password=PASSWORD)
+    token = get_token(self.client)
     self.client.set_cookie("/", "token", token)
     # POST
     event = GTEvents.query.limit(1).one()
@@ -66,7 +64,7 @@ class TestAPI:
 
 
   def test_post_one_bilan(self):
-    token = get_token(self.client, login=LOGIN, password=PASSWORD)
+    token = get_token(self.client)
     self.client.set_cookie("/", "token", token)
     # POST
     event = GTEvents.query.limit(1).one()
