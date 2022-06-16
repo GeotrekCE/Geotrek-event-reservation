@@ -64,8 +64,8 @@
                               </v-text-field>
                             </v-col>
                             <v-col cols="12" sm="12" md="6">
-                              <v-text-field v-model="editedItem.num_departement"
-                                label="Département">
+                              <v-text-field v-model="editedItem.num_departement" label="Département"
+                                :rules="[rules.required]">
                               </v-text-field>
                             </v-col>
                           </v-row>
