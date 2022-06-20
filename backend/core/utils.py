@@ -33,7 +33,7 @@ def transform_obj_to_flat_list(fields, data):
         for field in fields:
             tmp_res = res
             for i in field.split("."):
-                atmp_res = tmp_res[i]
+                tmp_res = tmp_res[i] if tmp_res else ''
             exp_res[field] = tmp_res
         flat_data.append(exp_res)
     return flat_data
