@@ -170,7 +170,7 @@
       </template>
       <template v-slot:footer.page-text>
         <v-btn color="primary" dark class="ma-2"
-          :href="'http://localhost:5000/export_reservation/' + id" target="_blank">
+          :href=" URL_APPLICATION + '/export_reservation/' + id" target="_blank">
           Exporter
         </v-btn>
       </template>
@@ -201,6 +201,7 @@ export default {
       dialog: false,
       dialogDelete: false,
       expanded: [],
+      URL_APPLICATION: config.URL_APPLICATION,
       headers: [
         { text: 'nom', value: 'nom' },
         { text: 'prenom', value: 'prenom' },
