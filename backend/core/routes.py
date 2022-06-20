@@ -1,7 +1,9 @@
 import json
+
 from flask import Flask, jsonify, request, current_app, Blueprint
 from core.models import TAnimationsBilans, db, GTEvents, TReservations
 from core.schemas import GTEventsSchema, TReservationsSchema, TAnimationsBilansSchema
+from core.utils import to_csv_resp
 from pypnusershub import routes as fnauth
 
 
@@ -86,6 +88,47 @@ def post_reservations():
     return jsonify({
         'msg': "Données sauvegardées"
     })
+
+@app_routes.route('/export_reservation/<id>')
+@fnauth.check_auth(1)
+def export_reservation(id):
+
+    resa = TReservations.query.filter_by(id_event=id).all()
+
+    results = TReservationsSchema(many=True).dump(resa)
+    export_fields = [
+        "id_reservation",
+        "id_event",
+        "nom",
+        "prenom",
+        "tel",
+        "liste_attente",
+        "sum_participants",
+        "sum_participants_liste_attente",
+        "nb_adultes",
+        "nb_moins_6_ans",
+        "nb_6_8_ans",
+        "nb_9_12_ans",
+        "nb_plus_12_ans",
+        "num_departement",
+        "numerisateur.identifiant",
+        "id_numerisateur",
+        "commentaire_numerisateur",
+        "commentaire",
+        "meta_create_date",
+        "meta_update_date"
+    ]
+    data = []
+    for res in results:
+        exp_res = {}
+        for e in export_fields:
+            a = res
+            for i in e.split("."):
+                a = a[i]
+            exp_res[e] = a
+        data.append(exp_res)
+
+    return to_csv_resp(f"reservation_{id}", data, export_fields, ";")
 
 
 @app_routes.route('/bilans', methods=['POST'])

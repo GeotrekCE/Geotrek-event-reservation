@@ -168,6 +168,12 @@
           </div>
         </td>
       </template>
+      <template v-slot:footer.page-text>
+        <v-btn color="primary" dark class="ma-2"
+          :href="'http://localhost:5000/export_reservation/' + id" target="_blank">
+          Exporter
+        </v-btn>
+      </template>
     </v-data-table>
   </div>
 </template>
