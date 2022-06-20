@@ -12,7 +12,8 @@ const gtApiFields = {
   'name.fr': { label: 'Nom', main: false },
   'description_teaser.fr': { label: 'Description courte', type: 'html', main: false },
   'description.fr': { label: 'Description', type: 'html', main: false },
-  duration: { label: 'Durée', main: false },
+  'accessibility.fr': { label: 'Accessibilité', type: 'html', main: false },
+  duration: { label: 'Durée', main: true },
   email: { label: 'Email', main: false },
   begin_date: { label: 'Date début', main: false },
   end_date: { label: 'Date fin', main: false },
@@ -22,7 +23,7 @@ const gtApiFields = {
   participant_number: { label: 'Nb participants', main: false },
   'practical_info.fr': { label: 'Info pratique publique', main: true },
   'practical_info.en': { label: 'Info pratique privé', main: true },
-  speaker: { label: 'Intervenant', main: false },
+  speaker: { label: 'Intervenant', main: true },
   target_audience: { label: 'Public visé', main: true },
 }
 
