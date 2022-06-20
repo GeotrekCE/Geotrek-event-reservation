@@ -16,13 +16,15 @@ CREATE TABLE animations.t_reservations (
     nb_9_12_ans int4 NOT NULL DEFAULT 0,
     nb_plus_12_ans int4 NOT NULL DEFAULT 0,
     num_departement varchar(250) NULL,
-    id_event int4 NULL,
+    id_event int4 ,
     id_numerisateur int4 NULL,
     commentaire_numerisateur varchar(250) NULL,
     liste_attente boolean default(null),
     meta_create_date timestamp without time zone DEFAULT now(),
     meta_update_date timestamp without time zone,
-    CONSTRAINT t_reservations_pkey PRIMARY KEY (id_reservation)
+    CONSTRAINT t_reservations_pkey PRIMARY KEY (id_reservation),
+    CONSTRAINT fk_id_event FOREIGN KEY(id_event)
+      REFERENCES tourism_touristicevent(id)
 );
 
 DROP TABLE  IF EXISTS animations.t_animations_bilans ;
@@ -41,7 +43,9 @@ CREATE TABLE animations.t_animations_bilans (
     commentaire varchar(1000) NULL,
     meta_create_date timestamp without time zone DEFAULT now(),
     meta_update_date timestamp without time zone,
-    CONSTRAINT t_animations_bilans_pkey PRIMARY KEY (id_bilan)
+    CONSTRAINT t_animations_bilans_pkey PRIMARY KEY (id_bilan),
+    CONSTRAINT fk_id_event FOREIGN KEY(id_event)
+      REFERENCES tourism_touristicevent(id)
 );
 
 CREATE OR REPLACE FUNCTION animations.get_secteur_name(id_event integer)
