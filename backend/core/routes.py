@@ -3,7 +3,7 @@ import json
 from flask import Flask, jsonify, request, current_app, Blueprint
 from core.models import TAnimationsBilans, db, GTEvents, TReservations
 from core.schemas import GTEventsSchema, TReservationsSchema, TAnimationsBilansSchema
-from core.utils import to_csv_resp
+from core.utils import to_csv_resp, transform_obj_to_flat_list
 from pypnusershub import routes as fnauth
 
 
@@ -89,7 +89,7 @@ def post_reservations():
         'msg': "Données sauvegardées"
     })
 
-@app_routes.route('/export_reservation/<id>')
+@app_routes.route('/export_reservation/<id>', methods=['GET'])
 @fnauth.check_auth(1)
 def export_reservation(id):
 
@@ -118,16 +118,7 @@ def export_reservation(id):
         "meta_create_date",
         "meta_update_date"
     ]
-    data = []
-    for res in results:
-        exp_res = {}
-        for e in export_fields:
-            a = res
-            for i in e.split("."):
-                a = a[i]
-            exp_res[e] = a
-        data.append(exp_res)
-
+    data = transform_obj_to_flat_list(export_fields, results)
     return to_csv_resp(f"reservation_{id}", data, export_fields, ";")
 
 

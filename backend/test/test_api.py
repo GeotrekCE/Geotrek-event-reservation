@@ -48,7 +48,7 @@ class TestAPI:
     assert self.client.get(url_for("app_routes.get_one_event", id=data.id)).status_code == 200
 
 
-  def test_post_and_delete_one_reservation(self):
+  def test_post_export_and_delete_one_reservation(self):
     token = get_token(self.client)
     self.client.set_cookie("/", "token", token)
     # POST
@@ -57,6 +57,15 @@ class TestAPI:
     data_resa["id_event"] = event.id
     resp = post_json(self.client, url_for("app_routes.post_reservations"), data_resa)
     assert resp == 200
+    # EXPORT
+    self.client.set_cookie("/", "token", token)
+    resa = TReservations.query.limit(1).one()
+    resp = self.client.get(
+      url_for("app_routes.export_reservation", id=resa.id_event)
+    )
+    assert resp.status_code == 200
+    assert f"export_reservation_{resa.id_event}.csv" in resp.headers["Content-Disposition"]
+
     # DELETE
     self.client.set_cookie("/", "token", token)
     resa = TReservations.query.limit(1).one()
