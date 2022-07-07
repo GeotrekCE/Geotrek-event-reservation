@@ -235,7 +235,8 @@ export default {
       // Define if reservation is open
 
       // If event is happened
-      if (new Date() >= new Date(this.event.begin_date)) {
+
+      if (new Date().setHours(0, 0, 0, 0) > new Date(this.event.begin_date).setHours(0, 0, 0, 0)) {
         return false
       }
 
@@ -243,7 +244,7 @@ export default {
       if ((config.DAY_BEFORE_RESA || -1) !== -1) {
         const resaBeginDate = new Date(this.event.begin_date);
         resaBeginDate.setDate(resaBeginDate.getDate() - config.DAY_BEFORE_RESA);
-        if (new Date() >= resaBeginDate) {
+        if (new Date().setHours(0, 0, 0, 0) >= resaBeginDate.setHours(0, 0, 0, 0)) {
           return true;
         }
         return false;
