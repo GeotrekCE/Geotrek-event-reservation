@@ -12,12 +12,12 @@
         </v-row>
         <v-row>
           <v-col cols="12" lg="6">
-            <date-picker label="Date de début" :dateValue="filters.begin_date"
+            <date-picker label="Date de début" :dateValue.sync="filters.begin_date"
               @input="filters.begin_date = $event">
             </date-picker>
           </v-col>
           <v-col cols="12" lg="6">
-            <date-picker label="Date de fin" :dateValue="filters.end_date"
+            <date-picker label="Date de fin" :dateValue.sync="filters.end_date"
               @input="filters.end_date = $event">
             </date-picker>
           </v-col>
