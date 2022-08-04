@@ -4,8 +4,8 @@ from flask import Flask, jsonify, request, current_app, Blueprint
 from core.models import TAnimationsBilans, db, GTEvents, TReservations
 from core.schemas import GTEventsSchema, TReservationsSchema, TAnimationsBilansSchema
 from core.utils import to_csv_resp, transform_obj_to_flat_list
+from core.repository import query_stats_bilan, query_stats_animations_per_month
 from pypnusershub import routes as fnauth
-
 
 
 app_routes = Blueprint('app_routes', __name__ )
@@ -145,3 +145,54 @@ def delete_reservations(id_reservation):
     return jsonify({
         'msg': "Données supprimées"
     })
+
+
+@app_routes.route('/stats/global', methods=['GET'])
+@fnauth.check_auth(1)
+def get_stats_global():
+    params = request.args
+    data = query_stats_bilan(params)
+
+    return jsonify(data)
+
+@app_routes.route('/stats/charts/nb_day_before_resa', methods=['GET'])
+@fnauth.check_auth(1)
+def get_stats_nb_day_before_resa():
+    params = request.args
+    data = query_stats_animations_per_month(params)
+    return jsonify(data)
+
+
+@app_routes.route('/export/events')
+# @fnauth.check_auth(1)
+def get_export_events():
+    query_params = request.args
+    fields = [
+        "id",
+        "deleted",
+        "published",
+        "name",
+        "begin_date",
+        "end_date",
+        "participant_number",
+        "target_audience",
+        "sum_participants",
+        "sum_participants_liste_attente",
+        "bilan.annulation",
+        "bilan.raison_annulation",
+        "bilan.nb_adultes",
+        "bilan.nb_moins_6_ans",
+        "bilan.nb_6_8_ans",
+        "bilan.nb_9_12_ans",
+        "bilan.nb_plus_12_ans",
+        "bilan.commentaire"
+    ]
+    events = GTEvents.query.filter_properties(query_params)
+
+    events = events.all()
+
+    results = GTEventsSchema(many=True, only=fields).dump(events)
+
+
+    data = transform_obj_to_flat_list(fields, results)
+    return to_csv_resp(f"animations_{id}", data, fields, ";")

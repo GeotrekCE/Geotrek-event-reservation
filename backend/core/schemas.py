@@ -53,4 +53,5 @@ class GTEventsSchema(SQLAlchemyAutoSchema):
     bilan = fields.Nested(lambda: TAnimationsBilansSchema)
     sum_participants = fields.Integer(dump_only=True)
     sum_participants_liste_attente  = fields.Integer(dump_only=True)
+    clean_nb_participants  = fields.Integer(dump_only=True)
     massif = fields.Str(dump_only=True)

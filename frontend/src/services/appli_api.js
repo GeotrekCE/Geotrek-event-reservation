@@ -33,11 +33,17 @@ const postLogin = (data) => postApiData(config.URL_APPLICATION, 'auth/login', da
 
 const postOneBilan = (data) => postApiData(config.URL_APPLICATION, 'bilans', data);
 
+const getGlobalStats = (data) => getApiData(config.URL_APPLICATION, 'stats/global', data);
+
+const getGraphStats = (url, data) => getApiData(config.URL_APPLICATION, url, data);
+
 export {
   postLogin,
   getEvents,
   getOneEvent,
   deleteOneReservation,
   postOneReservation,
-  postOneBilan
+  postOneBilan,
+  getGlobalStats,
+  getGraphStats
 };

@@ -1,5 +1,6 @@
 import datetime
 import json
+import re
 from sqlalchemy import func, or_
 from sqlalchemy.orm import aliased
 
@@ -100,6 +101,13 @@ class GTEvents(db.Model):
         return sum(r.sum_participants_liste_attente for r in self.reservations)
 
     @hybrid_property
+    def clean_nb_participants(self):
+        re_res = re.search('\d+', self.participant_number)
+        if re_res:
+            return int(re_res.group(0))
+        return 0
+
+    @hybrid_property
     def massif(self):
         return db.session.query(func.animations.get_secteur_name(self.id)).first()[0]
 
@@ -169,3 +177,4 @@ class TAnimationsBilans(db.Model):
     meta_create_date = db.Column(db.DateTime)
     meta_update_date = db.Column(db.DateTime)
     id_event = db.Column(db.Integer, db.ForeignKey('public.tourism_touristicevent.id'))
+
