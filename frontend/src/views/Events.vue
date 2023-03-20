@@ -22,7 +22,7 @@
       </template>
       <template v-slot:item.remplissage="{ item }">
         <reservation-progress :reservation-nb="item.sum_participants"
-          :participant-nb="item.participant_number"
+          :participant-nb="item.capacity"
           :attente-nb="item.sum_participants_liste_attente">
         </reservation-progress>
       </template>

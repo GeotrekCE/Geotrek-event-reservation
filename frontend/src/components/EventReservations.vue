@@ -5,7 +5,7 @@
       <template v-slot:top>
         <v-toolbar flat>
           <reservation-progress :reservation-nb="event.sum_participants"
-            :participant-nb="event.participant_number"
+            :participant-nb="event.capacity"
             :attente-nb="event.sum_participants_liste_attente" style="width=25%">
           </reservation-progress>
           <v-divider class="mx-4" inset vertical></v-divider>
@@ -27,7 +27,7 @@
                 <span class="text-h5">{{ formTitle }} - {{ event.name }}
                 </span>
                 <reservation-progress :reservation-nb="event.sum_participants"
-                  :participant-nb="event.participant_number"
+                  :participant-nb="event.capacity"
                   :attente-nb="event.sum_participants_liste_attente">
                 </reservation-progress>
               </v-card-title>
@@ -296,7 +296,7 @@ export default {
       ) + this.event.sum_participants - nbInit;
 
       // Faux si la sum des participant est supérieur au nb de place + delta défini dans la config
-      return sumP > parseInt(this.event.participant_number, 0) + config.RESA_NB_DELTA
+      return sumP > parseInt(this.event.capacity, 0) + config.RESA_NB_DELTA
     },
   },
   watch: {

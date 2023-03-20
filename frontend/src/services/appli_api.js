@@ -9,7 +9,7 @@ const getEvents = (params) => {
         'id',
         'begin_date',
         'sum_participants',
-        'participant_number',
+        'capacity',
         'sum_participants_liste_attente',
         'type',
         'name',

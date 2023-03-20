@@ -1,4 +1,3 @@
-
 import csv
 import io
 from werkzeug.datastructures import Headers
@@ -8,7 +7,9 @@ from flask import Response
 def to_csv_resp(filename, data, columns, separator=";"):
     headers = Headers()
     headers.add("Content-Type", "text/plain")
-    headers.add("Content-Disposition", "attachment", filename="export_%s.csv" % filename)
+    headers.add(
+        "Content-Disposition", "attachment", filename="export_%s.csv" % filename
+    )
     out = generate_csv_content(columns, data, separator)
     return Response(out, headers=headers)
 
@@ -33,7 +34,7 @@ def transform_obj_to_flat_list(fields, data):
         for field in fields:
             tmp_res = res
             for i in field.split("."):
-                tmp_res = tmp_res[i] if tmp_res else ''
+                tmp_res = tmp_res[i] if tmp_res else ""
             exp_res[field] = tmp_res
         flat_data.append(exp_res)
     return flat_data

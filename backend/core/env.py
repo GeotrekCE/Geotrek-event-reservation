@@ -5,4 +5,4 @@ from flask_sqlalchemy import SQLAlchemy
 
 
 db = SQLAlchemy()
-environ['FLASK_SQLALCHEMY_DB'] = f'{__name__}.db'
+environ["FLASK_SQLALCHEMY_DB"] = f"{__name__}.db"

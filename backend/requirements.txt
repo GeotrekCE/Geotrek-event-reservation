@@ -32,4 +32,4 @@ urllib3==1.26.9
 utils-flask-sqlalchemy==0.2.6
 Werkzeug==1.0.1
 zipp==3.8.0
-pypnusershub@https://github.com/PnX-SI/UsersHub-authentification-module/archive/1.5.9.tar.gz
+# pypnusershub@https://github.com/PnX-SI/UsersHub-authentification-module/archive/1.5.9.tar.gz

@@ -39,7 +39,7 @@ export default {
         meeting_point: { label: 'Lieu de RDV' },
         meeting_time: { label: 'Heure de RDV' },
         organizer: { label: 'Organisateur' },
-        participant_number: { label: 'Nb participants' },
+        capacity: { label: 'Nb participants' },
         'practical_info.fr': { label: 'Info pratique publique' },
         'practical_info.en': { label: 'Info pratique privé' },
         speaker: { label: 'Intervenant' },

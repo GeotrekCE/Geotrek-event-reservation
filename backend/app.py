@@ -5,13 +5,13 @@ from flask_cors import CORS
 from core.routes import app_routes
 from core.env import db
 
+
 # configuration
 def create_app():
-
     # instantiate the app
     app = Flask(__name__)
 
-    app.config.from_pyfile('./config/config.py')
+    app.config.from_pyfile("./config/config.py")
 
     db.init_app(app)
 
@@ -20,7 +20,8 @@ def create_app():
 
     with app.app_context():
         from pypnusershub import routes as fnauth
-        app.register_blueprint(fnauth.routes, url_prefix='/auth')
-        app.register_blueprint(app_routes, url_prefix='/')
+
+        app.register_blueprint(fnauth.routes, url_prefix="/auth")
+        app.register_blueprint(app_routes, url_prefix="/")
 
     return app

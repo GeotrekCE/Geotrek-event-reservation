@@ -20,7 +20,7 @@ const gtApiFields = {
   meeting_point: { label: 'Lieu de RDV', main: true },
   meeting_time: { label: 'Heure de RDV', main: true },
   organizer: { label: 'Organisateur', main: false },
-  participant_number: { label: 'Nb participants', main: false },
+  capacity: { label: 'Nb participants', main: false },
   'practical_info.fr': { label: 'Info pratique publique', main: true },
   'practical_info.en': { label: 'Info pratique privé', main: true },
   speaker: { label: 'Intervenant', main: true },

@@ -6,10 +6,17 @@ from core.models import (
     GTEvents,
     TReservations,
     GTEventType,
-    TAnimationsBilans
+    TAnimationsBilans,
+    VExportBilan,
 )
 
 from pypnusershub.db.models import User
+
+
+class VExportBilanSchema(SQLAlchemyAutoSchema):
+    class Meta:
+        model = VExportBilan
+
 
 class UserSchema(SQLAlchemyAutoSchema):
     class Meta:
@@ -24,9 +31,12 @@ class TReservationsSchema(SQLAlchemyAutoSchema):
         load_instance = True
         include_fk = True
         unknown = EXCLUDE
+
     sum_participants = fields.Integer(dump_only=True)
-    sum_participants_liste_attente  = fields.Integer(dump_only=True)
-    numerisateur = fields.Nested(lambda: UserSchema(only=("identifiant", "id_role")), dump_only=True)
+    sum_participants_liste_attente = fields.Integer(dump_only=True)
+    numerisateur = fields.Nested(
+        lambda: UserSchema(only=("identifiant", "id_role")), dump_only=True
+    )
 
 
 class GTEventTypeSchema(SQLAlchemyAutoSchema):
@@ -48,10 +58,10 @@ class GTEventsSchema(SQLAlchemyAutoSchema):
         model = GTEvents
         include_relationships = True
         load_instance = True
+
     reservations = fields.Nested(lambda: TReservationsSchema, many=True)
     type = fields.Nested(lambda: GTEventTypeSchema)
     bilan = fields.Nested(lambda: TAnimationsBilansSchema)
     sum_participants = fields.Integer(dump_only=True)
-    sum_participants_liste_attente  = fields.Integer(dump_only=True)
-    clean_nb_participants  = fields.Integer(dump_only=True)
+    sum_participants_liste_attente = fields.Integer(dump_only=True)
     massif = fields.Str(dump_only=True)
