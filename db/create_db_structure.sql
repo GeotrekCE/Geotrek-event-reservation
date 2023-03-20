@@ -38,6 +38,7 @@ DROP TABLE  IF EXISTS animations.t_animations_bilans ;
 CREATE TABLE animations.t_animations_bilans (
     id_bilan serial4 NOT NULL,
     annulation BOOLEAN NOT NULL DEFAULT(FALSE),
+    categorie_annulation  varchar(1000) NULL,
     raison_annulation varchar(1000) NULL,
     nb_adultes int4 NOT NULL DEFAULT 0,
     nb_moins_6_ans int4 NOT NULL DEFAULT 0,
