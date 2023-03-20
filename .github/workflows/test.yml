@@ -89,7 +89,7 @@ jobs:
         working-directory: ./backend
       - name: Install database
         run: |
-          psql -h localhost -d geotrekdb -U dbadmin -f create_db_structure.sql
+          psql -h localhost -d geotrekdb -U geotrekuser -f create_db_structure.sql
         working-directory: ./db
         env:
           PGPASSWORD: geotrekpwd
