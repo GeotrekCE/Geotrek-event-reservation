@@ -64,7 +64,20 @@ jobs:
           wget -O- "https://packages.geotrek.fr/geotrek.gpg.key" | sudo apt-key add -
           sudo apt update
           sudo apt install debconf-utils
+          cat << EOF | sudo debconf-set-selections
+            geotrek-admin geotrek-admin/POSTGRES_PASSWORD password geotrekpwd
+            geotrek-admin geotrek-admin/SERVER_NAME string localhost
+            geotrek-admin geotrek-admin/SRID string 2154
+            geotrek-admin geotrek-admin/POSTGRES_HOST string localhost
+            geotrek-admin geotrek-admin/TIMEOUT string 300
+            geotrek-admin geotrek-admin/MANAGE_DB boolean false
+            geotrek-admin geotrek-admin/LANGUAGES string fr en
+            geotrek-admin geotrek-admin/POSTGRES_USER string geotrekuser
+            geotrek-admin geotrek-admin/POSTGRES_DB string geotrekdb
+            geotrek-admin geotrek-admin/POSTGRES_PORT string 5432
+            geotrek-admin geotrek-admin/DEFAULT_STRUCTURE string TEST
+            geotrek-admin geotrek-admin/RANDO_SERVER_NAME string *
+            geotrek-admin geotrek-admin/TIME_ZONE string Etc/GMT-1
+            geotrek-admin geotrek-admin/WORKERS string 4
+          EOF
           sudo apt-get --quiet --yes install
-        env:
-          DEBIAN_FRONTEND:noninteractive
-          DEBCONF_NONINTERACTIVE_SEEN:true
