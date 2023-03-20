@@ -1,0 +1,70 @@
+name: pytest
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        os: [ubuntu-18.04, ubuntu-20.04]
+        tests-env: ['tests', 'tests_nds']
+        include:
+          - os: ubuntu-18.04
+            python-version: 3.8  # default python version in 18.04
+          - os: ubuntu-20.04
+            python-version: 3.8  # default python version in 20.04
+
+    name: ${{ matrix.name }}
+
+    services:
+      postgres:
+        image: postgis/postgis:${{ matrix.postgres-version }}-${{ matrix.postgis-version }}
+        env:
+          POSTGRES_DB: geotrekdb
+          POSTGRES_PASSWORD: geotrekpwd
+          POSTGRES_USER: geotrekuser
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - name: Add postgis_raster database extension
+        if: ${{ matrix.postgis-version >= 3 }}
+        run: |
+          psql -h localhost -U geotrekuser -d geotrekdb -tc 'CREATE EXTENSION "postgis_raster";'
+        env:
+          PGPASSWORD: geotrekpwd
+      - name: Add database extensions
+        run: |
+          psql -h localhost -U geotrekuser -d geotrekdb -tc 'CREATE EXTENSION "hstore";'
+          psql -h localhost -U geotrekuser -d geotrekdb -tc 'CREATE EXTENSION "uuid-ossp";'
+          psql -h localhost -U geotrekuser -d geotrekdb -tc 'CREATE EXTENSION "pg_trgm";'
+          psql -h localhost -U geotrekuser -d geotrekdb -tc 'CREATE EXTENSION "unaccent";'
+        env:
+          PGPASSWORD: geotrekpwd
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+      - name: Install Geotrek
+        run: |
+          echo "deb [arch=amd64] https://packages.geotrek.fr/ubuntu $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/geotrek.list
+          wget -O- "https://packages.geotrek.fr/geotrek.gpg.key" | sudo apt-key add -
+          sudo apt update
+          sudo apt install debconf-utils
+          sudo apt-get --quiet --yes install
+        env:
+          DEBIAN_FRONTEND:noninteractive
+          DEBCONF_NONINTERACTIVE_SEEN:true
