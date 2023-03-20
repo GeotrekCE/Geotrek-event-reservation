@@ -10,6 +10,9 @@ on:
       - main
       - develop
 
+env:
+  DEBIAN_FRONTEND: noninteractive
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -28,7 +31,7 @@ jobs:
 
     services:
       postgres:
-        image: postgis/postgis:${{ matrix.postgres-version }}-${{ matrix.postgis-version }}
+        image: postgis/postgis:10-2.5
         env:
           POSTGRES_DB: geotrekdb
           POSTGRES_PASSWORD: geotrekpwd
