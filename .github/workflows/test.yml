@@ -82,3 +82,15 @@ jobs:
             geotrek-admin geotrek-admin/WORKERS string 4
           EOF
           sudo apt-get --quiet --yes install
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+        working-directory: ./backend
+      - name: Install database
+        run: |
+          psql -h localhost -d geotrekdb -U dbadmin -f create_db_structure.sql
+        working-directory: ./db
+        env:
+          PGPASSWORD: geotrekpwd
+
