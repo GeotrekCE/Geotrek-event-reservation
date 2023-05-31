@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import store from '@/store';
+// import store from '@/store';
 import EventDetail from '../views/EventDetail.vue';
 import Login from '../views/Login.vue';
 import Events from '../views/Events.vue';
@@ -18,23 +18,23 @@ const routes = [
     path: '/',
     name: 'Events',
     component: Events,
-    meta: { requiresAuth: true },
+    // meta: { requiresAuth: true },
   },
   {
     path: '/event/:id',
     name: 'event',
     component: EventDetail,
-    meta: { requiresAuth: true },
+    // meta: { requiresAuth: true },
   }, {
     path: '/infos',
     name: 'informations',
     component: Informations,
-    meta: { requiresAuth: true },
+    // meta: { requiresAuth: true },
   }, {
     path: '/stats',
     name: 'stats',
     component: BilanStats,
-    meta: { requiresAuth: true },
+    // meta: { requiresAuth: true },
   }
 ];
 
@@ -44,21 +44,21 @@ const router = new VueRouter({
   routes,
 });
 
-router.beforeEach((to, from, next) => {
-  // instead of having to check every route record with
-  // to.matched.some(record => record.meta.requiresAuth)
-  if (to.path !== '/login') {
-    store.commit('redirectOnLogin', to.path)
-  }
-  if ((to.name !== 'Login') && !store.getters.isAuth) {
-    // this route requires auth, check if logged in
-    // if not, redirect to login page.
-    next({
-      path: 'login',
-      replace: true,
-    });
-  }
-  next();
-})
+// router.beforeEach((to, from, next) => {
+//   // instead of having to check every route record with
+//   // to.matched.some(record => record.meta.requiresAuth)
+//   if (to.path !== '/login') {
+//     store.commit('redirectOnLogin', to.path)
+//   }
+//   if ((to.name !== 'Login') && !store.getters.isAuth) {
+//     // this route requires auth, check if logged in
+//     // if not, redirect to login page.
+//     next({
+//       path: 'login',
+//       replace: true,
+//     });
+//   }
+//   next();
+// })
 
 export default router;
