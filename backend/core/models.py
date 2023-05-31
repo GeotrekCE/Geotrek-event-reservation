@@ -126,9 +126,10 @@ class TReservations(db.Model):
     nb_9_12_ans = db.Column(db.Integer, default=0)
     nb_plus_12_ans = db.Column(db.Integer, default=0)
     num_departement = db.Column(db.Unicode)
-    id_numerisateur = db.Column(
-        db.Integer, db.ForeignKey("utilisateurs.t_roles.id_role")
-    )
+    # id_numerisateur = db.Column(
+    #     db.Integer, db.ForeignKey("utilisateurs.t_roles.id_role")
+    # )
+    id_numerisateur = db.Column(db.Integer)
     commentaire_numerisateur = db.Column(db.Unicode)
     liste_attente = db.Column(db.Boolean)
     meta_create_date = db.Column(db.DateTime)
