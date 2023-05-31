@@ -141,7 +141,7 @@ SELECT
     r.nb_total as resa_nb_total,
     r.nb_total_attente as resa_nb_total_attente,
     COALESCE(b.annulation, FALSE) AS annulation,
-    b.categorie_annulation,
+    -- b.categorie_annulation,  -- mdu: n'existe pas dans la table t_animations_bilan
     b.raison_annulation,
     b.nb_adultes as bilan_nb_adultes,
     b.nb_moins_6_ans as bilan_nb_moins_6_ans,

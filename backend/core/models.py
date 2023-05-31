@@ -11,7 +11,7 @@ from .env import db
 
 from flask_sqlalchemy import BaseQuery
 
-from pypnusershub.db.models import User
+# from pypnusershub.db.models import User
 
 
 class GTEventsQuery(BaseQuery):
@@ -135,7 +135,7 @@ class TReservations(db.Model):
     meta_update_date = db.Column(db.DateTime)
     id_event = db.Column(db.Integer, db.ForeignKey("public.tourism_touristicevent.id"))
 
-    numerisateur = db.relationship("User", lazy="joined", uselist=False)
+    # numerisateur = db.relationship("User", lazy="joined", uselist=False)
 
     @hybrid_property
     def sum_participants(self):
@@ -161,7 +161,7 @@ class TReservations(db.Model):
             )
         return 0
 
-    User
+    # User
 
 
 class TAnimationsBilans(db.Model):

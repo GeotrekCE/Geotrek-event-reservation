@@ -10,7 +10,7 @@ from core.models import (
     VExportBilan,
 )
 
-from pypnusershub.db.models import User
+# from pypnusershub.db.models import User
 
 
 class VExportBilanSchema(SQLAlchemyAutoSchema):
@@ -18,10 +18,10 @@ class VExportBilanSchema(SQLAlchemyAutoSchema):
         model = VExportBilan
 
 
-class UserSchema(SQLAlchemyAutoSchema):
-    class Meta:
-        model = User
-        load_instance = True
+# class UserSchema(SQLAlchemyAutoSchema):
+#     class Meta:
+#         model = User
+#         load_instance = True
 
 
 class TReservationsSchema(SQLAlchemyAutoSchema):
@@ -34,9 +34,9 @@ class TReservationsSchema(SQLAlchemyAutoSchema):
 
     sum_participants = fields.Integer(dump_only=True)
     sum_participants_liste_attente = fields.Integer(dump_only=True)
-    numerisateur = fields.Nested(
-        lambda: UserSchema(only=("identifiant", "id_role")), dump_only=True
-    )
+    # numerisateur = fields.Nested(
+    #     lambda: UserSchema(only=("identifiant", "id_role")), dump_only=True
+    # )
 
 
 class GTEventTypeSchema(SQLAlchemyAutoSchema):
