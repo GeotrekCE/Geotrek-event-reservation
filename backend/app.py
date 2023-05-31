@@ -19,9 +19,9 @@ def create_app():
     cors = CORS(app, resources={r"*": {"origins": "*"}}, supports_credentials=True)
 
     with app.app_context():
-        from pypnusershub import routes as fnauth
+        # from pypnusershub import routes as fnauth
 
-        app.register_blueprint(fnauth.routes, url_prefix="/auth")
+        # app.register_blueprint(fnauth.routes, url_prefix="/auth")
         app.register_blueprint(app_routes, url_prefix="/")
 
     return app
