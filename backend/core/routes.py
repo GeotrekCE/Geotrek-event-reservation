@@ -114,7 +114,7 @@ def export_reservation(id):
         "nb_9_12_ans",
         "nb_plus_12_ans",
         "num_departement",
-        "numerisateur.identifiant",
+        # "numerisateur.identifiant",
         "id_numerisateur",
         "commentaire_numerisateur",
         "commentaire",
