@@ -8,6 +8,7 @@ CREATE TABLE animations.t_reservations (
     id_reservation serial4 NOT NULL,
     nom varchar(250) NULL,
     prenom varchar(250) NULL,
+    email varchar(250) NULL,
     tel varchar(100) NULL,
     commentaire varchar(1000) NULL,
     nb_adultes int4 NOT NULL DEFAULT 0,
@@ -16,12 +17,12 @@ CREATE TABLE animations.t_reservations (
     nb_9_12_ans int4 NOT NULL DEFAULT 0,
     nb_plus_12_ans int4 NOT NULL DEFAULT 0,
     num_departement varchar(250) NULL,
-    id_event int4 ,
-    id_numerisateur int4 NULL,
-    commentaire_numerisateur varchar(250) NULL,
+    id_event int4,
     liste_attente boolean default(null),
     meta_create_date timestamp without time zone DEFAULT now(),
     meta_update_date timestamp without time zone,
+    token varchar(50),
+    confirmed boolean default(false),
     CONSTRAINT t_reservations_pkey PRIMARY KEY (id_reservation),
     CONSTRAINT fk_id_event FOREIGN KEY(id_event)
       REFERENCES tourism_touristicevent(id)
@@ -46,6 +47,17 @@ CREATE TABLE animations.t_animations_bilans (
     CONSTRAINT t_animations_bilans_pkey PRIMARY KEY (id_bilan),
     CONSTRAINT fk_id_event FOREIGN KEY(id_event)
       REFERENCES tourism_touristicevent(id)
+);
+
+DROP TABLE  IF EXISTS animations.t_tokens;
+
+CREATE TABLE animations.t_tokens (
+    id serial4 NOT NULL,
+    email varchar(250) NOT NULL,
+    token varchar(50) NOT NULL,
+    used boolean default(false),
+    created_at timestamp without time zone DEFAULT now()
+    CONSTRAINT t_tokens_pkey PRIMARY KEY (id)
 );
 
 CREATE OR REPLACE FUNCTION animations.get_secteur_name(id_event integer)

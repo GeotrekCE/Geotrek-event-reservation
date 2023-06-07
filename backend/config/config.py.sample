@@ -12,3 +12,7 @@ COOKIE_AUTORENEW = True
 TRAP_ALL_EXCEPTIONS = False
 
 SECRET_KEY='the random string'
+
+SERVER_NAME = "localhost:5000"
+FRONTEND_PATHNAME = "/réservations"
+BACKEND_PATHNAME = "/réservations/api"

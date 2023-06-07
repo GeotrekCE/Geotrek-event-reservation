@@ -1,5 +1,4 @@
-from flask import Flask, jsonify, request, current_app
-from flask_sqlalchemy import SQLAlchemy
+from flask import Flask
 from flask_cors import CORS
 from flask_mail import Mail
 
@@ -7,8 +6,7 @@ from core.routes import app_routes
 from core.env import db
 
 
-app = Flask(__name__)
-mail = Mail(app)
+mail = None
 
 
 # configuration
@@ -24,11 +22,10 @@ def create_app():
     cors = CORS(app, resources={r"*": {"origins": "*"}}, supports_credentials=True)
 
     with app.app_context():
-        # from pypnusershub import routes as fnauth
 
-        # app.register_blueprint(fnauth.routes, url_prefix="/auth")
         app.register_blueprint(app_routes, url_prefix="/")
 
+    global mail
     mail = Mail(app)
 
     return app

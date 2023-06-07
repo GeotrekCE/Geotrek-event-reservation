@@ -1,0 +1,11 @@
+email-validator
+Flask
+Flask-Cors
+Flask-SQLAlchemy
+Flask-Mail
+gunicorn
+marshmallow
+marshmallow-sqlalchemy
+psycopg2-binary
+SQLAlchemy
+Werkzeug

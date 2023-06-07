@@ -1,0 +1,1 @@
+- protect public endpoints which can write with a rate limiter!

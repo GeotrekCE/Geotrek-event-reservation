@@ -1,25 +1,40 @@
-import json
-
-from flask import Flask, jsonify, request, current_app, Blueprint
+from flask import jsonify, request, Blueprint, render_template, session
 from flask_mail import Message
-from core.models import TAnimationsBilans, db, GTEvents, TReservations, VExportBilan, TUsers
+
+from core.models import db, GTEvents, TReservations, VExportBilan, TTokens
+from core.repository import query_stats_bilan, query_stats_animations_per_month
 from core.schemas import (
     GTEventsSchema,
     TReservationsSchema,
-    TUsersSchema,
     TAnimationsBilansSchema,
     VExportBilanSchema,
 )
 from core.utils import to_csv_resp, transform_obj_to_flat_list
-from core.repository import query_stats_bilan, query_stats_animations_per_month
-# from pypnusershub import routes as fnauth
 
 
 app_routes = Blueprint("app_routes", __name__)
 
 
+def send_email(subject, recipients, html):
+    msg = Message(subject=subject, recipients=recipients, html=html)
+    print("email sent", msg)
+    from app import mail
+    mail.send(msg)
+
+
+def generate_token():
+    return "12345abcde"
+
+
+def get_confirmation_link(reservation):
+    from flask import current_app
+    protocol = "http://" if current_app.config["DEBUG"] else "https://"
+    hostname = current_app.config["SERVER_NAME"]
+    front_path = current_app.config["FRONTEND_PATHNAME"]
+    return f"{protocol}{hostname}{front_path}?token={reservation.token}"
+
+
 @app_routes.route("/events")
-#@fnauth.check_auth(1)
 def get_events():
     page = request.args.get("page", 1, type=int)
     limit = request.args.get("limit", 10, type=int)
@@ -75,7 +90,6 @@ def get_events():
 
 
 @app_routes.route("/events/<id>")
-#@fnauth.check_auth(1)
 def get_one_event(id):
     events = GTEvents.query.get_or_404(id)
     results = GTEventsSchema().dump(events)
@@ -83,48 +97,84 @@ def get_one_event(id):
 
 
 @app_routes.route("/reservations", methods=["POST"])
-#@fnauth.check_auth(1)
 def post_reservations():
-    # vérifier si le user est connecté, cookie
     post_data = request.get_json()
 
     reservation = TReservationsSchema().load(post_data, session=db.session)
+    reservation.token = generate_token()
 
     db.session.add(reservation)
     db.session.commit()
-    db.session.close()
-    return jsonify({"msg": "Données sauvegardées"})
+    # db.session.close()
+
+    send_email(
+        subject="Lien pour confirmer votre demande de réservation",
+        recipients=[reservation.email],
+        html=render_template(
+            "please_confirm_resa_mail.html",
+            confirmation_link=get_confirmation_link(reservation),
+            event=reservation.event.name
+        )
+    )
+
+    return jsonify({"msg": "Demande de réservation enregistrée"})
+
+
+@app_routes.route("/reservations/confirm", methods=["POST"])
+def confirm_reservation():
+    """Expects the reservation's token in the request body as JSON: {"resa_token": "12345abcde"}, if the corresponding
+    reservation exists it is confirmed and a confirmation mail is sent."""
+    token = request.get_json()["resa_token"]
+    resa = db.first_or_404(db.select(TReservations).filter_by(token=token), description="Reservation not found")
+    if resa.confirmed:
+        return "Reservation already confirmed", 400
+    resa.confirmed = True
+    db.session.add(resa)
+    db.session.commit()
+
+    send_email(
+        subject="Votre réservation est confirmée",
+        recipients=[resa.email],
+        html=render_template(
+            "resa_confirmed_mail.html",
+            nb_places=resa.nb_participants,
+            event="la super fête"
+        )
+    )
+
+    return "", 204
+
+
+@app_routes.route("/send-login-email", methods=["POST"])
+def send_login_email():
+    # récupérer le email + next
+    email = request.get_json()["email"]
+    # valider l'email
+
+    # créer un token avec cet email
+    # token = TTokens(email=email, generated_token)
+    # token.save()
+
+    send_email(
+        "Lien de connexion sur site de réservation du PNG",
+        recipients=[email],
+        html=render_template(
+            "login_mail.html",
+            confirmation_link=get_login_link(token)
+        )
+    )
+
+    return "lien de login envoyé", 204
 
 
 @app_routes.route("/login", methods=["POST"])
 def login():
-    # récupérer le email + next
-    try:
-        email = request.json["email"]
-        next = request.json["next"]
-    except KeyError:
-        return "", 400
-
-    post_data = request.get_json()
-    post_data.pop("next")
-
-    # valider email
-
-    user = TUsers(email=email)
-    user.token = "12345"
-
-    confirmation_link = "frontend host"
-
-    msg = Message(f"Voici le lien: {confirmation_link}", recipients=[user.email])
-    print("msg sent", msg)
-
-    return
-
-
-@app_routes.route("/send-connection-email", methods=["POST"])
-def send_connection_email():
-
-    pass
+    login_token = request.json["login_token"]
+    # fetch the corresponding token record in DB, if not found or expired -> 404
+    # token = db.first_or_404(db.select(TTokens).filter_by(token=login_token).where(not expired), description="invalid token")
+    # Set a session cookie
+    #session['user'] = token.email
+    return "login successful", 200
 
 
 @app_routes.route("/export_reservation/<id>", methods=["GET"])

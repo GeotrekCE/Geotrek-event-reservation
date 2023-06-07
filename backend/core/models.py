@@ -117,8 +117,9 @@ class TReservations(db.Model):
     __table_args__ = {"schema": "animations"}
     id_reservation = db.Column(db.Integer, primary_key=True)
     nom = db.Column(db.Unicode, nullable=False)
-    prenom = db.Column(db.Unicode)
-    tel = db.Column(db.Unicode)
+    prenom = db.Column(db.Unicode, nullable=False)
+    tel = db.Column(db.Unicode, nullable=False)
+    email = db.Column(db.Unicode, nullable=False)
     commentaire = db.Column(db.Unicode)
     nb_adultes = db.Column(db.Integer, default=0)
     nb_moins_6_ans = db.Column(db.Integer, default=0)
@@ -126,17 +127,22 @@ class TReservations(db.Model):
     nb_9_12_ans = db.Column(db.Integer, default=0)
     nb_plus_12_ans = db.Column(db.Integer, default=0)
     num_departement = db.Column(db.Unicode)
-    # id_numerisateur = db.Column(
-    #     db.Integer, db.ForeignKey("utilisateurs.t_roles.id_role")
-    # )
-    # id_numerisateur = db.Column(db.Integer)
-    # commentaire_numerisateur = db.Column(db.Unicode)
     liste_attente = db.Column(db.Boolean)
     meta_create_date = db.Column(db.DateTime)
     meta_update_date = db.Column(db.DateTime)
+    token = db.Column(db.Unicode)
+    confirmed = db.Column(db.Boolean)
     id_event = db.Column(db.Integer, db.ForeignKey("public.tourism_touristicevent.id"))
 
-    # numerisateur = db.relationship("User", lazy="joined", uselist=False)
+    @property
+    def nb_participants(self):
+        return (
+                self.nb_adultes
+                + self.nb_moins_6_ans
+                + self.nb_6_8_ans
+                + self.nb_9_12_ans
+                + self.nb_plus_12_ans
+        )
 
     @hybrid_property
     def sum_participants(self):
@@ -219,13 +225,11 @@ class VExportBilan(db.Model):
     published = db.Column(db.Boolean)
 
 
-class TUsers(db.Model):
-    __tablename__ = "t_users"
+class TTokens(db.Model):
+    __tablename__ = "t_tokens"
     __table_args__ = {"schema": "animations"}
-    id_user = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.Unicode, nullable=False)
-    confirmed = db.Column(db.Boolean)
     token = db.Column(db.Unicode, nullable=False)
-    # is admin
-    meta_create_date = db.Column(db.DateTime)
-    meta_update_date = db.Column(db.DateTime)
+    used = db.Column(db.Boolean)
+    created_at = db.Column(db.DateTime)
