@@ -5,23 +5,16 @@ from marshmallow import fields, EXCLUDE
 from core.models import (
     GTEvents,
     TReservations,
+    TUsers,
     GTEventType,
     TAnimationsBilans,
     VExportBilan,
 )
 
-# from pypnusershub.db.models import User
-
 
 class VExportBilanSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = VExportBilan
-
-
-# class UserSchema(SQLAlchemyAutoSchema):
-#     class Meta:
-#         model = User
-#         load_instance = True
 
 
 class TReservationsSchema(SQLAlchemyAutoSchema):
@@ -37,6 +30,12 @@ class TReservationsSchema(SQLAlchemyAutoSchema):
     # numerisateur = fields.Nested(
     #     lambda: UserSchema(only=("identifiant", "id_role")), dump_only=True
     # )
+
+
+class TUsersSchema(SQLAlchemyAutoSchema):
+    class Meta:
+        model = TUsers
+        load_instance = True
 
 
 class GTEventTypeSchema(SQLAlchemyAutoSchema):
@@ -59,7 +58,7 @@ class GTEventsSchema(SQLAlchemyAutoSchema):
         include_relationships = True
         load_instance = True
 
-    reservations = fields.Nested(lambda: TReservationsSchema, many=True)
+    #reservations = fields.Nested(lambda: TReservationsSchema, many=True)
     type = fields.Nested(lambda: GTEventTypeSchema)
     bilan = fields.Nested(lambda: TAnimationsBilansSchema)
     sum_participants = fields.Integer(dump_only=True)

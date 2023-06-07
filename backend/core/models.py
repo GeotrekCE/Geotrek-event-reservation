@@ -129,8 +129,8 @@ class TReservations(db.Model):
     # id_numerisateur = db.Column(
     #     db.Integer, db.ForeignKey("utilisateurs.t_roles.id_role")
     # )
-    id_numerisateur = db.Column(db.Integer)
-    commentaire_numerisateur = db.Column(db.Unicode)
+    # id_numerisateur = db.Column(db.Integer)
+    # commentaire_numerisateur = db.Column(db.Unicode)
     liste_attente = db.Column(db.Boolean)
     meta_create_date = db.Column(db.DateTime)
     meta_update_date = db.Column(db.DateTime)
@@ -217,3 +217,15 @@ class VExportBilan(db.Model):
     resa_nb_9_12_ans_attente = db.Column(db.Integer)
     resa_nb_plus_12_ans_attente = db.Column(db.Integer)
     published = db.Column(db.Boolean)
+
+
+class TUsers(db.Model):
+    __tablename__ = "t_users"
+    __table_args__ = {"schema": "animations"}
+    id_user = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.Unicode, nullable=False)
+    confirmed = db.Column(db.Boolean)
+    token = db.Column(db.Unicode, nullable=False)
+    # is admin
+    meta_create_date = db.Column(db.DateTime)
+    meta_update_date = db.Column(db.DateTime)

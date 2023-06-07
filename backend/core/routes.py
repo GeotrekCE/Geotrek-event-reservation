@@ -1,10 +1,12 @@
 import json
 
 from flask import Flask, jsonify, request, current_app, Blueprint
-from core.models import TAnimationsBilans, db, GTEvents, TReservations, VExportBilan
+from flask_mail import Message
+from core.models import TAnimationsBilans, db, GTEvents, TReservations, VExportBilan, TUsers
 from core.schemas import (
     GTEventsSchema,
     TReservationsSchema,
+    TUsersSchema,
     TAnimationsBilansSchema,
     VExportBilanSchema,
 )
@@ -83,6 +85,7 @@ def get_one_event(id):
 @app_routes.route("/reservations", methods=["POST"])
 #@fnauth.check_auth(1)
 def post_reservations():
+    # vérifier si le user est connecté, cookie
     post_data = request.get_json()
 
     reservation = TReservationsSchema().load(post_data, session=db.session)
@@ -91,6 +94,37 @@ def post_reservations():
     db.session.commit()
     db.session.close()
     return jsonify({"msg": "Données sauvegardées"})
+
+
+@app_routes.route("/login", methods=["POST"])
+def login():
+    # récupérer le email + next
+    try:
+        email = request.json["email"]
+        next = request.json["next"]
+    except KeyError:
+        return "", 400
+
+    post_data = request.get_json()
+    post_data.pop("next")
+
+    # valider email
+
+    user = TUsers(email=email)
+    user.token = "12345"
+
+    confirmation_link = "frontend host"
+
+    msg = Message(f"Voici le lien: {confirmation_link}", recipients=[user.email])
+    print("msg sent", msg)
+
+    return
+
+
+@app_routes.route("/send-connection-email", methods=["POST"])
+def send_connection_email():
+
+    pass
 
 
 @app_routes.route("/export_reservation/<id>", methods=["GET"])

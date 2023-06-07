@@ -1,9 +1,14 @@
 from flask import Flask, jsonify, request, current_app
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
+from flask_mail import Mail
 
 from core.routes import app_routes
 from core.env import db
+
+
+app = Flask(__name__)
+mail = Mail(app)
 
 
 # configuration
@@ -23,5 +28,7 @@ def create_app():
 
         # app.register_blueprint(fnauth.routes, url_prefix="/auth")
         app.register_blueprint(app_routes, url_prefix="/")
+
+    mail = Mail(app)
 
     return app
