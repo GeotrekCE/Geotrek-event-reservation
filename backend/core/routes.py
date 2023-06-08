@@ -53,7 +53,7 @@ def generate_token():
 def get_confirmation_link(reservation):
     from flask import current_app
     protocol = "http://" if current_app.config["DEBUG"] else "https://"
-    hostname = current_app.config["SERVER_NAME"]
+    hostname = current_app.config["PUBLIC_SERVER_NAME"]
     front_path = current_app.config["FRONTEND_CONFIRMED_PATHNAME"]
     return f"{protocol}{hostname}{front_path}?token={reservation.token}"
 
@@ -61,7 +61,7 @@ def get_confirmation_link(reservation):
 def get_login_link(token):
     from flask import current_app
     protocol = "http://" if current_app.config["DEBUG"] else "https://"
-    hostname = current_app.config["SERVER_NAME"]
+    hostname = current_app.config["PUBLIC_SERVER_NAME"]
     front_path = current_app.config["FRONTEND_LOGIN_PATHNAME"]
     return f"{protocol}{hostname}{front_path}?token={token}"
 
