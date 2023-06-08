@@ -2,6 +2,7 @@ import email_validator
 from flask import Flask
 from flask_cors import CORS
 from flask_mail import Mail
+from marshmallow.exceptions import ValidationError
 
 from core.env import db
 from core.routes import app_routes
@@ -28,5 +29,9 @@ def create_app():
 
     global mail
     mail = Mail(app)
+
+    @app.errorhandler(ValidationError)
+    def handle_bad_request(e):
+        return str(e), 400
 
     return app
