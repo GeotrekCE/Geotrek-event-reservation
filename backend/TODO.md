@@ -1,1 +1,4 @@
 - protect public endpoints which can write with a rate limiter!
+- handle tokens lifespan and expiration
+- protect relevant routes with login required
+- handle login as admin
