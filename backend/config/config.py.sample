@@ -1,18 +1,44 @@
-# Database settings
+# --- Application settings ---
 
-SQLALCHEMY_DATABASE_URI = "postgresql://monuser:monpass@localhost:5432/madb"
+# The SERVER_NAME of the application, default None, for instance: 'www.png-resa.fr' or 'localhost:5000'.
+SERVER_NAME =
+
+# The path for the confirmed reservation page on the frontend, for instance: '/resa/confirmed'.
+FRONTEND_CONFIRMED_PATHNAME =
+
+# The path for the successfull login page on the frontend, for instance: '/resa/connected'.
+FRONTEND_LOGIN_PATHNAME =
+
+
+# --- Database settings ---
+
+# The connection string to the database, for instance: "postgresql://monuser:monpass@localhost:5432/madb"
+SQLALCHEMY_DATABASE_URI =
+
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
-URL_APPLICATION = "http://localhost:5000"
+# --- Flask settings ---
 
+URL_APPLICATION = "http://localhost:5000"
 PASS_METHOD = 'hash'
 COOKIE_EXPIRATION = 43200
 COOKIE_AUTORENEW = True
 TRAP_ALL_EXCEPTIONS = False
-
 SECRET_KEY='the random string'
 
-SERVER_NAME = "localhost:5000"
-FRONTEND_PATHNAME = "/réservations"
-BACKEND_PATHNAME = "/réservations/api"
+
+# --- Flask Mail settings ---
+
+# MAIL_SERVER: default ‘localhost’
+# MAIL_PORT: default 25
+# MAIL_USE_TLS: default False
+# MAIL_USE_SSL: default False
+# MAIL_DEBUG: default app.debug
+# MAIL_USERNAME: default None
+# MAIL_PASSWORD: default None
+# MAIL_DEFAULT_SENDER: default None
+# MAIL_DEFAULT_SENDER: default None
+# MAIL_MAX_EMAILS: default None
+# MAIL_SUPPRESS_SEND: default app.testing
+# MAIL_ASCII_ATTACHMENTS: default False

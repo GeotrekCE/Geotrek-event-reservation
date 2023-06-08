@@ -1,3 +1,4 @@
+import email_validator
 from flask import Flask
 from flask_cors import CORS
 from flask_mail import Mail
@@ -15,6 +16,8 @@ def create_app():
     app = Flask(__name__)
 
     app.config.from_pyfile("./config/config.py")
+    if app.config["DEBUG"] or app.config["TESTING"]:
+        email_validator.TEST_ENVIRONMENT = True
 
     db.init_app(app)
 
