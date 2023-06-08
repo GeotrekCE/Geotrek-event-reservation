@@ -52,7 +52,7 @@ packaging==23.1
     # via
     #   marshmallow
     #   marshmallow-sqlalchemy
-psycopg2-binary==2.9.6
+psycopg2==2.9.6
     # via -r requirements.in
 six==1.16.0
     # via flask-cors
