@@ -33,7 +33,7 @@ def get_confirmation_link(reservation):
     from flask import current_app
     protocol = "http://" if current_app.config["DEBUG"] else "https://"
     hostname = current_app.config["SERVER_NAME"]
-    front_path = current_app.config["FRONTEND_PATHNAME"]
+    front_path = current_app.config["FRONTEND_CONFIRMED_PATHNAME"]
     return f"{protocol}{hostname}{front_path}?token={reservation.token}"
 
 
@@ -172,14 +172,14 @@ def send_login_email():
     token = TTokens(email=clean_email, token=generate_token())
 
     db.session.add(token)
-    db.session.save()
+    db.session.commit()
 
     send_email(
         "Lien de connexion sur site de réservation du PNG",
         recipients=[email],
         html=render_template(
             "login_mail.html",
-            confirmation_link=get_login_link(token)
+            login_link=get_login_link(token.token)
         )
     )
 

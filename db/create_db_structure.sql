@@ -56,7 +56,7 @@ CREATE TABLE animations.t_tokens (
     email varchar(250) NOT NULL,
     token varchar(50) NOT NULL,
     used boolean default(false),
-    created_at timestamp without time zone DEFAULT now()
+    created_at timestamp without time zone DEFAULT now(),
     CONSTRAINT t_tokens_pkey PRIMARY KEY (id)
 );
 
