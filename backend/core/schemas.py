@@ -1,7 +1,6 @@
 from email_validator import validate_email, EmailNotValidError, EmailSyntaxError
-from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
-
 from marshmallow import fields, EXCLUDE, ValidationError, post_load
+from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 
 from core.models import (
     GTEvents,

@@ -1,17 +1,12 @@
 import datetime
 import json
-import re
-from sqlalchemy import func, or_
-from sqlalchemy.orm import aliased
-
-from sqlalchemy.ext.hybrid import hybrid_property
-
-from .env import db
-
 
 from flask_sqlalchemy import BaseQuery
+from sqlalchemy import func, or_
+from sqlalchemy.ext.hybrid import hybrid_property
+from sqlalchemy.orm import aliased
 
-# from pypnusershub.db.models import User
+from .env import db
 
 
 class GTEventsQuery(BaseQuery):

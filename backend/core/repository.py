@@ -1,6 +1,8 @@
 from datetime import datetime
-from sqlalchemy import extract, func
-from core.models import db, GTEvents, TAnimationsBilans, TReservations
+
+from sqlalchemy import func
+
+from core.models import db, GTEvents, TAnimationsBilans
 
 
 def query_stats_animations_per_month(params):
@@ -49,24 +51,24 @@ def query_stats_bilan(params):
     sum_clean_nb_participants = sum([d.capacity for d in events])
     # Taux de remplissage de toutes les animations
     taux_remplissage = (
-        sum([d.sum_participants / d.capacity for d in events if d.capacity > 0])
-        / nb_events
+            sum([d.sum_participants / d.capacity for d in events if d.capacity > 0])
+            / nb_events
     )
 
     # Taux de remplissage des animations passées
     taux_remplissage_passe = (
-        sum(
-            [
-                d.sum_participants / d.capacity
-                for d in events
-                if (
-                    (d.end_date or datetime.now().date()) < datetime.now().date()
-                    and d.capacity > 0
+            sum(
+                [
+                    d.sum_participants / d.capacity
+                    for d in events
+                    if (
+                        (d.end_date or datetime.now().date()) < datetime.now().date()
+                        and d.capacity > 0
                     # and not getattr(d, "bilan", {}).annulation
                 )
-            ]
-        )
-        / nb_events
+                ]
+            )
+            / nb_events
     )
 
     query = (

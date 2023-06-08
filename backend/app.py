@@ -3,9 +3,8 @@ from flask import Flask
 from flask_cors import CORS
 from flask_mail import Mail
 
-from core.routes import app_routes
 from core.env import db
-
+from core.routes import app_routes
 
 mail = None
 
@@ -25,7 +24,6 @@ def create_app():
     cors = CORS(app, resources={r"*": {"origins": "*"}}, supports_credentials=True)
 
     with app.app_context():
-
         app.register_blueprint(app_routes, url_prefix="/")
 
     global mail

@@ -14,7 +14,6 @@ from core.schemas import (
 )
 from core.utils import to_csv_resp, transform_obj_to_flat_list
 
-
 app_routes = Blueprint("app_routes", __name__)
 
 
@@ -194,7 +193,8 @@ def login():
         return "Expects a JSON body with a 'login_token' property", 400
 
     # TODO: handle token expiration
-    token = db.first_or_404(db.select(TTokens).filter_by(token=login_token), description="The login token is invalid or expired")
+    token = db.first_or_404(db.select(TTokens).filter_by(token=login_token),
+                            description="The login token is invalid or expired")
 
     # Set a Session Cookie in the response.
     session['user'] = token.email
@@ -203,7 +203,7 @@ def login():
 
 
 @app_routes.route("/export_reservation/<id>", methods=["GET"])
-#@fnauth.check_auth(1)
+# @fnauth.check_auth(1)
 def export_reservation(id):
     resa = TReservations.query.filter_by(id_event=id).all()
 
@@ -235,7 +235,7 @@ def export_reservation(id):
 
 
 @app_routes.route("/bilans", methods=["POST"])
-#@fnauth.check_auth(1)
+# @fnauth.check_auth(1)
 def post_bilans():
     post_data = request.get_json()
     bilan = TAnimationsBilansSchema().load(post_data, session=db.session)
@@ -247,7 +247,7 @@ def post_bilans():
 
 
 @app_routes.route("/reservations/<id_reservation>", methods=["DELETE"])
-#@fnauth.check_auth(1)
+# @fnauth.check_auth(1)
 def delete_reservations(id_reservation):
     reservation = TReservations.query.get_or_404(id_reservation)
     db.session.delete(reservation)
@@ -256,7 +256,7 @@ def delete_reservations(id_reservation):
 
 
 @app_routes.route("/stats/global", methods=["GET"])
-#@fnauth.check_auth(1)
+# @fnauth.check_auth(1)
 def get_stats_global():
     params = request.args
     data = query_stats_bilan(params)
@@ -265,7 +265,7 @@ def get_stats_global():
 
 
 @app_routes.route("/stats/charts/nb_day_before_resa", methods=["GET"])
-#@fnauth.check_auth(1)
+# @fnauth.check_auth(1)
 def get_stats_nb_day_before_resa():
     params = request.args
     data = query_stats_animations_per_month(params)
@@ -273,7 +273,7 @@ def get_stats_nb_day_before_resa():
 
 
 @app_routes.route("/export/events")
-#@fnauth.check_auth(1)
+# @fnauth.check_auth(1)
 def get_export_events():
     events = VExportBilan.query.all()
     results = VExportBilanSchema(many=True).dump(events)
