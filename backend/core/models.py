@@ -127,7 +127,7 @@ class TReservations(db.Model):
     meta_update_date = db.Column(db.DateTime)
     token = db.Column(db.Unicode)
     confirmed = db.Column(db.Boolean)
-    id_event = db.Column(db.Integer, db.ForeignKey("public.tourism_touristicevent.id"))
+    id_event = db.Column(db.Integer, db.ForeignKey("public.tourism_touristicevent.id"), nullable=False)
 
     @property
     def nb_participants(self):

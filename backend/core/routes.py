@@ -128,6 +128,31 @@ def get_one_event(id):
     return jsonify(results)
 
 
+@app_routes.route("/reservations", methods=["GET"])
+@login_required
+def get_reservations():
+    event_id_arg = request.args.get("event_id", None)
+    event_id = None
+    if event_id_arg:
+        try:
+            event_id = int(event_id_arg)
+        except TypeError:
+            return "event_id query param should be an integer", 400
+
+    email = session["user"]
+    from flask import current_app
+    is_admin = email in current_app.config["ADMIN_EMAILS"]
+
+    query = db.session.query(TReservations)
+    if event_id:
+        query.filter_by(id_event=event_id)
+    if not is_admin:
+        query.filter_by(email=email)
+    reservations = query.all()
+
+    return TReservationsSchema().dumps(reservations, many=True), 200
+
+
 @app_routes.route("/reservations", methods=["POST"])
 def post_reservations():
     post_data = request.get_json()
