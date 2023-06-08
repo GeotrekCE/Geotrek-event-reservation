@@ -9,6 +9,10 @@ FRONTEND_CONFIRMED_PATHNAME =
 # The path for the successfull login page on the frontend, for instance: '/resa/connected'.
 FRONTEND_LOGIN_PATHNAME =
 
+# A list of emails for admins, for instance: ['admin@png-resa.fr', 'teddy@png-it.fr']. This is used to give permissions,
+# not to actually send emails.
+ADMIN_EMAILS =
+
 
 # --- Database settings ---
 

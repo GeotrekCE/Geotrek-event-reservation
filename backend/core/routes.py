@@ -1,3 +1,4 @@
+from functools import wraps
 import secrets
 
 from email_validator import validate_email, EmailNotValidError, EmailSyntaxError
@@ -15,6 +16,27 @@ from core.schemas import (
 from core.utils import to_csv_resp, transform_obj_to_flat_list
 
 app_routes = Blueprint("app_routes", __name__)
+
+
+def login_required(f):
+
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        if 'user' in session:
+            return f(*args, **kwargs)
+        return "A logged-in user is required", 403
+    return wrapper
+
+
+def login_admin_required(f):
+
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        from flask import current_app
+        if 'user' in session and session['user'] in current_app.config["ADMIN_EMAILS"]:
+            return f(*args, **kwargs)
+        return "A logged-in admin is required", 403
+    return wrapper
 
 
 def send_email(subject, recipients, html):
@@ -203,7 +225,7 @@ def login():
 
 
 @app_routes.route("/export_reservation/<id>", methods=["GET"])
-# @fnauth.check_auth(1)
+@login_admin_required
 def export_reservation(id):
     resa = TReservations.query.filter_by(id_event=id).all()
 
@@ -235,7 +257,7 @@ def export_reservation(id):
 
 
 @app_routes.route("/bilans", methods=["POST"])
-# @fnauth.check_auth(1)
+@login_admin_required
 def post_bilans():
     post_data = request.get_json()
     bilan = TAnimationsBilansSchema().load(post_data, session=db.session)
@@ -247,7 +269,7 @@ def post_bilans():
 
 
 @app_routes.route("/reservations/<id_reservation>", methods=["DELETE"])
-# @fnauth.check_auth(1)
+@login_required
 def delete_reservations(id_reservation):
     reservation = TReservations.query.get_or_404(id_reservation)
     db.session.delete(reservation)
@@ -256,7 +278,7 @@ def delete_reservations(id_reservation):
 
 
 @app_routes.route("/stats/global", methods=["GET"])
-# @fnauth.check_auth(1)
+@login_admin_required
 def get_stats_global():
     params = request.args
     data = query_stats_bilan(params)
@@ -265,7 +287,7 @@ def get_stats_global():
 
 
 @app_routes.route("/stats/charts/nb_day_before_resa", methods=["GET"])
-# @fnauth.check_auth(1)
+@login_admin_required
 def get_stats_nb_day_before_resa():
     params = request.args
     data = query_stats_animations_per_month(params)
@@ -273,7 +295,7 @@ def get_stats_nb_day_before_resa():
 
 
 @app_routes.route("/export/events")
-# @fnauth.check_auth(1)
+@login_admin_required
 def get_export_events():
     events = VExportBilan.query.all()
     results = VExportBilanSchema(many=True).dump(events)
