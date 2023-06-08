@@ -1,3 +1,6 @@
+import secrets
+
+from email_validator import validate_email, EmailNotValidError, EmailSyntaxError
 from flask import jsonify, request, Blueprint, render_template, session
 from flask_mail import Message
 
@@ -23,7 +26,7 @@ def send_email(subject, recipients, html):
 
 
 def generate_token():
-    return "12345abcde"
+    return secrets.token_hex(16)
 
 
 def get_confirmation_link(reservation):
@@ -32,6 +35,14 @@ def get_confirmation_link(reservation):
     hostname = current_app.config["SERVER_NAME"]
     front_path = current_app.config["FRONTEND_PATHNAME"]
     return f"{protocol}{hostname}{front_path}?token={reservation.token}"
+
+
+def get_login_link(token):
+    from flask import current_app
+    protocol = "http://" if current_app.config["DEBUG"] else "https://"
+    hostname = current_app.config["SERVER_NAME"]
+    front_path = current_app.config["FRONTEND_LOGIN_PATHNAME"]
+    return f"{protocol}{hostname}{front_path}?token={token}"
 
 
 @app_routes.route("/events")
@@ -147,13 +158,21 @@ def confirm_reservation():
 
 @app_routes.route("/send-login-email", methods=["POST"])
 def send_login_email():
-    # récupérer le email + next
-    email = request.get_json()["email"]
-    # valider l'email
+    try:
+        email = request.get_json()["email"]
+    except KeyError:
+        return "'email' property is mandatory", 400
 
-    # créer un token avec cet email
-    # token = TTokens(email=email, generated_token)
-    # token.save()
+    try:
+        email_info = validate_email(email, check_deliverability=False)
+    except (EmailNotValidError, EmailSyntaxError) as e:
+        return f"email is not valid: {e}", 400
+    clean_email = email_info.normalized
+
+    token = TTokens(email=clean_email, token=generate_token())
+
+    db.session.add(token)
+    db.session.save()
 
     send_email(
         "Lien de connexion sur site de réservation du PNG",
@@ -169,11 +188,17 @@ def send_login_email():
 
 @app_routes.route("/login", methods=["POST"])
 def login():
-    login_token = request.json["login_token"]
-    # fetch the corresponding token record in DB, if not found or expired -> 404
-    # token = db.first_or_404(db.select(TTokens).filter_by(token=login_token).where(not expired), description="invalid token")
-    # Set a session cookie
-    #session['user'] = token.email
+    try:
+        login_token = request.json["login_token"]
+    except KeyError:
+        return "Expects a JSON body with a 'login_token' property", 400
+
+    # TODO: handle token expiration
+    token = db.first_or_404(db.select(TTokens).filter_by(token=login_token), description="The login token is invalid or expired")
+
+    # Set a Session Cookie in the response.
+    session['user'] = token.email
+
     return "login successful", 200
 
 
