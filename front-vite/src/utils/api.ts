@@ -28,7 +28,12 @@ async function callFetchApi (
     if (response.status === 500) {
       throw Error(response.statusText);
     }
-    const data = await response.json()
+    let data = { msg: '' }
+    try {
+      data = await response.json()
+    } catch {
+      // we have an error with API server, sometimes the response is not JSON
+    }
 
     if (response.status === 200) {
       if (method !== 'GET' && snackMessage) {
