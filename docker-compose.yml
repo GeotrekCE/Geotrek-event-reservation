@@ -1,0 +1,44 @@
+version: "3"
+services:
+  png-web:
+    build: png-resa/backend
+    container_name: png-web
+    env_file:
+      - png-resa/backend/docker.env
+    networks:
+      - png-resa-network
+
+  png-mail:
+    image: mailhog/mailhog:latest
+    container_name: png-mail
+    environment:
+      MH_STORAGE: maildir
+      MH_MAILDIR_PATH: /home/mailhog
+    volumes:
+      - png-mailhog-data:/home/mailhog/
+    ports:
+      - 25:1025
+      - 8025:8025
+    networks:
+      - png-resa-network
+
+  # proxy nginx, useful for cache & purge strategy
+  png-proxy:
+    image: nginx
+    container_name: png-proxy
+    restart: always
+    volumes:
+      - ./nginx:/etc/nginx/conf.d:ro
+      - ./build-front:/var/www/static/:ro
+    ports:
+      - "0.0.0.0:80:80"
+    links:
+      - png-web
+    networks:
+      - png-resa-network
+
+volumes:
+  png-mailhog-data:
+
+networks:
+  png-resa-network: 
