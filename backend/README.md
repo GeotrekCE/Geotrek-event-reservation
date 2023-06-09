@@ -1,3 +1,11 @@
+# Préparation de la BD
+
+L'outil doit pouvoir se connecter sur la BD Geotrek Admin. La définition des tables et fonctions nécessaires se trouve
+dans `./db/create_db_structure.sql`.
+
+Les commandes créent les tables nécessaires (nécessite les privilèges de lecture et référencement de la table
+`tourism_touristicevent`) dans le nouveau schéma `animations`.
+
 # Démarrer le serveur Flask de dev
 
 Serveur sur `http://localhost:5000` :
