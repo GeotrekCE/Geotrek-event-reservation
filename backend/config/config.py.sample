@@ -1,3 +1,5 @@
+import os
+
 # --- Application settings ---
 
 # The PUBLIC_SERVER_NAME of the application, default None, for instance: 'www.png-resa.fr' or 'localhost:5000'.
