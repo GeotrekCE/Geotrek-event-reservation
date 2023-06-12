@@ -18,7 +18,7 @@ async function callFetchApi (
   url: URL | RequestInfo,
   optionsHeaders = {},
   snackMessage?: boolean | string
-) {
+): Promise<any> {
   const baseParams = { method }
   const fetchParams = { ...baseParams, ...optionsHeaders }
 
@@ -38,7 +38,7 @@ async function callFetchApi (
     if (response.status === 200) {
       if (method !== 'GET' && snackMessage) {
         appStore.snackbarInfo = {
-          message: data.msg || snackMessage,
+          message: data.msg || (snackMessage as string),
           color: 'success',
           show: true
         };

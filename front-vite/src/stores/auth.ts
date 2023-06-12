@@ -31,7 +31,7 @@ export const useAuthStore = defineStore('auth', () => {
       password,
     };
 
-    const response = await (postApiData(CONFIGURATION.URL_APPLICATION, 'auth/login', userData, false) as Promise<{ user: any, expires: any }>);
+    const response = await (postApiData(CONFIGURATION.URL_APPLICATION, 'auth/login', userData, false));
     user.value = { ...response.user, expires: response.expires };
 
     if (redirectOnLogin.value !== undefined) {
@@ -46,5 +46,9 @@ export const useAuthStore = defineStore('auth', () => {
     user.value = null
   }
 
-  return { user, login, logout, redirectOnLogin, isAuth }
+  async function sendLoginEmail (email: string) {
+    await postApiData(CONFIGURATION.URL_APPLICATION, 'send-login-email', { email }, false)
+  }
+
+  return { user, login, logout, redirectOnLogin, isAuth, sendLoginEmail }
 })

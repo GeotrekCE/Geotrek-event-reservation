@@ -3,7 +3,7 @@ import { defineStore } from 'pinia'
 
 export const useAppStore = defineStore('app', () => {
   const snackbarInfo = ref({
-    message: undefined,
+    message: '',
     color: 'success',
     show: false
   })

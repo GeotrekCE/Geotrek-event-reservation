@@ -402,17 +402,17 @@ const isSummaryDisplayed = ref(true)
 })
 */
 const reservation = ref({
-  nom: 'D',
-  prenom: 'M',
-  tel: '23413',
-  email: 'mathieu@dartic.Fr',
-  commentaire: 'fazeaze',
-  nb_adultes: 12,
+  nom: '',
+  prenom: '',
+  tel: '',
+  email: '',
+  commentaire: '',
+  nb_adultes: 0,
   nb_moins_6_ans: 0,
   nb_6_8_ans: 0,
   nb_9_12_ans: 0,
   nb_plus_12_ans: 0,
-  num_departement: '2',
+  num_departement: '09',
   id_event: geotrekId,
 })
 const status = ref(STATUS.PRISTINE)

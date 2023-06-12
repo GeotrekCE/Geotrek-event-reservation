@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 // import { useAuthStore } from '@/stores/auth';
 // import EventDetail from '@/views/EventDetail.vue';
-// import Login from '@/views/Login.vue';
+import LoginView from '@/views/LoginView.vue';
 // import Events from '@/views/Events.vue';
 // import Informations from '@/views/Informations.vue';
 // import BilanStats from '@/views/BilanStats.vue';
@@ -30,10 +30,14 @@ const ROUTES_PATHS = {
 
 const routes = [
   {
-   /* path: ROUTES_PATHS.LOGIN,
+    path: ROUTES_PATHS.LOGIN,
     name: ROUTES_NAMES.LOGIN,
-    component: Login,
-  }, 
+    component: LoginView,
+    meta: {
+      requiresAuth: false
+    }
+  }, { 
+  /*
   {
     path: ROUTES_PATHS.EVENTS,
     name: ROUTES_NAMES.EVENTS,
