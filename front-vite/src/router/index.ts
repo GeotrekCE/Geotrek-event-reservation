@@ -7,12 +7,12 @@ import LoginView from '@/views/LoginView.vue';
 import LoginCallbackView from '@/views/LoginCallbackView.vue';
 import LogoutView from '@/views/LogoutView.vue';
 
-// import EventDetail from '@/views/EventDetail.vue';
+import EventDetailView from '@/views/EventDetailView.vue';
 
 import InformationsView from '@/views/InformationsView.vue';
 // import BilanStats from '@/views/BilanStats.vue';
 
-const ROUTES_NAMES = {
+export const ROUTES_NAMES = {
   HOME: 'HOME',
   LOGIN: 'LOGIN',
   LOGIN_CALLBACK: 'LOGIN_CALLBACK',
@@ -76,13 +76,13 @@ const routes = [
       requiresAuth: true 
     },
   }, {
-  /*
-   
     path: ROUTES_PATHS.EVENT_DETAIL,
     name: ROUTES_NAMES.EVENT_DETAIL,
-    component: EventDetail,
-    // meta: { requiresAuth: true },
-  }, {*/
+    component: () => import('@/views/EventListingView.vue'),
+    meta: { 
+      requiresAuth: true 
+    },
+  }, {
     path: ROUTES_PATHS.INFOS,
     name: ROUTES_NAMES.INFOS,
     component: InformationsView,

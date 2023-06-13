@@ -10,12 +10,11 @@ export interface DataConfirmReservation {
 }
 export const confirmReservation = (data: DataConfirmReservation) => postApiData(CONFIGURATION.URL_APPLICATION, 'reservations/confirm', data)
 
-export async function getReservations (page = 1, limit = 10, sortField = null, sortOrder = null) {
+export async function getReservations (params: Record<string, any> = {}) {
   return getApiData(CONFIGURATION.URL_APPLICATION, 'reservations', {
-    page,
-    limit,
-    sortBy: sortField,
-    sortDesc: sortOrder === -1
+    page: 1,
+    limit: 10,
+    ...params
   })
 }
 
@@ -56,7 +55,7 @@ export const getEvents = (params: any) => {
 
 export const getOneEvent = (id: any): Promise<ResaEvent> => getApiData(CONFIGURATION.URL_APPLICATION, `events/${id}`);
 
-export const postOneBilan = (data: any) => postApiData(CONFIGURATION.URL_APPLICATION, 'bilans', data);
+export const postBilan = (data: any) => postApiData(CONFIGURATION.URL_APPLICATION, 'bilans', data);
 
 /**
  * Statistiques

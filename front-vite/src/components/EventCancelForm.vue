@@ -40,7 +40,7 @@
 
 <script lang="ts">
 import type { ResaBilan } from '@/declaration';
-import { postOneBilan } from '@/utils/appli_api'
+import { postBilan } from '@/utils/appli_api'
 import { rulesFct } from '@/utils/fields'
 
 export default {
@@ -88,7 +88,7 @@ export default {
       if (this.editedItem.annulation === false) {
         this.editedItem.raison_annulation = '';
       }
-      postOneBilan(this.editedItem).then(() => {
+      postBilan(this.editedItem).then(() => {
         this.$emit('reloadEvent');
       });
 
