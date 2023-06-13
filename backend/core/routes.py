@@ -261,8 +261,12 @@ def login():
 
     # Set a Session Cookie in the response.
     session['user'] = token.email
+    from flask import current_app
 
-    return "login successful", 200
+    return jsonify({
+        "is_admin": token.email in current_app.config["ADMIN_EMAILS"],
+        "email": token.email
+    }), 200
 
 
 @app_routes.route("/export_reservation/<id>", methods=["GET"])
