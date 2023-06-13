@@ -77,7 +77,7 @@
     </div>
   </header>
 
-  <main>
+  <main class="flex-grow">
     <router-view/>
   </main>
   <!--

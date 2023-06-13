@@ -6,6 +6,9 @@ module.exports = {
   ],
   theme: {
     extend: {},
+    minWidth: {
+      '1/2': '50%',
+    }
   },
   plugins: [],
 }

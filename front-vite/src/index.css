@@ -2,6 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --border-radius: 2px;
+}
+
 body {
   font-family: var(--font-family);
 } 
+
+html, body, #app {
+  height: 100%;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+}
+
+.p-inputtext {
+  border-radius: var(--border-radius);
+}
