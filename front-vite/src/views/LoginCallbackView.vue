@@ -45,10 +45,8 @@ onMounted(async () => {
 		 * Si l'utilisateur est admin, on le renvoie sur la page des événements
 		 */
 		if (authStore.isAdmin) {
-      console.log('ici')
 			router.push(ROUTES_PATHS.EVENT_LISTING)
 		} else {
-      console.log('là')
   		/**
   		 * Sinon, sur les réservations
   		 */
