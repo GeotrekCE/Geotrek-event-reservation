@@ -42,6 +42,14 @@ Le `docker-compose.yml` est positionné dans le répertoire supérieur
 sur notre vm de test, pour pouvoir disposer d'une configuration nginx, 
 du build front, et du repo png-resa.
 
+Un template de la configuration Nginx utilisée se trouve dans le 
+répertoire `install`.
+
+## Lien de réservation dans Geotrek Rando
+
+Il faut ajouter le script `install/scriptsFooter.html` dans la customization de Geotrek Rando.
+L'emplacement est `<geotrek-rando>/customization/html/scriptsFooter.html`.
+
 
 # Technologie
 * backend : python flask

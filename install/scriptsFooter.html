@@ -1,0 +1,43 @@
+function insertReservationLink(url) {
+    if (document.getElementById("reservation-link") !== null)
+        // Le lien a déjà été inséré.
+        return;
+
+    const result = url.match(/\/event\/(\d+)/);
+    if (result === null || result.length !== 2)
+        // On ne se trouve pas sur une page détails d'un événement.
+        return;
+    const event_id = result[1];
+
+    const reference_element  = document.getElementById("details_description_ref");
+    if (reference_element === null)
+        // Mauvais timing. Évitons une erreur dans la console en quittant.
+        return;
+
+    const resa_div = Object.assign(document.createElement("div"), {
+        className: "mx-4 desktop:mx-18 mt-2 desktop:mt-10 relative"
+    });
+
+    const reservation_link = Object.assign(document.createElement('a'), {
+        href: `http://png-resa-demo.geotrek.fr/resa/${event_id}`,
+        innerText: "S'inscrire à l'événement",
+        className: "text-primary1 p-2 border-solid border border-primary1 rounded-lg bg-white",
+        id: "reservation-link"
+    });
+
+    resa_div.appendChild(reservation_link);
+    reference_element.parentElement.insertBefore(resa_div, reference_element);
+}
+
+// Wait for the load of next router
+var routeChange = setInterval(async function() {
+  if (window.next && window.next.router) {
+    window.next.router.events.on('routeChangeComplete', async function(url) {
+        setTimeout((e) => insertReservationLink(url), 1000);
+    });
+    insertReservationLink(window.location.toString());
+    clearInterval(routeChange)
+  }
+}, 100)
+
+window.onload = setTimeout((e) => insertReservationLink(window.location.toString()), 1500);
