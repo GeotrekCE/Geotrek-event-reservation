@@ -4,7 +4,7 @@
 // DAY_BEFORE_RESA: nombre de jours avant la date de debut de l'animation ou l'inscription est possible (si -1 aucune limitation de date)
 // RESA_NB_DELTA: nombre de participants surnuméraire acepté en plus du nombre de participants spécifiés dans geotrek
 
-const config = {
+const CONFIGURATION = {
   URL_APPLICATION: 'URL_BACKEND',
   URL_GTA: 'URL_GEOTREK_ADMIN',
   URL_GTR: 'URL_GEOTREK_PUBLIC',
