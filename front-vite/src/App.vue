@@ -15,15 +15,23 @@
           </svg>
         </button>
       </div>
-      <div class="hidden lg:flex lg:gap-x-12">
-        <router-link to="/events" class="text-sm font-semibold leading-6 text-gray-900">Animations</router-link>
+      <div class="hidden lg:flex lg:gap-x-12" v-if="isAuth">
+        <template v-if="isAdmin">
+          <router-link to="/events" class="text-sm font-semibold leading-6 text-gray-900">Animations</router-link>
+          <router-link to="/stats" class="text-sm font-semibold leading-6 text-gray-900">Statistiques</router-link>  
+        </template>
+        <template v-else>
+          <router-link to="/resalisting" class="text-sm font-semibold leading-6 text-gray-900">Mes résas</router-link>
+        </template>
         <router-link to="/infos" class="text-sm font-semibold leading-6 text-gray-900">Informations</router-link>
-        <router-link to="/stats" class="text-sm font-semibold leading-6 text-gray-900">Statistiques</router-link>
-        <router-link to="/resa/1" class="text-sm font-semibold leading-6 text-gray-900">Résa 1</router-link>
-        <router-link to="/resaconfirm?token=pouet" class="text-sm font-semibold leading-6 text-gray-900">Confirmation résa</router-link>
       </div>
       <div class="hidden lg:flex lg:flex-1 lg:justify-end">
-        <router-link to="/login" class="text-sm font-semibold leading-6 text-gray-900">Connexion<span aria-hidden="true">&rarr;</span></router-link>
+        <router-link
+          :to="isAuth ? '/logout' : '/login'"
+          class="text-sm font-semibold leading-6 text-gray-900"
+        >
+          {{ isAuth ? 'Déconnexion (' + user?.email + ')' : 'Connexion' }}
+        </router-link>
       </div>
     </nav>
     <!-- Mobile menu, show/hide based on menu open state. -->
@@ -43,15 +51,25 @@
             </svg>
           </button>
         </div>
-        <div class="mt-6 flow-root">
+        <div class="mt-6 flow-root" v-if="isAuth">
           <div class="-my-6 divide-y divide-gray-500/10">
             <div class="space-y-2 py-6">
-              <router-link to="/events" class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50">Animations</router-link>
-              <router-link to="/infos" class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50">Informations</router-link>
-              <router-link to="/stats" class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50">Statistiques</router-link>
+              <template v-if="isAdmin">
+                <router-link to="/events" class="text-sm font-semibold leading-6 text-gray-900">Animations</router-link>
+                <router-link to="/stats" class="text-sm font-semibold leading-6 text-gray-900">Statistiques</router-link>  
+              </template>
+              <template v-else>
+                <router-link to="/resalisting" class="text-sm font-semibold leading-6 text-gray-900">Mes résas</router-link>
+              </template>
+              <router-link to="/infos" class="text-sm font-semibold leading-6 text-gray-900">Informations</router-link>
             </div>
             <div class="py-6">
-              <router-link to="/login" class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50">Connexion</router-link>
+              <router-link
+                :to="isAuth ? '/logout' : '/login'"
+                class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+              >
+                {{ isAuth ? 'Déconnexion' : 'Connexion' }}
+              </router-link>
             </div>
           </div>
         </div>
@@ -60,55 +78,9 @@
   </header>
 
   <main>
-    <div>
-      <router-view/>
-    </div>
+    <router-view/>
   </main>
-  <!-- v-if="user && user.identifiant" -->
-  <!-- <v-app>
-    <v-app-bar
-      app
-      color="primary"
-      dark
-    >
-      <div class="d-flex align-center">
-        <v-img
-          alt="Animations Logo"
-          class="shrink mr-2"
-          contain
-          src="./assets/logo.svg"
-          transition="scale-transition"
-          width="40"
-        /> </router-link>
-
-        <v-toolbar-title>Reservation animations</v-toolbar-title>
-      </div>
-
-      <template
-        v-slot:extension
-       >
-        <v-tabs align-with-title>
-          <v-tab to="/">Animations</v-tab>
-          <v-tab to="/infos">Informations</v-tab>
-          <v-tab to="/stats">Stats</v-tab>
-        </v-tabs>
-      </template>
-
-      <v-spacer />
-
-      <v-btn
-        to="/login"
-        text
-      >
-        <span class="mr-2">{{ user && user.identifiant }}</span>
-        <v-icon icon="mdi-open-in-new" />
-      </v-btn>
-    </v-app-bar>
-
-    <v-main>
-      <router-view/>
-    </v-main>
-
+  <!--
     <api-snackbar
       v-if="snackbarInfo.show"
       :snackbar-message="snackbarInfo.message"
@@ -116,22 +88,21 @@
       @close="snackbarInfo.show = false"
     />
 
-  </v-app> -->
+  -->
 </template>
 
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { useAuthStore } from '@/stores/auth'
-import { useAppStore } from '@/stores/app'
-import Menubar from 'primevue/menubar';
+// import { useAppStore } from '@/stores/app'
 import { ref } from 'vue'
 
 const authStore = useAuthStore()
-const appStore = useAppStore()
+// const appStore = useAppStore()
 
-const { user } = storeToRefs(authStore)
-const { snackbarInfo } = storeToRefs(appStore)
+const { isAuth, isAdmin, user } = storeToRefs(authStore)
+// const { snackbarInfo } = storeToRefs(appStore)
 
 const isMenuOpened = ref(false)
 
