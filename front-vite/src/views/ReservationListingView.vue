@@ -33,12 +33,13 @@
         <p-column field="begin_date" header="Date de début"></p-column>
         <p-column field="nom" header="Nom"></p-column>
         <p-column field="prenom" header="Prénom"></p-column>
+        <p-column field="sum_participants" header="Total"></p-column>
+        <p-column field="sum_participants_liste_attente" header="Liste d'attente"></p-column>
+        <p-column field="nb_adultes" header="adultes"></p-column>
         <p-column field="nb_moins_6_ans" header="-6 ans"></p-column>
         <p-column field="nb_6_8_ans" header="6/8 ans"></p-column>
         <p-column field="nb_9_12_ans" header="9/12 ans"></p-column>
-        <p-column field="nb_adultes" header="adultes"></p-column>
-        <p-column field="sum_participants" header="Total"></p-column>
-        <p-column field="sum_participants_liste_attente" header="Liste d'attente"></p-column>
+        <p-column field="nb_plus_12_ans" header="+12 ans"></p-column>
         <p-column field="confirmed" header="Confirmé">
           <template #body="{ data }">
               <i
