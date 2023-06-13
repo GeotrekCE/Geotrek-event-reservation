@@ -131,6 +131,9 @@ def get_one_event(id):
 @app_routes.route("/reservations", methods=["GET"])
 @login_required
 def get_reservations():
+    page = request.args.get("page", 1, type=int)
+    limit = request.args.get("limit", 10, type=int)
+
     event_id_arg = request.args.get("event_id", None)
     event_id = None
     if event_id_arg:
@@ -144,13 +147,26 @@ def get_reservations():
     is_admin = email in current_app.config["ADMIN_EMAILS"]
 
     query = db.session.query(TReservations)
+
     if event_id:
         query.filter_by(id_event=event_id)
     if not is_admin:
         query.filter_by(email=email)
-    reservations = query.all()
+    query = query.paginate(page=page, per_page=limit)
 
-    return TReservationsSchema().dumps(reservations, many=True), 200
+    results = TReservationsSchema(many=True).dump(query.items)
+
+    # reservations = query.all()
+    return jsonify(
+        {
+            "page": page,
+            "limit": limit,
+            "total": query.total,
+            "has_next": query.has_next,
+            "has_prev": query.has_prev,
+            "results": results,
+        }
+    )
 
 
 @app_routes.route("/reservations", methods=["POST"])
