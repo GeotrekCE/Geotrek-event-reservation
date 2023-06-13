@@ -1,0 +1,22 @@
+image: node:18
+
+stages:
+  - build
+
+# Build stage
+build:
+  tags: [shared-ci-docker]
+  stage: build
+  only:
+    - tags
+    - merge_requests
+    - main
+  script:
+    - cd front-vite
+    - npm ci
+    - npm run build
+  artifacts:
+    expire_in: 1 week
+    name: 'pngresa-${CI_COMMIT_REF_SLUG}'
+    paths:
+    - front-vite/dist/
