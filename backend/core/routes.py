@@ -149,9 +149,9 @@ def get_reservations():
     query = db.session.query(TReservations)
 
     if event_id:
-        query.filter_by(id_event=event_id)
+        query = query.filter_by(id_event=event_id)
     if not is_admin:
-        query.filter_by(email=email)
+        query = query.filter_by(email=email)
     query = query.paginate(page=page, per_page=limit)
 
     results = TReservationsSchema(many=True).dump(query.items)
