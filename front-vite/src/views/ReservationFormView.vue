@@ -368,7 +368,7 @@
 <script setup lang="ts">
 import { ref, onBeforeMount } from 'vue'
 import { useRoute } from 'vue-router'
-import {getOneEvent, postOneReservation } from '@/utils/appli_api';
+import {getOneEvent, postReservation } from '@/utils/appli_api';
 
 const currentRoute = useRoute()
 const geotrekId = currentRoute.params.geotrekid
@@ -435,7 +435,7 @@ async function saveReservation() {
   status.value = STATUS.SAVING
   saving.value = true
   try {
-    await postOneReservation(reservation.value)
+    await postReservation(reservation.value)
     status.value = STATUS.SUCCESS
   } catch (error) {
     saveError.value = error

@@ -1,37 +1,53 @@
 import { createRouter, createWebHistory } from 'vue-router'
-// import { useAuthStore } from '@/stores/auth';
-// import EventDetail from '@/views/EventDetail.vue';
+import { useAuthStore } from '@/stores/auth';
+
+import HomeView from '@/views/HomeView.vue'
+
 import LoginView from '@/views/LoginView.vue';
 import LoginCallbackView from '@/views/LoginCallbackView.vue';
 import LogoutView from '@/views/LogoutView.vue';
+
+// import EventDetail from '@/views/EventDetail.vue';
+
+import InformationsView from '@/views/InformationsView.vue';
 // import BilanStats from '@/views/BilanStats.vue';
 
-import ReservationFormView from '@/views/ReservationForm.vue';
-const ReservationConfirmationView = () => import('@/views/ReservationConfirmation.vue')
-
 const ROUTES_NAMES = {
+  HOME: 'HOME',
   LOGIN: 'LOGIN',
   LOGIN_CALLBACK: 'LOGIN_CALLBACK',
   LOGOUT: 'LOGOUT',
+  EVENT_LISTING: 'EVENT_LISTING',
   EVENT_DETAIL: 'EVENT_DETAIL',
   INFOS: 'INFOS',
   STATS: 'STATS',
-  RESA: 'RESA',
+  RESA_FORM: 'RESA_FORM',
+  RESA_LISTING: 'RESA_LISTING',
   RESA_CONFIRM: 'RESA_CONFIRM',
 }
-const ROUTES_PATHS = {
+export const ROUTES_PATHS = {
+  HOME: '/',
   LOGIN: '/login',
   LOGIN_CALLBACK: '/login/callback',
   LOGOUT: '/logout',
+  EVENT_LISTING: '/events',
   EVENT_DETAIL: '/events/:id',
   INFOS: '/infos',
   STATS: '/stats',
-  RESA: '/resa/:geotrekid',
+  RESA_FORM: '/resa/:geotrekid',
+  RESA_LISTING: '/resalisting',
   RESA_CONFIRM: '/resaconfirm'
 }
 
 const routes = [
   {
+    path: ROUTES_PATHS.HOME,
+    name: ROUTES_NAMES.HOME,
+    component: HomeView,
+    meta: {
+      requiresAuth: false
+    }
+  }, {
     path: ROUTES_PATHS.LOGIN,
     name: ROUTES_NAMES.LOGIN,
     component: LoginView,
@@ -53,39 +69,47 @@ const routes = [
       requiresAuth: true
     }
   }, { 
+    path: ROUTES_PATHS.EVENT_LISTING,
+    name: ROUTES_NAMES.EVENT_LISTING,
+    component: () => import('@/views/EventListingView.vue'),
+    meta: { 
+      requiresAuth: true 
+    },
+  }, {
   /*
-  {
-    path: ROUTES_PATHS.EVENTS,
-    name: ROUTES_NAMES.EVENTS,
-    component: Events,
-    // meta: { requiresAuth: true },
-  },
-   {
+   
     path: ROUTES_PATHS.EVENT_DETAIL,
     name: ROUTES_NAMES.EVENT_DETAIL,
     component: EventDetail,
     // meta: { requiresAuth: true },
-  }, {
+  }, {*/
     path: ROUTES_PATHS.INFOS,
     name: ROUTES_NAMES.INFOS,
-    component: Informations,
-    // meta: { requiresAuth: true },
+    component: InformationsView,
+    meta: { requiresAuth: true },
   }, {
-    path: ROUTES_PATHS.STATS,
+/*    path: ROUTES_PATHS.STATS,
     name: ROUTES_NAMES.STATS,
     component: BilanStats,
     // meta: { requiresAuth: true },
   }, {*/
-    path: ROUTES_PATHS.RESA,
-    name: ROUTES_NAMES.RESA,
-    component: ReservationFormView,
+    path: ROUTES_PATHS.RESA_FORM,
+    name: ROUTES_NAMES.RESA_FORM,
+    component: () => import('@/views/ReservationFormView.vue'),
     meta: {
       requiresAuth: false
     }
   }, {
+    path: ROUTES_PATHS.RESA_LISTING,
+    name: ROUTES_NAMES.RESA_LISTING,
+    component: () => import('@/views/ReservationListingView.vue'),
+    meta: {
+      requiresAuth: true
+    }
+  }, {
     path: ROUTES_PATHS.RESA_CONFIRM,
     name: ROUTES_NAMES.RESA_CONFIRM,
-    component: ReservationConfirmationView,
+    component: () => import('@/views/ReservationConfirmationView.vue'),
     meta: {
       requiresAuth: false
     }
@@ -97,22 +121,26 @@ const router = createRouter({
   routes
 })
 
-// router.beforeEach((to, from, next) => {
-//   const authStore = useAuthStore()
-//   // instead of having to check every route record with
-//   // to.matched.some(record => record.meta.requiresAuth)
-//   if (to.path !== ROUTES_PATHS.LOGIN) {
-//     authStore.redirectOnLogin = to.path
-//   }
-//   if ((to.name !== ROUTES_NAMES.LOGIN) && !authStore.isAuth) {
-//     // this route requires auth, check if logged in
-//     // if not, redirect to login page.
-//     next({
-//       path: ROUTES_PATHS.LOGIN,
-//       replace: true,
-//     });
-//   }
-//   next();
-// })
+router.beforeEach((to, from, next) => {
+  const authStore = useAuthStore()
+  // instead of having to check every route record with
+  // to.matched.some(record => record.meta.requiresAuth)
+  // if (to.path !== ROUTES_PATHS.LOGIN) {
+  //   authStore.redirectOnLogin = to.path
+  // }
+  if (
+    to.name !== ROUTES_NAMES.LOGIN
+    && !authStore.isAuth
+    && to.meta.requiresAuth
+  ) {
+    // this route requires auth, check if logged in
+    // if not, redirect to login page.
+    next({
+      path: ROUTES_PATHS.LOGIN,
+      replace: true,
+    });
+  }
+  next();
+})
 
 export default router;

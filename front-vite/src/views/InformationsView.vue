@@ -1,4 +1,5 @@
 <template>
+  Est ce toujours utile de garder cette page ?
   <v-container>
     <div v-if="loading">Loading...</div>
     <div v-html="markdownToHTML" v-else></div>

@@ -183,7 +183,7 @@
 import { fieldsClasseAge, rulesFct } from '@/utils/fields'
 // import { VDataTable } from 'vuetify/labs/VDataTable'
 
-import { deleteOneReservation, postOneReservation } from '@/utils/appli_api'
+import { deleteReservation, postReservation } from '@/utils/appli_api'
 import type { Resa, ResaEventFilters } from '@/declaration';
 
 // import ReservationProgress from '@/components/ReservationProgress.vue';
@@ -322,9 +322,9 @@ export default {
     },
 
     deleteItemConfirm() {
-      deleteOneReservation(this.editedItem.id_reservation).then(() => {
+      deleteReservation(this.editedItem.id_reservation).then(() => {
         this.$emit('reloadEvent');
-      }).catch((error) => {
+      }).catch((error: any) => {
         console.error('There was an error!', error);
       });
       this.closeDelete()
@@ -347,7 +347,7 @@ export default {
     save() {
       // Set digitizer
       this.editedItem.id_numerisateur = this.user.id_role;
-      postOneReservation(this.editedItem).then(() => {
+      postReservation(this.editedItem).then(() => {
         this.$emit('reloadEvent');
       })
       this.close()
