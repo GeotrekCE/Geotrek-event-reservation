@@ -17,7 +17,7 @@
       <p>Merci de patienter...</p>
     </div>
     <div v-else-if="success" class="space-y-6">
-      <h2 class="text-xl font-semibold leading-7 text-gray-900 mt-10 mb-4">
+      <h2 class="text-xl font-medium leading-7 text-gray-900 mt-10 mb-4">
         Merci !
       </h2>
       <p>

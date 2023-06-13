@@ -20,11 +20,11 @@
 
       <p>
         Vous vous apprêtez à effectuer une réservation pour l'animation
-        <span class="font-semibold" v-if="event">{{ event.name }}</span>
+        <span class="font-medium" v-if="event">{{ event.name }}</span>
         proposé par le Parc National de Guadeloupe.
       </p>
 
-      <h2 class="text-base font-semibold leading-7 text-gray-900 mt-10" @click="isSummaryDisplayed = !isSummaryDisplayed">
+      <h2 class="text-base font-medium leading-7 text-gray-900 mt-10" @click="isSummaryDisplayed = !isSummaryDisplayed">
         Résumé de l'animation
       </h2>
 
@@ -151,7 +151,7 @@
       <form @submit.prevent="saveReservation" class="mt-10">
         <div class="space-y-12">
           <div>
-            <h1 class="text-xl font-semibold leading-7 text-gray-900">Inscription</h1>
+            <h1 class="text-xl font-medium leading-7 text-gray-900">Inscription</h1>
             <p class="mt-1 text-sm leading-6 text-gray-600">
               En remplissant ce formulaire, puis en le validant,
               vous recevrez un email de confirmation.
@@ -162,7 +162,7 @@
           </div>
 
           <div class="border-b border-gray-900/10 pb-12">
-            <h2 class="text-base font-semibold leading-7 text-gray-900">Informations personnelles</h2>
+            <h2 class="text-base font-medium leading-7 text-gray-900">Informations personnelles</h2>
             <p class="mt-1 text-sm leading-6 text-gray-600">Utilisez une adresse mail sur laquelle vous pouvez vous connecter.</p>
 
             <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
@@ -220,7 +220,7 @@
           </div>
 
           <div class="border-b border-gray-900/10 pb-12">
-            <h2 class="text-base font-semibold leading-7 text-gray-900">Informations sur les participants</h2>
+            <h2 class="text-base font-medium leading-7 text-gray-900">Informations sur les participants</h2>
             <p class="mt-1 text-sm leading-6 text-gray-600">
               Merci de préciser le nombre de participants par tranche d'âge.
             </p>
@@ -298,7 +298,7 @@
 
 
           <div class="border-b border-gray-900/10 pb-12">
-            <h2 class="text-base font-semibold leading-7 text-gray-900">Commentaire</h2>
+            <h2 class="text-base font-medium leading-7 text-gray-900">Commentaire</h2>
             <p class="mt-1 text-sm leading-6 text-gray-600">
               Vous souhaitez préciser certains points sur votre réservation, vous pouvez les inscrire ici.
             </p>
@@ -317,7 +317,7 @@
         <div class="my-6 flex flex-col items-end gap-x-6">
           <button
             type="submit"
-            class="rounded-sm px-3 py-2 text-sm font-semibold text-white shadow-sm  focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600"
+            class="rounded-sm px-3 py-2 text-sm font-medium text-white shadow-sm  focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600"
             :class="{
               'bg-sky-600': !saving,
               'hover:bg-sky-500': !saving,
@@ -347,20 +347,19 @@
     class="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8 px-4 py-6"
     v-else
   >
-    <h2 class="text-xl font-semibold leading-7 text-gray-900 mt-10 mb-4">
+    <h2 class="text-xl font-medium leading-7 text-gray-900 mt-10 mb-4">
       Merci pour votre inscription !
     </h2>
     <p class="mb-4">
       Vous allez recevoir un email dans votre boîte de réception
       attestant votre demande de réservation.
     </p>
-    <h2 class="text-xl font-semibold">
+    <h2 class="text-xl font-medium">
       Mais ce n'est pas fini !
     </h2>
     <p>
       Vous devez <strong>confirmer</strong> cette demande 
-      en cliquant sur le lien présent dans l'email, 
-      ou en copiant / collant le lien dans votre barre de navigateur.
+      en cliquant sur le lien présent dans l'email.
     </p>
   </main>
 </template>

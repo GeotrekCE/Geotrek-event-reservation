@@ -4,7 +4,7 @@
       <div class="flex lg:flex-1">
         <router-link to="/" class="-m-1.5 p-1.5 flex items-center">
           <img class="h-8 w-auto pr-1.5" src="/assets/logo.svg" alt="">
-          <span class="text-lg font-semibold leading-6 text-gray-900">Réservation animations</span>
+          <span class="text-2xl font-medium text-gray-900">Réservation animations</span>
         </router-link>
       </div>
       <div class="flex lg:hidden">
@@ -17,18 +17,18 @@
       </div>
       <div class="hidden lg:flex lg:gap-x-12" v-if="isAuth">
         <template v-if="isAdmin">
-          <router-link to="/events" class="text-sm font-semibold leading-6 text-gray-900">Animations</router-link>
-          <router-link to="/stats" class="text-sm font-semibold leading-6 text-gray-900">Statistiques</router-link>  
+          <router-link to="/events" class="text-sm font-medium leading-6 text-gray-900">Animations (en cours)</router-link>
+          <router-link to="/stats" class="text-sm font-medium leading-6 text-gray-900">Statistiques (à migrer)</router-link>  
         </template>
         <template v-else>
-          <router-link to="/resalisting" class="text-sm font-semibold leading-6 text-gray-900">Mes résas</router-link>
+          <router-link to="/resalisting" class="text-sm font-medium leading-6 text-gray-900">Mes résas</router-link>
         </template>
-        <router-link to="/infos" class="text-sm font-semibold leading-6 text-gray-900">Informations</router-link>
+        <router-link to="/infos" class="text-sm font-medium leading-6 text-gray-900">Informations</router-link>
       </div>
       <div class="hidden lg:flex lg:flex-1 lg:justify-end">
         <router-link
           :to="isAuth ? '/logout' : '/login'"
-          class="text-sm font-semibold leading-6 text-gray-900"
+          class="text-sm font-medium leading-6 text-gray-900"
         >
           {{ isAuth ? 'Déconnexion (' + user?.email + ')' : 'Connexion' }}
         </router-link>
@@ -42,7 +42,7 @@
         <div class="flex items-center justify-between">
           <router-link to="/" class="-m-1.5 p-1.5 flex items-center">
             <img class="h-8 w-auto pr-1.5" src="/assets/logo.svg" alt="">
-            <span class="text-lg font-semibold leading-6 text-gray-900">Réservation animations</span>
+            <span class="text-2xl font-medium text-gray-900">Réservation animations</span>
           </router-link>
           <button type="button" class=" rounded-md p-2.5 text-gray-700" @click="isMenuOpened = false">
             <span class="sr-only">Close menu</span>
@@ -55,18 +55,18 @@
           <div class="-my-6 divide-y divide-gray-500/10">
             <div class="space-y-2 py-6">
               <template v-if="isAdmin">
-                <router-link to="/events" class="text-sm font-semibold leading-6 text-gray-900">Animations</router-link>
-                <router-link to="/stats" class="text-sm font-semibold leading-6 text-gray-900">Statistiques</router-link>  
+                <router-link to="/events" class="text-sm font-medium leading-6 text-gray-900">Animations (en cours)</router-link>
+                <router-link to="/stats" class="text-sm font-medium leading-6 text-gray-900">Statistiques (à migrer)</router-link>  
               </template>
               <template v-else>
-                <router-link to="/resalisting" class="text-sm font-semibold leading-6 text-gray-900">Mes résas</router-link>
+                <router-link to="/resalisting" class="text-sm font-medium leading-6 text-gray-900">Mes résas</router-link>
               </template>
-              <router-link to="/infos" class="text-sm font-semibold leading-6 text-gray-900">Informations</router-link>
+              <router-link to="/infos" class="text-sm font-medium leading-6 text-gray-900">Informations</router-link>
             </div>
             <div class="py-6">
               <router-link
                 :to="isAuth ? '/logout' : '/login'"
-                class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-medium leading-7 text-gray-900 hover:bg-gray-50"
               >
                 {{ isAuth ? 'Déconnexion' : 'Connexion' }}
               </router-link>
