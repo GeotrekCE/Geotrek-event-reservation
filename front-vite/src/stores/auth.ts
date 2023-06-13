@@ -1,23 +1,22 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import { postApiData } from '@/utils/api'
-import router from '@/router'
 
 interface User {
-  id: number
-  id_role: number
+  email: string
+  is_admin: boolean
 }
 
 export const useAuthStore = defineStore('auth', () => {
 
   const user = ref<null | User>(null)
-  const redirectOnLogin = ref('')
 
   const isAuth = computed(() => {
-      if (!user.value) {
-        return false;
-      }
-      return !!(user.value && user.value.id_role);
+    return !!user.value
+  })
+
+  const isAdmin = computed(() => {
+    return user.value?.is_admin
   })
 
   /**
@@ -25,21 +24,13 @@ export const useAuthStore = defineStore('auth', () => {
    * retrieve user data
    * and store it in the auth state
    */
-  async function login (username: string, password: string) {
-    const userData = {
-      login: username,
-      password,
-    };
-
-    const response = await (postApiData(CONFIGURATION.URL_APPLICATION, 'auth/login', userData, false));
-    user.value = { ...response.user, expires: response.expires };
-
-    if (redirectOnLogin.value !== undefined) {
-      router.push({ path: redirectOnLogin.value });
-    } else {
-      router.push({ path: '/' });
-    }
-
+  async function login (token: string) {
+    user.value = await postApiData(
+      CONFIGURATION.URL_APPLICATION, 
+      'login', 
+      { login_token: token }, 
+      false
+    )
   }
 
   function logout () {
@@ -50,5 +41,5 @@ export const useAuthStore = defineStore('auth', () => {
     await postApiData(CONFIGURATION.URL_APPLICATION, 'send-login-email', { email }, false)
   }
 
-  return { user, login, logout, redirectOnLogin, isAuth, sendLoginEmail }
+  return { user, login, logout, sendLoginEmail, isAuth, isAdmin }
 })

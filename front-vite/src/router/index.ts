@@ -2,8 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 // import { useAuthStore } from '@/stores/auth';
 // import EventDetail from '@/views/EventDetail.vue';
 import LoginView from '@/views/LoginView.vue';
-// import Events from '@/views/Events.vue';
-// import Informations from '@/views/Informations.vue';
+import LoginCallbackView from '@/views/LoginCallbackView.vue';
+import LogoutView from '@/views/LogoutView.vue';
 // import BilanStats from '@/views/BilanStats.vue';
 
 import ReservationFormView from '@/views/ReservationForm.vue';
@@ -11,7 +11,8 @@ const ReservationConfirmationView = () => import('@/views/ReservationConfirmatio
 
 const ROUTES_NAMES = {
   LOGIN: 'LOGIN',
-  EVENTS: 'EVENTS',
+  LOGIN_CALLBACK: 'LOGIN_CALLBACK',
+  LOGOUT: 'LOGOUT',
   EVENT_DETAIL: 'EVENT_DETAIL',
   INFOS: 'INFOS',
   STATS: 'STATS',
@@ -20,7 +21,8 @@ const ROUTES_NAMES = {
 }
 const ROUTES_PATHS = {
   LOGIN: '/login',
-  EVENTS: '/events',
+  LOGIN_CALLBACK: '/login/callback',
+  LOGOUT: '/logout',
   EVENT_DETAIL: '/events/:id',
   INFOS: '/infos',
   STATS: '/stats',
@@ -35,6 +37,20 @@ const routes = [
     component: LoginView,
     meta: {
       requiresAuth: false
+    }
+  }, { 
+    path: ROUTES_PATHS.LOGIN_CALLBACK,
+    name: ROUTES_NAMES.LOGIN_CALLBACK,
+    component: LoginCallbackView,
+    meta: {
+      requiresAuth: false
+    }
+  }, { 
+    path: ROUTES_PATHS.LOGOUT,
+    name: ROUTES_NAMES.LOGOUT,
+    component: LogoutView,
+    meta: {
+      requiresAuth: true
     }
   }, { 
   /*
