@@ -174,7 +174,7 @@ def post_reservations():
         )
     )
 
-    return jsonify({"msg": "Demande de réservation enregistrée"})
+    return TReservationsSchema().dumps(reservation)
 
 
 @app_routes.route("/reservations/confirm", methods=["POST"])
