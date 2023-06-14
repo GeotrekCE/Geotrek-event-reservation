@@ -9,7 +9,15 @@
         <div>
           <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Adresse email</label>
           <div class="mt-2">
-            <input id="email" name="email" type="email" autocomplete="email" required v-model="email" class="block w-full rounded-sm border-0 p-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6">
+            <input
+              id="email"
+              name="email"
+              type="email"
+              autocomplete="email"
+              required
+              v-model="email"
+              class="block w-full rounded-sm border-0 p-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6"
+            />
           </div>
         </div>
 
