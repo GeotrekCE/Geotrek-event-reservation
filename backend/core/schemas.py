@@ -1,6 +1,6 @@
 from email_validator import validate_email, EmailNotValidError, EmailSyntaxError
-from marshmallow import fields, EXCLUDE, ValidationError, post_load
-from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
+from marshmallow import fields, EXCLUDE, ValidationError, post_load, RAISE
+from marshmallow_sqlalchemy import SQLAlchemyAutoSchema, auto_field
 
 from core.models import (
     GTEvents,
@@ -19,11 +19,20 @@ class VExportBilanSchema(SQLAlchemyAutoSchema):
 class TReservationsSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = TReservations
-        include_relationships = True
         load_instance = True
         include_fk = True
-        unknown = EXCLUDE
+        unknown = RAISE
+        dump_only = (
+            "id_reservation",
+            "liste_attente",
+            "meta_create_date",
+            "meta_update_date",
+        )
+        exclude = (
+            "token",
+        )
 
+    event = fields.Nested("GTEventsSchema", only=("name", "begin_date"))
     sum_participants = fields.Integer(dump_only=True)
     sum_participants_liste_attente = fields.Integer(dump_only=True)
 
