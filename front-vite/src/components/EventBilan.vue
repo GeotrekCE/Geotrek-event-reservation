@@ -55,7 +55,7 @@
 import { fieldsClasseAge, rulesFct } from '@/utils/fields'
 import { type Resa } from '@/declaration'
 
-import { postOneBilan } from '@/utils/appli_api'
+import { postBilan } from '@/utils/appli_api'
 
 export default {
   props: ['event', 'user'],
@@ -141,7 +141,7 @@ export default {
       // Set digitizer
       this.editedItem.id_numerisateur = this.user.id_role;
 
-      await postOneBilan(this.editedItem)
+      await postBilan(this.editedItem)
       this.$emit('reloadEvent');
       this.closeModal()
     },
