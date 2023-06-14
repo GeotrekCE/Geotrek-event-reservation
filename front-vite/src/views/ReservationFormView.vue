@@ -558,7 +558,7 @@ onBeforeMount(async () => {
   loadingEvent.value = true
   try {
     event.value = await getEvent(geotrekId)
-  } catch (error) {
+  } catch (error: any) {
     switch (error.message) {
       case "NOT FOUND":
         eventError.value = `L'événement n° ${geotrekId} n'a pas été trouvé. Il est impossible d'effectuer une réservation`
