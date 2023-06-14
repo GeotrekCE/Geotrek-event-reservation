@@ -47,6 +47,20 @@ class TReservationsSchema(SQLAlchemyAutoSchema):
         data.email = email_info.normalized
         return data
 
+    @post_load
+    def set_zero_default_value_for_participants(self, data, **kwargs):
+        NB_PARTICIPANTS_DEFAULT_VALUE = 0
+        for prop in [
+            "nb_adultes",
+            "nb_moins_6_ans",
+            "nb_6_8_ans",
+            "nb_9_12_ans",
+            "nb_plus_12_ans",
+        ]:
+            if getattr(data, prop) is None:
+                setattr(data, prop, NB_PARTICIPANTS_DEFAULT_VALUE)
+        return data
+
 
 class GTEventTypeSchema(SQLAlchemyAutoSchema):
     class Meta:

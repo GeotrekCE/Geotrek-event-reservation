@@ -9,6 +9,10 @@ from sqlalchemy.orm import aliased
 from .env import db
 
 
+# Le nombre maximale de personnes que l'on peut mettre en liste d'attente sur un événement.
+LISTE_ATTENTE_CAPACITY = 10
+
+
 class GTEventsQuery(BaseQuery):
     def filter_properties(self, filters):
         if filters.get("search_name", None):
@@ -84,11 +88,11 @@ class GTEvents(db.Model):
 
     @hybrid_property
     def sum_participants(self):
-        return sum(r.sum_participants for r in self.reservations)
+        return sum(r.sum_participants for r in self.reservations if r.confirmed)
 
     @hybrid_property
     def sum_participants_liste_attente(self):
-        return sum(r.sum_participants_liste_attente for r in self.reservations)
+        return sum(r.sum_participants_liste_attente for r in self.reservations if r.confirmed)
 
     @hybrid_property
     def massif(self):
@@ -97,6 +101,13 @@ class GTEvents(db.Model):
     @massif.expression
     def massif(cls):
         return func.animations.get_secteur_name(cls.id)
+
+    def is_reservation_possible_for(self, nb_people):
+        if self.sum_participants + nb_people <= self.capacity:
+            return True
+        if self.sum_participants_liste_attente + nb_people <= LISTE_ATTENTE_CAPACITY:
+            return True
+        return False
 
 
 class GTEventType(db.Model):
