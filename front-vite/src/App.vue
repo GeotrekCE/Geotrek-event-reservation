@@ -21,9 +21,8 @@
           <router-link to="/stats" class="text-sm font-medium leading-6 text-gray-900">Statistiques (à migrer)</router-link>  
         </template>
         <template v-else>
-          <router-link to="/resalisting" class="text-sm font-medium leading-6 text-gray-900">Mes résas</router-link>
+          <router-link to="/resalisting" class="text-sm font-medium leading-6 text-gray-900">Mes réservations</router-link>
         </template>
-        <router-link to="/infos" class="text-sm font-medium leading-6 text-gray-900">Informations</router-link>
       </div>
       <div class="hidden lg:flex lg:flex-1 lg:justify-end">
         <router-link
@@ -32,6 +31,7 @@
         >
           {{ isAuth ? 'Déconnexion (' + user?.email + ')' : 'Connexion' }}
         </router-link>
+        <a href="http://localhost:5173/login/callback?token=89352233a9a0df137f6fa5a2478ebe62">Auto connect</a>
       </div>
     </nav>
     <!-- Mobile menu, show/hide based on menu open state. -->
@@ -59,9 +59,8 @@
                 <router-link to="/stats" class="text-sm font-medium leading-6 text-gray-900">Statistiques (à migrer)</router-link>  
               </template>
               <template v-else>
-                <router-link to="/resalisting" class="text-sm font-medium leading-6 text-gray-900">Mes résas</router-link>
+                <router-link to="/resalisting" class="text-sm font-medium leading-6 text-gray-900">Mes réservations</router-link>
               </template>
-              <router-link to="/infos" class="text-sm font-medium leading-6 text-gray-900">Informations</router-link>
             </div>
             <div class="py-6">
               <router-link

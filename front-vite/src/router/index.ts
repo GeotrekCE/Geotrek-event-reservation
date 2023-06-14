@@ -9,7 +9,6 @@ import LogoutView from '@/views/LogoutView.vue';
 
 import EventDetailView from '@/views/EventDetailView.vue';
 
-import InformationsView from '@/views/InformationsView.vue';
 // import BilanStats from '@/views/BilanStats.vue';
 
 export const ROUTES_NAMES = {
@@ -19,7 +18,6 @@ export const ROUTES_NAMES = {
   LOGOUT: 'LOGOUT',
   EVENT_LISTING: 'EVENT_LISTING',
   EVENT_DETAIL: 'EVENT_DETAIL',
-  INFOS: 'INFOS',
   STATS: 'STATS',
   RESA_FORM: 'RESA_FORM',
   RESA_LISTING: 'RESA_LISTING',
@@ -32,7 +30,6 @@ export const ROUTES_PATHS = {
   LOGOUT: '/logout',
   EVENT_LISTING: '/events',
   EVENT_DETAIL: '/events/:id',
-  INFOS: '/infos',
   STATS: '/stats',
   RESA_FORM: '/resa/:geotrekid',
   RESA_LISTING: '/resalisting',
@@ -82,11 +79,6 @@ const routes = [
     meta: { 
       requiresAuth: true 
     },
-  }, {
-    path: ROUTES_PATHS.INFOS,
-    name: ROUTES_NAMES.INFOS,
-    component: InformationsView,
-    meta: { requiresAuth: true },
   }, {
 /*    path: ROUTES_PATHS.STATS,
     name: ROUTES_NAMES.STATS,
