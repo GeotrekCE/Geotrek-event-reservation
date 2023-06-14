@@ -2,7 +2,15 @@ export interface ResaBilan {
   annulation: boolean
   raison_annulation: string
   id_event: number
-  id_numerisateur: number
+  email_numerisateur: string
+  commentaire: string
+  nb_adultes: number
+  nb_moins_6_ans: number
+  nb_6_8_ans: number
+  nb_9_12_ans: number
+  nb_plus_12_ans: number
+
+  // id_numerisateur: number
 }
 
 /**

@@ -1,7 +1,7 @@
 <template>
   <div class="flex min-h-full flex-col">
 
-    <header class="bg-white shadow">
+    <header class="hidden md:block bg-white shadow">
       <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
         <h1 class="text-3xl font-bold tracking-tight text-gray-900">
           Listing des animations
@@ -11,7 +11,10 @@
 
     <main class="flex flex-grow gap-x-4">
 
-      <nav class="w-1/4 lg:w-1/5 bg-gray-100 shadow-xl">
+      <nav
+        class="md:block w-full md:w-1/4 2xl:w-1/5 bg-gray-100 shadow-xl"
+        :class="{ hidden: selectedEvent }"
+      >
 
         <p-data-view :value="events" paginator :rows="5" data-key="id">
           <template #header>
@@ -133,7 +136,10 @@
                   :participant-nb="data.capacity"
                   :attente-nb="data.sum_participants_liste_attente"
                 />
-                {{ data.begin_date || '?' }} - {{ data.end_date || '?' }}
+                {{ formatDate(data.begin_date) || '?' }} 
+                <span v-if="data.end_date">
+                  - {{ formatDate(data.end_date) }}
+                </span>
               </div>
             </router-link>
           </template>
@@ -141,41 +147,33 @@
 
       </nav>
 
-      <section class="w-3/4 lg:w-4/5 " v-if="selectedEvent">
+      <section class="w-full md:w-3/4 2xl:w-4/5" v-if="selectedEvent">
 
-        <p-card class="rounded-sm mt-8 mx-auto max-w-6xl">
+        <div class="md:hidden h-12 flex items-center cursor-pointer" @click="selectedEvent = null">
+          <i class="pi pi-chevron-left" />Retourner au résultats
+        </div>
+
+        <p-card class="rounded-sm md:mt-8 mx-auto max-w-6xl">
           <template #title>
-            <div class="flex items-center justify-between">
+            <div class="md:flex items-center justify-between space-y-4">
               {{ selectedEvent.name }}
-              <div class="text-center ml-auto text-sm font-medium">
+              <div class="text-center md:ml-auto text-sm font-medium mt-4 md:mt-0">
                 <a
                   :href="config.URL_GTR + '/event/' + selectedEvent.id"
                   target="_blank"
-                  class="mr-2 bg-cyan-500 p-2 rounded-sm drop-shadow-md text-black"
+                  class="mr-2 bg-cyan-500 text-gray-900 p-2 rounded-sm drop-shadow-md text-black"
                   :disabled="selectedEvent.published !== true">
                   Geotrek <i class="pi pi-external-link" />
                 </a>
                 <a
                   :href="config.URL_GTA + '/touristicevent/' + selectedEvent.id"
                   target="_blank"
-                  class="bg-green-500 p-2 rounded-sm drop-shadow-md text-black"
+                  class="bg-green-500 text-gray-900 p-2 rounded-sm drop-shadow-md text-black"
                 >
                   Geotrek admin <i class="pi pi-external-link" />
                 </a>
               </div>
 
-              <!-- <event-cancel-form
-                :bilan="selectedEvent.bilan"
-                :canceled="selectedEventCanceled"
-                :id_event="selectedEvent.id"
-                @submit="cancelAnimation"
-                class="ml-auto"
-              ></event-cancel-form> -->
-              <button
-                class="ml-2 rounded-sm px-3 py-2 text-sm font-medium text-white drop-shadow-md bg-red-600 hover:bg-red-400"
-              >
-                <i class="pi pi-exclamation-triangle" /> {{ selectedEventCanceled ? 'Dé annuler' : 'Annuler' }}
-              </button>
             </div>
           </template>
 
@@ -329,7 +327,7 @@
                 </div>
 
               </p-tab-panel>
-              <p-tab-panel header="Réservations">
+              <p-tab-panel header="Réservations" class="mx-0 px-0">
 
                 <reservation-progress
                   :reservation-nb="selectedEvent.sum_participants"
@@ -356,6 +354,7 @@
                   class="p-datatable-sm"
                   lazy
                   paginator
+                  scrollable
                   :rows="10"
                   :total-records="resas.total"
                   :loading="loading"
@@ -365,7 +364,7 @@
                   <template #loadingicon>
                     <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
                   </template>
-                  <p-column field="nom" header="Nom"></p-column>
+                  <p-column frozen field="nom" header="Nom"></p-column>
                   <p-column field="prenom" header="Prénom"></p-column>
                   <p-column field="email" header="email"></p-column>
                   <p-column field="tel" header="Tél"></p-column>
@@ -395,16 +394,78 @@
                 </p-data-table>
               </p-tab-panel>
               <p-tab-panel header="Bilan">
-                <event-bilan
-                  v-if="!selectedEventCanceled"
-                  :event="selectedEvent"
-                  @reloadEvent="getEvent()"
-                />
-                <div v-else>
-                  <v-alert text dense icon="mdi-information-outline" border="left">
-                    L'animation a été annulée, il n'y a pas de bilan à saisir
-                  </v-alert>
+
+                <p-message severity="warn" :closable="false">La saisie du bilan est réservée à l'animateur</p-message>
+
+                <div v-if="selectedEventCanceled">
+                  <p-message severity="error" :closable="false">
+                  L'animation a été annulée, il n'y a pas de bilan à saisir
+                  </p-message>
                 </div>
+
+                <div
+                  v-else-if="selectedEvent.bilan && !bilanEditing"
+                  class="grid grid-cols-1 sm:grid-cols-10 gap-x-2 gap-y-4 mt-4"
+                >
+                  <div
+                    class="col-span-1 sm:col-span-2"
+                    v-for="(field, index) in fieldsClasseAge"
+                    :key="index"
+                  >
+                    <label class="block text-sm font-medium leading-6 text-gray-900">{{ field }} : </label>
+                    <span>{{ selectedEvent.bilan[index] }}</span>
+                  </div>
+
+                  <div class="col-span-full">
+                    <label class="block text-sm font-medium leading-6 text-gray-900">Commentaire : </label>
+                    <p
+                      v-for="comment in selectedEvent.bilan?.commentaire?.split('\n')"
+                      :key="comment"
+                    >
+                      {{comment }}
+                    </p>
+                  </div>
+
+                  <div class="col-span-full flex items-center">
+                    <button
+                      class="ml-auto rounded-sm px-3 py-2 text-sm font-medium text-white shadow-sm  focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600 bg-sky-600 hover:bg-sky-500"
+                      @click="bilanEditing = true"
+                    >
+                      Modifier le bilan
+                    </button>
+                  </div>
+                </div>
+
+                <div class="border-b border-gray-900/10 pb-12" v-else>
+
+                  <event-bilan-form
+                    :saving="bilanSaving"
+                    :error="bilanError"
+                    :original-data="selectedEvent.bilan"
+                    @input="onSaveBilan"
+                  />
+
+                </div>
+
+              </p-tab-panel>
+              <p-tab-panel>
+                <template #header>
+                  <span class="text-red-500 p-tabview-title">
+                    Annulation
+                  </span>
+                </template>
+                <!-- <event-cancel-form
+                  :bilan="selectedEvent.bilan"
+                  :canceled="selectedEventCanceled"
+                  :id_event="selectedEvent.id"
+                  @input="onSaveBilan"
+                  class="ml-auto"
+                /> -->
+                <button
+                  class="ml-auto md:ml-2 md:mr-0 rounded-sm px-3 py-2 text-sm font-medium text-white drop-shadow-md bg-red-600 hover:bg-red-400"
+                >
+                  <i class="pi pi-exclamation-triangle" /> {{ selectedEventCanceled ? 'Dé annuler' : 'Annuler' }}
+                </button>
               </p-tab-panel>
             </p-tab-view>
           </template>
@@ -416,7 +477,7 @@
           -->
       </section>
 
-      <section class="w-3/4 grid min-h-full px-6 py-24 sm:py-32 lg:px-8" v-else>
+      <section class="hidden md:block md:w-3/4 2xl:w-4/5 grid min-h-full px-6 py-24 sm:py-32 lg:px-8" v-else>
 
         <div class="text-center">
           <p class="mt-6 text-base leading-7 text-gray-600">Merci de sélectioner une animation dans la liste de gauche.</p>
@@ -428,8 +489,9 @@
 </template>
 
 <script setup lang="ts">
-import { getEvents, getReservations } from '@/utils/appli_api';
+import { getEvents, getReservations, postBilan, getEvent } from '@/utils/appli_api';
 import ReservationProgress from '@/components/ReservationProgress.vue';
+import EventBilanForm from '@/components/EventBilanForm.vue'
 import { useEventStore } from '@/stores/events'
 import { ref, onBeforeMount, watch, computed } from 'vue'
 
@@ -443,13 +505,14 @@ import PTabPanel from 'primevue/tabpanel'
 import PDataTable from 'primevue/datatable'
 import PColumn from 'primevue/column'
 import PTag from 'primevue/tag'
+import PMessage from 'primevue/message'
 
 import { ROUTES_NAMES } from '@/router'
 import type { ResaEventFilters } from '@/declaration';
 import { getDistricts, getTouristiceventType, getTouristicEventDetail } from '@/utils/gta_api';
 
 import { formatDate } from '@/utils/formatDate'
-import { gtApiFields, type API_FIELDS } from '@/utils/fields'
+import { gtApiFields, type API_FIELDS, fieldsClasseAge } from '@/utils/fields'
 import type { ResaBilan } from '@/declaration';
 
 const eventStore = useEventStore()
@@ -492,14 +555,15 @@ const eventtypes = ref<string[]>([])
 const formOpened = ref(false)
 
 /**
- * Donnée unitaire d'un événement
+ * Gestion d'un événement
  */
 const selectedEvent = ref<any>(null)
 const selectedEventCanceled = computed(() => selectedEvent.value?.bilan?.annulation)
 const gtevent = ref<any>(null)
 const resas = ref<any>(null)
 const showMore = ref(false)
-const bilan = ref<ResaBilan | null>(null)
+
+
 /**
  * Fonction de chargement des événements
  */
@@ -544,14 +608,29 @@ function onPage($event: any) {
   loadReservations($event.page)
 }
 
-/*async function cancelAnimation() {
-  editedItem.id_numerisateur = user.id_role;
-  editedItem.id_event = id_event;
-  if (editedItem.annulation === false) {
-    editedItem.raison_annulation = '';
+
+/**
+ * Gestion du bilan
+ */
+const bilanSaving = ref(false)
+const bilanError = ref<any>(null)
+const bilanEditing = ref(false)
+async function onSaveBilan(data) {
+  bilanSaving.value = true
+  bilanError.value = null
+  try {
+    await postBilan({
+      id_event: selectedEvent.value.id,
+      id_bilan: selectedEvent.value.bilan?.id_bilan,
+      ...data
+    })
+    selectedEvent.value = await getEvent(selectedEvent.value.id)
+    bilanEditing.value = false
+  } catch (error) {
+    bilanError.value = error
   }
-  postBilan(editedItem)
-}*/
+  bilanSaving.value = false
+}
 
 /**
  * Fonction de gestion des champs geotrek
@@ -600,7 +679,17 @@ onBeforeMount(async () => {
 </script>
 
 <style>
-#red {
-  background-color: aquamarine;
+.p-tabview .p-tabview-panel, 
+.p-tabview .p-tabview-panels{
+  margin: 0;
+  padding: 0;
+}
+
+.p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
+  color: var(--blue-500);
+  border-color: var(--blue-500);
+}
+.p-tabview .p-tabview-nav li .p-tabview-nav-link:not(.p-disabled):focus {
+  box-shadow: unset;
 }
 </style>

@@ -7,8 +7,6 @@ import LoginView from '@/views/LoginView.vue';
 import LoginCallbackView from '@/views/LoginCallbackView.vue';
 import LogoutView from '@/views/LogoutView.vue';
 
-import EventDetailView from '@/views/EventDetailView.vue';
-
 // import BilanStats from '@/views/BilanStats.vue';
 
 export const ROUTES_NAMES = {
