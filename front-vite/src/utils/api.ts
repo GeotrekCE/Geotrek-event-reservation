@@ -23,53 +23,20 @@ async function callFetchApi (
   const fetchParams = { ...baseParams, ...optionsHeaders }
 
 
-  // try {
-    const response = await fetch(url, fetchParams)
-    console.log(response)
-    if (response.status >= 400) {
-      throw Error(response.statusText);
-    }
-    let data = { msg: '' }
-    try {
-      data = await response.json()
-    } catch {
-      // we have an error with API server, sometimes the response is not JSON
-    }
+  const response = await fetch(url, fetchParams)
 
-    return data
-/*
-    if (response.status < 400) {
-      if (method !== 'GET' && snackMessage) {
-        // appStore.snackbarInfo = {
-        //   message: data.msg || (snackMessage as string),
-        //   color: 'success',
-        //   show: true
-        // };
-      }
-      return data;
-    } else {
-      // appStore.snackbarInfo = {
-      //   message: data.msg,
-      //   color: 'error',
-      //   show: true
-      // }
-      return {
-        status: response.status,
-        data,
-        error: response.statusText
-      }
-    }
-    */
-  // } catch (error: any) {
-  //   console.error('There was an error!', error);
-  //   appStore.snackbarInfo = {
-  //     message: error,
-  //     color: 'error',
-  //     show: true
-  //   }
-  //   throw new Error(error as string)
-  // }
+  if (response.status >= 400) {
+    throw Error(response.statusText);
+  }
+  let data = { msg: '' }
+  try {
+    data = await response.json()
+  } catch {
+    // we have an error with API server, sometimes the response is not JSON
+    // but we don't throw error, just we pass it silently
+  }
 
+  return data
 }
 
 export function getApiData (baseUrl: string, route: string, params?: any) {
