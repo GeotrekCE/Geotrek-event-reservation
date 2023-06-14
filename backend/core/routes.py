@@ -11,6 +11,7 @@ from core.repository import query_stats_bilan, query_stats_animations_per_month
 from core.schemas import (
     GTEventsSchema,
     TReservationsSchema,
+    TReservationsUpdateSchema,
     TAnimationsBilansSchema,
     VExportBilanSchema,
 )
@@ -254,6 +255,25 @@ def confirm_reservation():
         )
 
     return "", 204
+
+
+@app_routes.route("/reservations/<reservation_id>", methods=["PUT"])
+@login_admin_required
+def update_reservation(reservation_id):
+
+    # Check : la réservation existe
+    reservation = TReservations.query.get(reservation_id)
+    if not reservation:
+        return jsonify({"error": f"Reservation #{reservation_id} not found"}), 404
+
+    post_data = request.get_json()
+    validated_data = TReservationsUpdateSchema().load(post_data)
+    for k, v in validated_data.items():
+        setattr(reservation, k, v)
+    db.session.add(reservation)
+    db.session.commit()
+
+    return TReservationsSchema().dumps(reservation), 200
 
 
 @app_routes.route("/reservations/<reservation_id>", methods=["DELETE"])

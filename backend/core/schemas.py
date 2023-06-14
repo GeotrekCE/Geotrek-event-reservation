@@ -1,6 +1,6 @@
 from email_validator import validate_email, EmailNotValidError, EmailSyntaxError
 from marshmallow import fields, EXCLUDE, ValidationError, post_load, RAISE
-from marshmallow_sqlalchemy import SQLAlchemyAutoSchema, auto_field
+from marshmallow_sqlalchemy import SQLAlchemyAutoSchema, auto_field, SQLAlchemySchema
 
 from core.models import (
     GTEvents,
@@ -9,6 +9,16 @@ from core.models import (
     TAnimationsBilans,
     VExportBilan,
 )
+
+
+def validate_and_normalize_email(email):
+    try:
+        email_info = validate_email(email, check_deliverability=False)
+    except EmailNotValidError as e:
+        raise ValidationError(f"email is not valid: {e}")
+    except EmailSyntaxError as e:
+        raise ValidationError(f"email is not valid: {e}")
+    return email_info.normalized
 
 
 class VExportBilanSchema(SQLAlchemyAutoSchema):
@@ -43,13 +53,7 @@ class TReservationsSchema(SQLAlchemyAutoSchema):
 
     @post_load
     def validate_and_normalize_email(self, data, **kwargs):
-        try:
-            email_info = validate_email(data.email, check_deliverability=False)
-        except EmailNotValidError as e:
-            raise ValidationError(f"email is not valid: {e}")
-        except EmailSyntaxError as e:
-            raise ValidationError(f"email is not valid: {e}")
-        data.email = email_info.normalized
+        data.email = validate_and_normalize_email(data.email)
         return data
 
     @post_load
@@ -64,6 +68,36 @@ class TReservationsSchema(SQLAlchemyAutoSchema):
         ]:
             if getattr(data, prop) is None:
                 setattr(data, prop, NB_PARTICIPANTS_DEFAULT_VALUE)
+        return data
+
+
+class TReservationsUpdateSchema(SQLAlchemySchema):
+    class Meta:
+        model = TReservations
+        unknown = RAISE
+        load_instance = False
+
+    nom = auto_field(required=False)
+    prenom = auto_field(required=False)
+    tel = auto_field(required=False)
+    email = auto_field(required=False)
+    commentaire = auto_field()
+    nb_adultes = auto_field()
+    nb_moins_6_ans = auto_field()
+    nb_6_8_ans = auto_field()
+    nb_9_12_ans = auto_field()
+    nb_plus_12_ans = auto_field()
+    num_departement = auto_field()
+    liste_attente = auto_field()
+    confirmed = auto_field()
+
+    @post_load
+    def validate_and_normalize_email(self, data, **kwargs):
+        try:
+            data.email
+        except AttributeError:
+            return data
+        data.email = validate_and_normalize_email(data.email)
         return data
 
 
