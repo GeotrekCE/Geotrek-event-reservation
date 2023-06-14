@@ -18,8 +18,10 @@
     "pinia": "^2.0.36",
     "primeicons": "^6.0.1",
     "primevue": "^3.29.2",
+    "vee-validate": "^4.9.6",
     "vue": "^3.3.2",
-    "vue-router": "^4.2.0"
+    "vue-router": "^4.2.0",
+    "yup": "^1.2.0"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.2.0",
