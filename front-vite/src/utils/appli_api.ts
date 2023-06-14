@@ -53,7 +53,7 @@ export const getEvents = (params: any) => {
   return getApiData(CONFIGURATION.URL_APPLICATION, 'events', getparams);
 }
 
-export const getOneEvent = (id: any): Promise<ResaEvent> => getApiData(CONFIGURATION.URL_APPLICATION, `events/${id}`);
+export const getEvent = (id: any): Promise<ResaEvent> => getApiData(CONFIGURATION.URL_APPLICATION, `events/${id}`);
 
 export const postBilan = (data: any) => postApiData(CONFIGURATION.URL_APPLICATION, 'bilans', data);
 

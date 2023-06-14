@@ -17,15 +17,16 @@ async function callFetchApi (
   method: 'GET' | 'POST' | 'DELETE',
   url: URL | RequestInfo,
   optionsHeaders = {},
-  snackMessage?: boolean | string
+  // snackMessage?: boolean | string
 ): Promise<any> {
   const baseParams = { method }
   const fetchParams = { ...baseParams, ...optionsHeaders }
 
 
-  try {
+  // try {
     const response = await fetch(url, fetchParams)
-    if (response.status === 500) {
+    console.log(response)
+    if (response.status >= 400) {
       throw Error(response.statusText);
     }
     let data = { msg: '' }
@@ -35,36 +36,39 @@ async function callFetchApi (
       // we have an error with API server, sometimes the response is not JSON
     }
 
-    if (response.status === 200) {
+    return data
+/*
+    if (response.status < 400) {
       if (method !== 'GET' && snackMessage) {
-        appStore.snackbarInfo = {
-          message: data.msg || (snackMessage as string),
-          color: 'success',
-          show: true
-        };
+        // appStore.snackbarInfo = {
+        //   message: data.msg || (snackMessage as string),
+        //   color: 'success',
+        //   show: true
+        // };
       }
       return data;
     } else {
-      appStore.snackbarInfo = {
-        message: data.msg,
-        color: 'error',
-        show: true
-      }
+      // appStore.snackbarInfo = {
+      //   message: data.msg,
+      //   color: 'error',
+      //   show: true
+      // }
       return {
         status: response.status,
         data,
         error: response.statusText
       }
     }
-  } catch (error: any) {
-    console.error('There was an error!', error);
-    appStore.snackbarInfo = {
-      message: error,
-      color: 'error',
-      show: true
-    }
-    throw new Error(error as string)
-  }
+    */
+  // } catch (error: any) {
+  //   console.error('There was an error!', error);
+  //   appStore.snackbarInfo = {
+  //     message: error,
+  //     color: 'error',
+  //     show: true
+  //   }
+  //   throw new Error(error as string)
+  // }
 
 }
 
@@ -91,11 +95,11 @@ export function postApiData (baseUrl: string, route: string, postData: any, mess
   }
 
   const url = buildGetUrl(baseUrl, route);
-  let snackMessage: boolean | string = false
-  if (message) {
-    snackMessage = 'Données sauvegardées';
-  }
-  return callFetchApi('POST', url, fetchParams, snackMessage);
+  // let snackMessage: boolean | string = false
+  // if (message) {
+  //   snackMessage = 'Données sauvegardées';
+  // }
+  return callFetchApi('POST', url, fetchParams /*, snackMessage */);
 }
 
 export function deleteApiData (baseUrl: string, route: string) {
