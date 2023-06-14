@@ -7,7 +7,7 @@
           <span class="text-2xl font-medium text-gray-900">Réservation animations</span>
         </router-link>
       </div>
-      <div class="flex lg:hidden">
+      <div class="flex lg:hidden" v-if="isAuth">
         <button type="button" class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700" @click="isMenuOpened = true">
           <span class="sr-only">Open main menu</span>
           <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
@@ -31,7 +31,6 @@
         >
           {{ isAuth ? 'Déconnexion (' + user?.email + ')' : 'Connexion' }}
         </router-link>
-        <a href="http://localhost:5173/login/callback?token=89352233a9a0df137f6fa5a2478ebe62">Auto connect</a>
       </div>
     </nav>
     <!-- Mobile menu, show/hide based on menu open state. -->
@@ -44,7 +43,7 @@
             <img class="h-8 w-auto pr-1.5" src="/assets/logo.svg" alt="">
             <span class="text-2xl font-medium text-gray-900">Réservation animations</span>
           </router-link>
-          <button type="button" class=" rounded-md p-2.5 text-gray-700" @click="isMenuOpened = false">
+          <button type="button" class=" rounded-md p-2.5 text-gray-700" @click="isMenuOpened = false" v-if="isAuth">
             <span class="sr-only">Close menu</span>
             <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
