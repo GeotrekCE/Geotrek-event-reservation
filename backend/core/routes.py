@@ -152,6 +152,7 @@ def get_reservations():
         except TypeError:
             return "event_id query param should be an integer", 400
 
+    email = session["user"]
     is_admin = is_user_admin()
 
     query = db.session.query(TReservations)
