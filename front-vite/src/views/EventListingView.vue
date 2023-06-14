@@ -13,7 +13,7 @@
 
       <nav class="w-1/4 lg:w-1/5 bg-gray-100 shadow-xl">
 
-        <p-data-view :value="events" paginator :rows="5">
+        <p-data-view :value="events" paginator :rows="5" data-key="id">
           <template #header>
             <form @submit.prevent="search">
               <div class="w-full flex justify-between">
@@ -153,7 +153,7 @@
                   target="_blank"
                   class="mr-2 bg-cyan-500 p-2 rounded-sm drop-shadow-md text-black"
                   :disabled="selectedEvent.published !== true">
-                  Destination cévennes <i class="pi pi-external-link" />
+                  Geotrek <i class="pi pi-external-link" />
                 </a>
                 <a
                   :href="config.URL_GTA + '/touristicevent/' + selectedEvent.id"
@@ -367,6 +367,8 @@
                   </template>
                   <p-column field="nom" header="Nom"></p-column>
                   <p-column field="prenom" header="Prénom"></p-column>
+                  <p-column field="email" header="email"></p-column>
+                  <p-column field="tel" header="Tél"></p-column>
                   <p-column field="sum_participants" header="Total"></p-column>
                   <p-column field="sum_participants_liste_attente" header="Liste d'attente"></p-column>
                   <p-column field="nb_adultes" header="adultes"></p-column>
@@ -374,14 +376,6 @@
                   <p-column field="nb_6_8_ans" header="6/8 ans"></p-column>
                   <p-column field="nb_9_12_ans" header="9/12 ans"></p-column>
                   <p-column field="nb_plus_12_ans" header="+12 ans"></p-column>
-                  <p-column field="confirmed" header="Confirmé">
-                    <template #body="{ data }">
-                        <i
-                          class="pi"
-                          :class="{ 'pi-check-circle text-green-500': data.confirmed, 'pi-times-circle text-orange-400': !data.confirmed }"
-                        />
-                    </template>
-                  </p-column>
                   <p-column field="confirmed" header="Statut">
                     <template #body="{ data }">
                       <p-tag
@@ -391,7 +385,7 @@
                       />
                     </template>
                   </p-column>
-                  <p-column header="Annulation">
+                  <p-column>
                     <template #body>
                       <button
                         class="rounded-sm px-3 py-2 text-sm font-medium text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600 bg-sky-600 hover:bg-sky-500"
