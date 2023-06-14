@@ -208,8 +208,18 @@ def confirm_reservation():
     token = request.get_json()["resa_token"]
     resa = db.first_or_404(db.select(TReservations).filter_by(token=token), description="Reservation not found")
     if resa.confirmed:
-        return "Reservation already confirmed", 400
+        return jsonify({"error": "Reservation already confirmed"}), 400
+
+    event = resa.event
+    if not event.is_reservation_possible_for(resa.nb_participants):
+        return "", 422
+    elif event.sum_participants + resa.nb_participants <= event.capacity:
+        resa.liste_attente = False
+    else:
+        resa.liste_attente = True
+
     resa.confirmed = True
+
     db.session.add(resa)
     db.session.commit()
 
