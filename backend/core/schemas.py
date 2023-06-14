@@ -25,8 +25,10 @@ class TReservationsSchema(SQLAlchemyAutoSchema):
         dump_only = (
             "id_reservation",
             "liste_attente",
+            "confirmed",
             "meta_create_date",
             "meta_update_date",
+            "event",
         )
         exclude = (
             "token",
