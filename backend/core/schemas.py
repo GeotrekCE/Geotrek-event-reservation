@@ -29,6 +29,9 @@ class TReservationsSchema(SQLAlchemyAutoSchema):
             "meta_create_date",
             "meta_update_date",
             "event",
+            "cancelled",
+            "cancel_date",
+            "cancel_by",
         )
         exclude = (
             "token",

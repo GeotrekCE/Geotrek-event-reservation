@@ -139,6 +139,9 @@ class TReservations(db.Model):
     token = db.Column(db.Unicode)
     confirmed = db.Column(db.Boolean)
     id_event = db.Column(db.Integer, db.ForeignKey("public.tourism_touristicevent.id"), nullable=False)
+    cancelled = db.Column(db.Boolean, default=False)
+    cancel_date = db.Column(db.DateTime, nullable=True)
+    cancel_by = db.Column(db.Unicode, nullable=True)
 
     @property
     def nb_participants(self):

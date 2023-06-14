@@ -1,3 +1,4 @@
+from datetime import datetime
 from functools import wraps
 import secrets
 
@@ -37,6 +38,11 @@ def login_admin_required(f):
             return f(*args, **kwargs)
         return "A logged-in admin is required", 403
     return wrapper
+
+
+def is_user_admin():
+    email = session["user"]
+    return email in current_app.config["ADMIN_EMAILS"]
 
 
 def send_email(subject, recipients, html):
@@ -146,9 +152,7 @@ def get_reservations():
         except TypeError:
             return "event_id query param should be an integer", 400
 
-    email = session["user"]
-    from flask import current_app
-    is_admin = email in current_app.config["ADMIN_EMAILS"]
+    is_admin = is_user_admin()
 
     query = db.session.query(TReservations)
 
@@ -245,6 +249,60 @@ def confirm_reservation():
                 "confirmation_mail_on_liste_attente.html",
                 nb_places=resa.nb_participants,
                 event=event.name
+            )
+        )
+
+    return "", 204
+
+
+@app_routes.route("/reservations/<reservation_id>", methods=["DELETE"])
+@login_required
+def cancel_reservation(reservation_id):
+    is_admin = is_user_admin()
+
+    # Check : la réservation existe
+    reservation = TReservations.query.get(reservation_id)
+    if not reservation:
+        return jsonify({"error": f"Reservation #{reservation_id} not found"}), 404
+
+    # Check : la réservation appartient à l'utilisateur OU is_admin
+    user_email = session["user"]
+    if not is_admin and reservation.email != user_email:
+        return jsonify({"error": f"Reservation #{reservation_id} does not belong to {user_email}"}), 404
+
+    if not reservation.confirmed:
+        return jsonify({"error": f"Reservation #{reservation_id} is not confirmed and cannot be cancelled"}), 400
+
+    if reservation.cancelled:
+        return jsonify({"error": f"Reservation #{reservation_id} has already been cancelled"}), 400
+
+
+    reservation.cancelled = True
+    reservation.cancel_data = datetime.now()
+    reservation.cancel_by = "admin" if is_admin else "utilisateur"
+    db.session.add(reservation)
+    db.session.commit()
+
+    if not is_admin:
+        # Envoi email confirmation d'annulation à l'utilisateur
+        send_email(
+            subject=get_mail_subject("Votre réservation a été annulée"),
+            recipients=[reservation.email],
+            html=render_template(
+                "resa_cancelled_mail.html",
+                reservation=reservation,
+                event=reservation.event
+            )
+        )
+
+        # Envoi notification aux administrateurs
+        send_email(
+            subject=get_mail_subject("Une réservation a été annulée"),
+            recipients=[reservation.email],
+            html=render_template(
+                "admin_resa_cancelled_mail.html",
+                reservation=reservation,
+                event=reservation.event
             )
         )
 
