@@ -2,7 +2,7 @@ from functools import wraps
 import secrets
 
 from email_validator import validate_email, EmailNotValidError, EmailSyntaxError
-from flask import jsonify, request, Blueprint, render_template, session
+from flask import jsonify, request, Blueprint, render_template, session, current_app
 from flask_mail import Message
 
 from core.models import db, GTEvents, TReservations, VExportBilan, TTokens
@@ -64,6 +64,10 @@ def get_login_link(token):
     hostname = current_app.config["PUBLIC_SERVER_NAME"]
     front_path = current_app.config["FRONTEND_LOGIN_PATHNAME"]
     return f"{protocol}{hostname}{front_path}?token={token}"
+
+
+def get_mail_subject(text):
+    return current_app.config["ORGANISM_FOR_EMAIL_SUBJECT"] + " " + text
 
 
 @app_routes.route("/events")
@@ -223,15 +227,26 @@ def confirm_reservation():
     db.session.add(resa)
     db.session.commit()
 
-    send_email(
-        subject="Votre réservation est confirmée",
-        recipients=[resa.email],
-        html=render_template(
-            "resa_confirmed_mail.html",
-            nb_places=resa.nb_participants,
-            event="la super fête"
+    if not resa.liste_attente:
+        send_email(
+            subject=get_mail_subject("Votre réservation est confirmée"),
+            recipients=[resa.email],
+            html=render_template(
+                "resa_confirmed_mail.html",
+                nb_places=resa.nb_participants,
+                event=event.name
+            )
         )
-    )
+    else:
+        send_email(
+            subject=get_mail_subject("Votre réservation est en liste d'attente"),
+            recipients=[resa.email],
+            html=render_template(
+                "confirmation_mail_on_liste_attente.html",
+                nb_places=resa.nb_participants,
+                event=event.name
+            )
+        )
 
     return "", 204
 

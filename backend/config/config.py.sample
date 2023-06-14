@@ -1,5 +1,11 @@
 import os
 
+# --- Content settings ---
+
+# Ce texte est placé au début de l'objet dans les emails, par exemple "[Rando Guadeloupe]".
+ORGANISM_FOR_EMAIL_SUBJECT = ""
+
+
 # --- Application settings ---
 
 # The PUBLIC_SERVER_NAME of the application, default None, for instance: 'www.png-resa.fr' or 'localhost:5000'.
