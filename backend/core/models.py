@@ -133,7 +133,7 @@ class TReservations(db.Model):
     nb_9_12_ans = db.Column(db.Integer, default=0)
     nb_plus_12_ans = db.Column(db.Integer, default=0)
     num_departement = db.Column(db.Unicode)
-    liste_attente = db.Column(db.Boolean, default=True)
+    liste_attente = db.Column(db.Boolean, nullable=True)
     meta_create_date = db.Column(db.DateTime)
     meta_update_date = db.Column(db.DateTime)
     token = db.Column(db.Unicode)
