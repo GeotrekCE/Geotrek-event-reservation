@@ -2,6 +2,8 @@
 
 CREATE SCHEMA IF NOT EXISTS animations;
 
+DROP VIEW animations.v_export_bilans_global;
+
 DROP TABLE  IF EXISTS animations.t_reservations ;
 
 CREATE TABLE animations.t_reservations (
