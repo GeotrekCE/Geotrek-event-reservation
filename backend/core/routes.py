@@ -12,6 +12,7 @@ from core.schemas import (
     GTEventsSchema,
     TReservationsSchema,
     TReservationsUpdateSchema,
+    TReservationsCreateByAdminSchema,
     TAnimationsBilansSchema,
     VExportBilanSchema,
 )
@@ -42,8 +43,8 @@ def login_admin_required(f):
 
 
 def is_user_admin():
-    email = session["user"]
-    return email in current_app.config["ADMIN_EMAILS"]
+    email = session.get("user")
+    return email and email in current_app.config["ADMIN_EMAILS"]
 
 
 def send_email(subject, recipients, html):
@@ -51,6 +52,29 @@ def send_email(subject, recipients, html):
     print("email sent", msg)
     from app import mail
     mail.send(msg)
+
+
+def send_confirmation_email(reservation):
+    if not reservation.liste_attente:
+        send_email(
+            subject=get_mail_subject("Votre réservation est confirmée"),
+            recipients=[reservation.email],
+            html=render_template(
+                "resa_confirmed_mail.html",
+                nb_places=reservation.nb_participants,
+                event=reservation.event.name
+            )
+        )
+    else:
+        send_email(
+            subject=get_mail_subject("Votre réservation est en liste d'attente"),
+            recipients=[reservation.email],
+            html=render_template(
+                "confirmation_mail_on_liste_attente.html",
+                nb_places=reservation.nb_participants,
+                event=reservation.event.name
+            )
+        )
 
 
 def generate_token():
@@ -181,9 +205,42 @@ def get_reservations():
 
 @app_routes.route("/reservations", methods=["POST"])
 def post_reservations():
+    """Crée une réservation.
+
+    Si non authentifié, la réservation est créée non-confirmée. Les propriétés acceptées sont :
+
+    nom (required)
+    prenom (required)
+    tel (required)
+    email (required)
+    commentaire
+    nb_adultes (default 0)
+    nb_moins_6_ans (default 0)
+    nb_6_8_ans (default 0)
+    nb_9_12_ans (default 0)
+    nb_plus_12_ans (default 0)
+    num_departement
+    id_event (required)
+
+    Si authentifié en tant qu'admin, la réservation est créée confirmée par défaut. Les propriétés supplémentaires
+    acceptées sont :
+
+    liste_attente (required)
+    confirmed (default True)
+
+    Selon l'état de la réservation le mail correspondant est envoyé à l'adresse email indiquée.
+
+    - non-confirmée -> email de validation
+    - confirmée ET sur liste d'attente -> email de placement sur liste d'attente
+    - confirmée -> email de confirmation
+    """
+    is_admin = is_user_admin()
     post_data = request.get_json()
 
-    reservation = TReservationsSchema().load(post_data, session=db.session)
+    if is_admin:
+        reservation = TReservationsCreateByAdminSchema().load(post_data, session=db.session)
+    else:
+        reservation = TReservationsSchema().load(post_data, session=db.session)
 
     # Récupération de l'événement cible, ce n'est pas un attribut de 'reservation' avant le commit.
     # TODO: return 404? Or just let the internal server error spread?
@@ -198,15 +255,18 @@ def post_reservations():
     db.session.commit()
     # db.session.close()
 
-    send_email(
-        subject="Lien pour confirmer votre demande de réservation",
-        recipients=[reservation.email],
-        html=render_template(
-            "please_confirm_resa_mail.html",
-            confirmation_link=get_confirmation_link(reservation),
-            event=reservation.event.name
+    if not reservation.confirmed:
+        send_email(
+            subject="Lien pour confirmer votre demande de réservation",
+            recipients=[reservation.email],
+            html=render_template(
+                "please_confirm_resa_mail.html",
+                confirmation_link=get_confirmation_link(reservation),
+                event=reservation.event.name
+            )
         )
-    )
+    else:
+        send_confirmation_email(reservation)
 
     return TReservationsSchema().dumps(reservation)
 
@@ -233,26 +293,7 @@ def confirm_reservation():
     db.session.add(resa)
     db.session.commit()
 
-    if not resa.liste_attente:
-        send_email(
-            subject=get_mail_subject("Votre réservation est confirmée"),
-            recipients=[resa.email],
-            html=render_template(
-                "resa_confirmed_mail.html",
-                nb_places=resa.nb_participants,
-                event=event.name
-            )
-        )
-    else:
-        send_email(
-            subject=get_mail_subject("Votre réservation est en liste d'attente"),
-            recipients=[resa.email],
-            html=render_template(
-                "confirmation_mail_on_liste_attente.html",
-                nb_places=resa.nb_participants,
-                event=event.name
-            )
-        )
+    send_confirmation_email(resa)
 
     return "", 204
 

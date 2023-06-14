@@ -71,6 +71,22 @@ class TReservationsSchema(SQLAlchemyAutoSchema):
         return data
 
 
+class TReservationsCreateByAdminSchema(TReservationsSchema):
+    class Meta(TReservationsSchema.Meta):
+        dump_only = (
+            "id_reservation",
+            "meta_create_date",
+            "meta_update_date",
+            "event",
+            "cancelled",
+            "cancel_date",
+            "cancel_by",
+        )
+
+    confirmed = auto_field(load_default=True)
+    liste_attente = fields.Boolean(required=True)
+
+
 class TReservationsUpdateSchema(SQLAlchemySchema):
     class Meta:
         model = TReservations
