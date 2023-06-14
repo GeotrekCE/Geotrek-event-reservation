@@ -201,26 +201,6 @@
               <p class="mt-1 text-sm leading-6 text-gray-600">Utilisez une adresse mail sur laquelle vous pouvez vous connecter.</p>
 
               <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-<!-- 
-                <div
-                  v-for="f in fields"
-                  :key="f.name"
-                  class="col-span-1 sm:col-span-3"
-                >
-                  <label :for="f.name" class="block text-sm font-medium leading-6 text-gray-900">{{ f.label }}</label>
-                  <div class="mt-2">
-                    <vv-field
-                      :as="f.as"
-                      :name="f.name"
-                      :id="f.name"
-                      class="block w-full rounded-sm border-0 p-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                    />
-                    <vv-error-message
-                      :name="f.name"
-                    />
-                  </div>
-                </div> -->
-
 
                 <div class="col-span-1 sm:col-span-3">
                   <label for="prenom" class="block text-sm font-medium leading-6 text-gray-900">Prénom</label>
@@ -518,29 +498,6 @@ const formValues = {
   nb_9_12_ans: 0,
   nb_plus_12_ans: 0,
 }
-
-/*const fields = [{
-  name: 'prenom',
-  label: 'Prénom',
-  as: 'input',
-  type: 'text',
-  wrapperClass: 'col-span-1 sm:col-span-3'
-}, {
-  name: 'nom',
-  label: 'Nom',
-  as: 'input',
-  type: 'text',
-}, {
-  name: 'email',
-  label: 'Email',
-  as: 'input',
-  type: 'text',
-}, {
-  name: 'tel',
-  label: 'Téléphone',
-  as: 'input',
-  type: 'text',
-}]*/
 
 /**
  * State local
