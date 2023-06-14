@@ -137,7 +137,7 @@ class TReservations(db.Model):
     meta_create_date = db.Column(db.DateTime, default=datetime.datetime.now)
     meta_update_date = db.Column(db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
     token = db.Column(db.Unicode)
-    confirmed = db.Column(db.Boolean)
+    confirmed = db.Column(db.Boolean, default=False)
     id_event = db.Column(db.Integer, db.ForeignKey("public.tourism_touristicevent.id"), nullable=False)
     cancelled = db.Column(db.Boolean, default=False)
     cancel_date = db.Column(db.DateTime, nullable=True)
