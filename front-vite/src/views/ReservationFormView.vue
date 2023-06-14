@@ -183,6 +183,7 @@
           class="mt-10"
           :validation-schema="formSchema"
           :initial-values="formValues"
+          v-slot="{ errors }"
         >
           <div class="space-y-12">
             <div>
@@ -276,7 +277,7 @@
                       as="select"
                       class="block w-full rounded-sm border-0 p-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 text-sm leading-6 h-10"
                     >
-                      <option value="971">Guadeloupe</option>
+                      <option value="guadeloupe">Guadeloupe</option>
                       <option value="hexagone">Hexagone</option>
                       <option value="autre">Autre</option>
                     </vv-field>
@@ -423,6 +424,14 @@
             >
               {{ saving ? 'Enregistrement en cours...' : 'Enregistrer réservation' }}
             </button>
+            <span v-if="Object.keys(errors).length === 1" class="text-red-500">
+              Une erreur est présente dans votre formulaire (champ {{ Object.keys(errors)[0] }}).
+              Merci de la corriger avant de soumettre à nouveau le formulaire
+            </span>
+            <span v-if="Object.keys(errors).length > 1" class="text-red-500">
+              Plusieurs erreurs sont présentes dans votre formulaire.
+              Merci de les corriger avant de soumettre à nouveau le formulaire
+            </span>
             <span v-if="saveError" class="text-red-500">
              Une erreur est survenue : {{ saveError }} 
             </span>
@@ -550,3 +559,9 @@ async function saveReservation(values: any) {
 }
 
 </script>
+
+<style scoped>
+span[role='alert'] {
+  color: var(--red-500);
+}
+</style>
