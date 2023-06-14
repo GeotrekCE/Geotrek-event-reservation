@@ -191,145 +191,17 @@
 
             <p-tab-view>
               <p-tab-panel header="Résumé">
-                <div class="grid grid-cols-1 sm:grid-cols-6 gap-x-2 gap-y-4 mt-4" v-if="selectedEvent">
-                  <div class="col-span-1 sm:col-span-3">
-                    <label for="username" class="block text-sm font-medium leading-6 text-gray-900">
-                      Type
-                    </label>
-                    <div class="mt-2">
-                      <div
-                        class="flex rounded-sm shadow-sm ring-1 ring-inset ring-gray-300 sm:max-w-md"
-                      >
-                        <span
-                          class="block flex-1 border-0 bg-transparent p-2 text-gray-600 sm:text-sm sm:leading-6"
-                        >
-                          {{ ( selectedEvent.type && selectedEvent.type.type ) || 'Non renseigné' }}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
 
-                  <div class="col-span-1 sm:col-span-3">
-                    <label for="username" class="block text-sm font-medium leading-6 text-gray-900">
-                      Date de début
-                    </label>
-                    <div class="mt-2">
-                      <div
-                        class="flex rounded-sm shadow-sm ring-1 ring-inset ring-gray-300 sm:max-w-md"
-                      >
-                        <span
-                          class="block flex-1 border-0 bg-transparent p-2 text-gray-600 sm:text-sm sm:leading-6"
-                        >
-                          {{ formatDate(selectedEvent.begin_date) || 'Non renseigné' }}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-span-1 sm:col-span-3">
-                    <label for="username" class="block text-sm font-medium leading-6 text-gray-900">
-                      Date de fin
-                    </label>
-                    <div class="mt-2">
-                      <div
-                        class="flex rounded-sm shadow-sm ring-1 ring-inset ring-gray-300 sm:max-w-md"
-                      >
-                        <span
-                          class="block flex-1 border-0 bg-transparent p-2 text-gray-600 sm:text-sm sm:leading-6"
-                        >
-                          {{ formatDate(selectedEvent.end_date) || 'Non renseigné' }}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-span-1 sm:col-span-3">
-                    <label for="username" class="block text-sm font-medium leading-6 text-gray-900">
-                      Capacité
-                    </label>
-                    <div class="mt-2">
-                      <div
-                        class="flex rounded-sm shadow-sm ring-1 ring-inset ring-gray-300 sm:max-w-md"
-                      >
-                        <span
-                          class="block flex-1 border-0 bg-transparent p-2 text-gray-600 sm:text-sm sm:leading-6"
-                        >
-                          {{ selectedEvent.capacity || 'Non renseigné' }}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="col-span-1 sm:col-span-3">
-                    <label for="username" class="block text-sm font-medium leading-6 text-gray-900">
-                      Massif
-                    </label>
-                    <div class="mt-2">
-                      <div
-                        class="flex rounded-sm shadow-sm ring-1 ring-inset ring-gray-300 sm:max-w-md"
-                      >
-                        <span
-                          class="block flex-1 border-0 bg-transparent p-2 text-gray-600 sm:text-sm sm:leading-6"
-                        >
-                          {{ selectedEvent.massif || 'Non renseigné' }}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="col-span-full">
-                    <label for="about" class="block text-sm font-medium leading-6 text-gray-900">Informations pratiques (fr)</label>
-                    <div class="mt-2">
-                      <textarea id="about" name="about" rows="3" class="block w-full rounded-sm border-0 p-2 text-gray-600 shadow-sm ring-1 ring-inset ring-gray-300 sm:text-sm sm:leading-6" :value="selectedEvent.practical_info_fr" disabled />
-                    </div>
-                  </div>
-
-                  <div class="col-span-full">
-                    <label for="about" class="block text-sm font-medium leading-6 text-gray-900">Informations pratiques (en)</label>
-                    <div class="mt-2">
-                      <textarea id="about" name="about" rows="3" class="block w-full rounded-sm border-0 p-2 text-gray-600 shadow-sm ring-1 ring-inset ring-gray-300 sm:text-sm sm:leading-6" :value="selectedEvent.practical_info_en" disabled />
-                    </div>
-                  </div>
-
-                </div>
-
-                <div
-                  v-if="selectedEvent.published === true && gtevent"
-                  class="grid grid-cols-1 sm:grid-cols-6 gap-x-2 gap-y-4 mt-4"
-                >
-                  <h2 class="col-span-full cursor-pointer" @click="showMore = !showMore">
-                    <i
-                      class="w-4 h-4 pi"
-                      :class="{
-                        'pi-chevron-down': showMore,
-                        'pi-chevron-right': !showMore
-                      }"
-                    />
-                    Données GeoTrek
-                    {{ showMore ? '' : '(Cliquez pour afficher)'}}
-                  </h2>
-                  <template v-if="showMore">
-                    <div
-                      class="col-span-1 sm:col-span-3"
-                      v-for="(field, index) in getGtFields(true)"
-                      :key="index"
-                    >
-                      <label class="block text-sm font-medium leading-6 text-gray-900">{{ field.label }} : </label>
-                      <span v-html="getGtFieldValue(index)"></span>
-                    </div>
-                    <div
-                      class="col-span-1 sm:col-span-3"
-                      v-for="(field, index) in getGtFields(false)"
-                      :key="index"
-                    >
-                      <label class="block text-sm font-medium leading-6 text-gray-900">{{ field.label }} : </label>
-                      <span v-html="getGtFieldValue(index)"></span>
-                    </div>
-                  </template>
-                </div>
+                <event-summary
+                  :event="selectedEvent"
+                  :gtevent="gtevent"
+                />
 
               </p-tab-panel>
               <p-tab-panel header="Réservations" class="mx-0 px-0">
 
                 <reservation-progress
+                  class="my-4"
                   :reservation-nb="selectedEvent.sum_participants"
                   :participant-nb="selectedEvent.capacity"
                   :attente-nb="selectedEvent.sum_participants_liste_attente"
@@ -346,52 +218,14 @@
                   </span>
                 </div>
  -->
-                <p-data-table
-                  :value="resas.results"
-                  data-key="id_reservation"
-                  tableStyle="min-width: 50rem"
-                  stripedRows
-                  class="p-datatable-sm"
-                  lazy
-                  paginator
-                  scrollable
-                  :rows="10"
-                  :total-records="resas.total"
+                <event-reservations
                   :loading="loading"
+                  :resas="resas"
                   @page="onPage($event)"
-                >
-                  <template #empty>Aucune réservation trouvée.</template>
-                  <template #loadingicon>
-                    <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
-                  </template>
-                  <p-column frozen field="nom" header="Nom"></p-column>
-                  <p-column field="prenom" header="Prénom"></p-column>
-                  <p-column field="email" header="email"></p-column>
-                  <p-column field="tel" header="Tél"></p-column>
-                  <p-column field="sum_participants" header="Total"></p-column>
-                  <p-column field="sum_participants_liste_attente" header="Liste d'attente"></p-column>
-                  <p-column field="nb_adultes" header="adultes"></p-column>
-                  <p-column field="nb_moins_6_ans" header="-6 ans"></p-column>
-                  <p-column field="nb_6_8_ans" header="6/8 ans"></p-column>
-                  <p-column field="nb_9_12_ans" header="9/12 ans"></p-column>
-                  <p-column field="nb_plus_12_ans" header="+12 ans"></p-column>
-                  <p-column field="confirmed" header="Statut">
-                    <template #body="{ data }">
-                      <p-tag
-                        class="rounded-sm"
-                        :value="data.confirmed ? 'Confirmé' : 'En attente'"
-                        :severity="data.confirmed ? 'success' : 'warning'"
-                      />
-                    </template>
-                  </p-column>
-                  <p-column>
-                    <template #body>
-                      <button
-                        class="rounded-sm px-3 py-2 text-sm font-medium text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600 bg-sky-600 hover:bg-sky-500"
-                      >Annuler</button>
-                    </template>
-                  </p-column>
-                </p-data-table>
+                  @cancel="onCancelReservation"
+                  @confirm="onConfirmReservation"
+                />
+
               </p-tab-panel>
               <p-tab-panel header="Bilan">
 
@@ -470,11 +304,6 @@
             </p-tab-view>
           </template>
         </p-card>
-          <!-- 
-          <div v-if="selectedEvent.published === true">
-            <gt-event-detail class="mb-10" :id="id" :published="selectedEvent.published"></gt-event-detail>
-          </div>
-          -->
       </section>
 
       <section class="hidden md:block md:w-3/4 2xl:w-4/5 grid min-h-full px-6 py-24 sm:py-32 lg:px-8" v-else>
@@ -489,9 +318,11 @@
 </template>
 
 <script setup lang="ts">
-import { getEvents, getReservations, postBilan, getEvent } from '@/utils/appli_api';
+import { getEvents, getReservations, postBilan, getEvent, deleteReservation, updateReservation } from '@/utils/appli_api';
 import ReservationProgress from '@/components/ReservationProgress.vue';
 import EventBilanForm from '@/components/EventBilanForm.vue'
+import EventSummary from '@/components/EventSummary.vue'
+import EventReservations from '@/components/EventReservations.vue'
 import { useEventStore } from '@/stores/events'
 import { ref, onBeforeMount, watch, computed } from 'vue'
 
@@ -502,9 +333,6 @@ import PMultiSelect from 'primevue/multiselect'
 import PCard from 'primevue/card'
 import PTabView from 'primevue/tabview'
 import PTabPanel from 'primevue/tabpanel'
-import PDataTable from 'primevue/datatable'
-import PColumn from 'primevue/column'
-import PTag from 'primevue/tag'
 import PMessage from 'primevue/message'
 
 import { ROUTES_NAMES } from '@/router'
@@ -512,8 +340,7 @@ import type { ResaEventFilters } from '@/declaration';
 import { getDistricts, getTouristiceventType, getTouristicEventDetail } from '@/utils/gta_api';
 
 import { formatDate } from '@/utils/formatDate'
-import { gtApiFields, type API_FIELDS, fieldsClasseAge } from '@/utils/fields'
-import type { ResaBilan } from '@/declaration';
+import { fieldsClasseAge } from '@/utils/fields'
 
 const eventStore = useEventStore()
 
@@ -561,8 +388,27 @@ const selectedEvent = ref<any>(null)
 const selectedEventCanceled = computed(() => selectedEvent.value?.bilan?.annulation)
 const gtevent = ref<any>(null)
 const resas = ref<any>(null)
-const showMore = ref(false)
+const reservationOpened = computed(() => {
+  // Define if reservation is open
 
+  // If event is happened
+
+  if (new Date().setHours(0, 0, 0, 0) > new Date(selectedEvent.value.begin_date).setHours(0, 0, 0, 0)) {
+    return false
+  }
+
+  // If event in reservation period (control by DAY_BEFORE_RESA)
+  if ((CONFIGURATION.DAY_BEFORE_RESA || -1) !== -1) {
+    const resaBeginDate = new Date(selectedEvent.value.begin_date);
+    resaBeginDate.setDate(resaBeginDate.getDate() - CONFIGURATION.DAY_BEFORE_RESA);
+    if (new Date().setHours(0, 0, 0, 0) >= resaBeginDate.setHours(0, 0, 0, 0)) {
+      return true;
+    }
+    return false;
+  }
+
+  return true;
+})
 
 /**
  * Fonction de chargement des événements
@@ -607,6 +453,14 @@ async function loadReservations (page: number = 0) {
 function onPage($event: any) {
   loadReservations($event.page)
 }
+async function onCancelReservation(id_reservation: number) {
+  await deleteReservation(id_reservation)
+  await loadReservations(options.value.page)
+}
+async function onConfirmReservation(id_reservation: number) {
+  await updateReservation(id_reservation, { confirmed: true })
+  await loadReservations(options.value.page)
+}
 
 
 /**
@@ -632,21 +486,7 @@ async function onSaveBilan(data) {
   bilanSaving.value = false
 }
 
-/**
- * Fonction de gestion des champs geotrek
- */
-function getGtFields(main: boolean): API_FIELDS {
-  return Object.keys(gtApiFields)
-    .filter((key) => gtApiFields[key].main === main)
-    .reduce((res, key) => ({ ...res, [key]: gtApiFields[key] }), {});
-}
 
-function getGtFieldValue(field: string) {
-  return field.split('.').reduce(
-    (subevent, c) => ((c in subevent) ? subevent[c] : subevent),
-    gtevent.value
-  );
-}
 
 /**
  * On fraîchit les events si un élément des options change

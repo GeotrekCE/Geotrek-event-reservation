@@ -1,6 +1,89 @@
 <template>
-  <div name="event-reservation-list">
-    {{ event.reservations }}
+  <p-confirm-popup />
+  <p-data-table
+    :value="resas.results"
+    data-key="id_reservation"
+    tableStyle="min-width: 50rem"
+    stripedRows
+    class="p-datatable-sm"
+    lazy
+    paginator
+    scrollable
+    :rows="10"
+    :total-records="resas.total"
+    :loading="loading"
+    @page="emits('page', $event)"
+    v-model:expandedRows="expandedRows"
+  >
+    <template #empty>Aucune réservation trouvée.</template>
+    <template #loadingicon>
+      <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
+    </template>
+    <p-column frozen expander />
+    <p-column frozen field="nom" header="Nom"></p-column>
+    <p-column field="prenom" header="Prénom"></p-column>
+    <p-column field="email" header="email"></p-column>
+    <p-column field="tel" header="Tél"></p-column>
+    <p-column field="sum_participants" header="Total"></p-column>
+    <p-column field="sum_participants_liste_attente" header="Liste d'attente"></p-column>
+    <p-column field="confirmed" header="Confirmée">
+      <template #body="{ data }">
+        <p-tag
+          class="rounded-sm"
+          :value="data.confirmed ? 'Confirmée' : 'En attente'"
+          :severity="data.confirmed ? 'success' : 'warning'"
+        />
+      </template>
+    </p-column>
+    <p-column field="cancelled" header="Annulée">
+      <template #body="{ data }">
+        <p-tag
+          class="rounded-sm"
+          :value="data.cancelled ? 'Annulée' : ''"
+          :severity="data.cancelled ? 'danger' : 'success'"
+        />
+      </template>
+    </p-column>
+    <p-column header="Actions">
+      <template #body="{ data }">
+        <button
+          class="rounded-sm px-3 py-2 text-sm font-medium text-white shadow-sm bg-sky-600 hover:bg-sky-500"
+          @click="onCancelResa($event, data.id_reservation)"
+          v-if="!data.cancelled"
+        >Annuler</button>
+      </template>
+    </p-column>
+    <template #expansion="{ data }">
+      <div class="grid grid-cols-1 sm:grid-cols-10 gap-x-2 gap-y-4 mt-4">
+        <div
+          v-for="(field) in expandedFields"
+          :key="field.name"
+          :class="field.class"
+        >
+          <label class="block text-sm font-medium leading-6 text-gray-900">{{ field.label }} : </label>
+          <span v-if="field.name !== 'commentaire'">{{ data[field.name] }}</span>
+          <template v-else>
+            <p
+              v-for="comment in data[field.name]?.split('\n')"
+              :key="comment"
+            >
+              {{comment }}
+            </p>
+          </template>
+
+        </div>
+        <div class="col-span-full mx-auto">
+          <button
+            @click="emits('confirm', data.id_reservation)"
+            v-if="! data.confirmed"
+            class="rounded-sm px-3 py-2 text-sm font-medium text-white shadow-sm bg-sky-600 hover:bg-sky-500"
+          >Confirmer la réservation</button>
+        </div>
+      </div>
+    </template>
+  </p-data-table>
+
+  <!-- <div name="event-reservation-list"> -->
     <!-- <v-data-table :headers="headers" :items="event.reservations" v-model:expanded="expanded"
       show-expand item-key="id_reservation" sort-by="nb" class="elevation-1" :v-if="loading">
       <template v-slot:top>
@@ -24,14 +107,6 @@
               </div>
             </template>
             <v-card>
-              <v-card-title>
-                <span class="text-h5">{{ formTitle }} - {{ event.name }}
-                </span>
-                <reservation-progress :reservation-nb="event.sum_participants"
-                  :participant-nb="event.capacity"
-                  :attente-nb="event.sum_participants_liste_attente">
-                </reservation-progress>
-              </v-card-title>
               <v-card-text>
                 <v-container name="reservation-form">
                   <v-alert text dense icon="mdi-information-outline" border="left">
@@ -43,35 +118,6 @@
                   </v-alert>
                   <v-form ref="reservation_form" v-model="valid" lazy-validation>
                     <v-expansion-panels v-model="openPanels" multiple>
-                      <v-expansion-panel>
-                        <v-expansion-panel-header>
-                          Informations personnelles
-                        </v-expansion-panel-header>
-                        <v-expansion-panel-content>
-                          <v-row>
-                            <v-col cols="12" sm="12" md="6">
-                              <v-text-field v-model="editedItem.nom" label="Nom"
-                                :rules="[rules.required]"></v-text-field>
-                            </v-col>
-                            <v-col cols="12" sm="12" md="6">
-                              <v-text-field v-model="editedItem.prenom" label="Prénom"
-                                :rules="[rules.required]"></v-text-field>
-                            </v-col>
-                          </v-row>
-                          <v-row>
-                            <v-col cols="12" sm="12" md="6">
-                              <v-text-field v-model="editedItem.tel" label="Téléphone"
-                                :rules="[rules.required]">
-                              </v-text-field>
-                            </v-col>
-                            <v-col cols="12" sm="12" md="6">
-                              <v-text-field v-model="editedItem.num_departement" label="Département"
-                                :rules="[rules.required]">
-                              </v-text-field>
-                            </v-col>
-                          </v-row>
-                        </v-expansion-panel-content>
-                      </v-expansion-panel>
                       <v-expansion-panel>
                         <v-expansion-panel-header>
                           Nombres participants
@@ -176,60 +222,105 @@
         </v-btn>
       </template>
     </v-data-table> -->
-  </div>
+  <!-- </div> -->
 </template>
 
-<script lang="ts">
-import { fieldsClasseAge, rulesFct } from '@/utils/fields'
-// import { VDataTable } from 'vuetify/labs/VDataTable'
+<script setup lang="ts">
+import PDataTable from 'primevue/datatable'
+import PColumn from 'primevue/column'
+import PTag from 'primevue/tag'
+import PConfirmPopup from 'primevue/confirmpopup'
+import { ref } from 'vue'
+import { fieldsClasseAge } from '@/utils/fields'
+import { useConfirm } from "primevue/useconfirm";
 
-import { deleteReservation, postReservation } from '@/utils/appli_api'
-import type { Resa, ResaEventFilters } from '@/declaration';
+const confirm = useConfirm()
+
+defineProps({
+  resas: {
+    type: Object,
+    required: true
+  },
+  loading: {
+    type: Boolean,
+    required: true
+  }
+})
+const emits = defineEmits(['page', 'cancel', 'confirm'])
+
+const expandedRows = ref([]);
+const expandedFields = ref([{
+  name: 'nb_adultes',
+  label: fieldsClasseAge.nb_adultes,
+  class: 'col-span-1 sm:col-span-2',
+}, {
+  name: 'nb_moins_6_ans',
+  label: fieldsClasseAge.nb_moins_6_ans,
+  class: 'col-span-1 sm:col-span-2',
+}, {
+  name: 'nb_6_8_ans',
+  label: fieldsClasseAge.nb_6_8_ans,
+  class: 'col-span-1 sm:col-span-2',
+}, {
+  name: 'nb_9_12_ans',
+  label: fieldsClasseAge.nb_9_12_ans,
+  class: 'col-span-1 sm:col-span-2',
+}, {
+  name: 'nb_plus_12_ans',
+  label: fieldsClasseAge.nb_plus_12_ans,
+  class: 'col-span-1 sm:col-span-2',
+}, {
+  name: 'meta_create_date',
+  label: 'Créée le',
+  class: 'col-span-1 sm:col-span-4',
+}, {
+  name: 'confirmed',
+  label: 'Confirmé',
+  class: 'col-span-1 sm:col-span-3',
+}, {
+  name: 'num_departement',
+  label: 'Département',
+  class: 'col-span-1 sm:col-span-3',
+}, {
+  name: 'cancelled',
+  label: 'Annulée',
+  class: 'col-span-1 sm:col-span-2',
+}, {
+  name: 'cancel_by',
+  label: 'Annulée par',
+  class: 'col-span-1 sm:col-span-4',
+}, {
+  name: 'cancel_date',
+  label: 'Annulée le',
+  class: 'col-span-1 sm:col-span-4',
+}, {
+  name: 'commentaire',
+  label: 'Commentaire',
+  class: 'col-span-full',
+}])
+
+function onCancelResa(event: any, id_reservation: number) {
+  console.log(id_reservation)
+  confirm.require({
+    target: event.currentTarget,
+    message: 'Êtes vous sûr de vouloir annuler cette réservation ?',
+    icon: 'pi pi-exclamation-triangle',
+    accept: () => {
+      emits('cancel', id_reservation)
+    },
+  })
+
+}
+
+
+// import { deleteReservation, postReservation } from '@/utils/appli_api'
+// import type { Resa, ResaEventFilters } from '@/declaration';
 
 // import ReservationProgress from '@/components/ReservationProgress.vue';
-
+/*
 export default {
-  // components: { ReservationProgress, VDataTable },
-  props: ['event', 'user'],
-  data() {
-    return {
-      openPanels: [0, 1, 2],
-      valid: false,
-      userMgstext: '',
-      loading: true,
-      id: parseInt(this.$route.params.id as string, 0),
-      dialog: false,
-      dialogDelete: false,
-      expanded: [],
-      URL_APPLICATION: CONFIGURATION.URL_APPLICATION,
-      headers: [
-        { text: 'nom', value: 'nom' },
-        { text: 'prenom', value: 'prenom' },
-        { text: 'total', value: 'sum_participants' },
-        { text: 'total_attente', value: 'sum_participants_liste_attente' },
-        { text: 'nb_adultes', value: 'nb_adultes' },
-        { text: 'nb_moins_6_ans', value: 'nb_moins_6_ans' },
-        { text: 'nb_6_8_ans', value: 'nb_6_8_ans' },
-        { text: 'nb_9_12_ans', value: 'nb_9_12_ans' },
-        { text: 'nb_plus_12_ans', value: 'nb_plus_12_ans' },
-        { text: 'liste_attente', value: 'liste_attente' },
-        { text: 'Actions', value: 'actions', sortable: false },
-        { text: '', value: 'data-table-expand' },
-      ],
-      editedItem: {} as Partial<Resa>,
-      numerisateurName: undefined as string | undefined,
-      URL_GTR: CONFIGURATION.URL_GTR,
-      URL_GTA: CONFIGURATION.URL_GTA
-    };
-  },
   computed: {
 
-    liste_champs_nb() {
-      return fieldsClasseAge;
-    },
-    rules() {
-      return rulesFct;
-    },
     reservationOpened() {
       // Define if reservation is open
 
@@ -296,77 +387,7 @@ export default {
       return sumP > parseInt(this.event.capacity, 0) + CONFIGURATION.RESA_NB_DELTA
     },
   },
-  mounted() {
-    this.validateForm()
-  },
-  methods: {
-    addItem() {
-      this.editedItem = { ...this.defaultItem };
-      this.numerisateurName = undefined;
-      this.dialog = true;
-      this.validateForm()
-    },
-
-    editItem(item: Resa) {
-      this.editedItem = { ...item };
-      this.numerisateurName = item.numerisateur
-        ? item.numerisateur.identifiant
-        : undefined;
-      this.dialog = true;
-      this.validateForm()
-    },
-
-    deleteItem(item: Resa) {
-      this.editedItem = item;
-      this.dialogDelete = true;
-    },
-
-    deleteItemConfirm() {
-      deleteReservation(this.editedItem.id_reservation).then(() => {
-        this.$emit('reloadEvent');
-      }).catch((error: any) => {
-        console.error('There was an error!', error);
-      });
-      this.closeDelete()
-    },
-
-    close() {
-      this.dialog = false
-      this.$nextTick(() => {
-        this.editedItem = this.defaultItem;
-      })
-    },
-
-    closeDelete() {
-      this.dialogDelete = false
-      this.$nextTick(() => {
-        this.editedItem = this.defaultItem;
-      })
-    },
-
-    save() {
-      // Set digitizer
-      this.editedItem.id_numerisateur = this.user.id_role;
-      postReservation(this.editedItem).then(() => {
-        this.$emit('reloadEvent');
-      })
-      this.close()
-    },
-
-    validateForm() {
-      setTimeout(() => {
-        // @ts-expect-error
-        this.$refs.reservation_form?.validate();
-      }, 500);
-    }
-  },
-  watch: {
-    dialog(val) {
-      return val || this.close()
-    },
-    dialogDelete(val) {
-      return val || this.closeDelete()
-    },
   },
 };
+*/
 </script>

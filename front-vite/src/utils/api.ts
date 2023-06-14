@@ -14,7 +14,7 @@ function buildGetUrl (baseUrl: string, urlRelative: string, params: Record<strin
 }
 
 async function callFetchApi (
-  method: 'GET' | 'POST' | 'DELETE',
+  method: 'GET' | 'POST' | 'DELETE' | 'PUT',
   url: URL | RequestInfo,
   optionsHeaders = {},
   // snackMessage?: boolean | string
@@ -67,6 +67,25 @@ export function postApiData (baseUrl: string, route: string, postData: any, mess
   //   snackMessage = 'Données sauvegardées';
   // }
   return callFetchApi('POST', url, fetchParams /*, snackMessage */);
+}
+
+export function putApiData (baseUrl: string, route: string, putData: any) {
+  const fetchParams = {
+    method: 'PUT',
+    credentials: 'include',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(putData),
+  }
+
+  const url = buildGetUrl(baseUrl, route);
+  // let snackMessage: boolean | string = false
+  // if (message) {
+  //   snackMessage = 'Données sauvegardées';
+  // }
+  return callFetchApi('PUT', url, fetchParams /*, snackMessage */);
 }
 
 export function deleteApiData (baseUrl: string, route: string) {

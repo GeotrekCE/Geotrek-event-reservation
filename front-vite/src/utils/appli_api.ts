@@ -1,5 +1,5 @@
 import type { ResaEvent } from '@/declaration';
-import { getApiData, postApiData, deleteApiData } from './api';
+import { getApiData, postApiData, deleteApiData, putApiData } from './api';
 
 
 /**
@@ -21,6 +21,9 @@ export async function getReservations (params: Record<string, any> = {}) {
 export const deleteReservation = (id: any) => deleteApiData(CONFIGURATION.URL_APPLICATION, `reservations/${id}`);
 
 export const postReservation = (data: any) => postApiData(CONFIGURATION.URL_APPLICATION, 'reservations', data);
+
+export const updateReservation = (id: number, data: any) => putApiData(CONFIGURATION.URL_APPLICATION, `reservations/${id}`, data);
+
 
 
 /**
