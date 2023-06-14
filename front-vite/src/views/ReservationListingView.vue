@@ -12,6 +12,8 @@
 
     <section class="pb-12">
 
+      <div v-html="markdownToHTML" class="my-8 text-base leading-7 text-gray-900 space-y-4"></div>
+
       <p-data-table
         :value="resas.results"
         data-key="id_reservation"
