@@ -116,12 +116,10 @@
               class="flex justify-between gap-x-6 p-5 hover:bg-gray-200 hover:shadow-inner border-b border-gray-200"
               :to="{ name: ROUTES_NAMES.EVENT_DETAIL, params: { id: data.id }}"
               :class="{
-                'bg-red-300': data.bilan?.annulation,
-                'hover:bg-red-100': data.bilan?.annulation,
-                'hover:bg-gray-100': !data.bilan?.annulation,
-                'bg-gray-100': data.id === selectedEvent.id,
-                'bg-red-200': data.bilan?.annulation && data.id === selectedEvent.id,
-                'shadow-inner': data.id === selectedEvent.id,
+                'bg-red-300 hover:bg-red-100': data.bilan?.annulation || data.cancelled,
+                'hover:bg-gray-100': !data.bilan?.annulation && !data.cancelled,
+                'bg-gray-100 shadow-inner border-r-4 border-solid border-gray-500 border-b-0': data.id === selectedEvent?.id,
+                'bg-red-200 border-red-500': (data.bilan?.annulation || data.cancelled) && data.id === selectedEvent?.id,
               }"
               @click="selectedEvent = data"
             >
@@ -261,11 +259,21 @@
               </p-tab-panel>
               <p-tab-panel header="Bilan">
 
-                <p-message severity="warn" :closable="false">La saisie du bilan est réservée à l'animateur</p-message>
+                <p-message
+                  severity="warn"
+                  :closable="false"
+                  class="rounded-sm"
+                >
+                  <p class="ml-4">La saisie du bilan est réservée à l'animateur</p>
+                </p-message>
 
                 <div v-if="selectedEventCanceled">
-                  <p-message severity="error" :closable="false">
-                  L'animation a été annulée, il n'y a pas de bilan à saisir
+                  <p-message
+                    severity="error"
+                    :closable="false"
+                    class="rounded-sm"
+                  >
+                    <p class="ml-4">L'animation a été annulée, il n'y a pas de bilan à saisir</p>
                   </p-message>
                 </div>
 
@@ -322,7 +330,7 @@
                 </template>
 
                 <p-message severity="warn" :closable="false">
-                  <div class="space-y-4">
+                  <div class="space-y-4 ml-4">
                     <p>L'annulation d'une animation doit d'abord être faite dans GeoTrek.</p>
                     <p>À partir de l'outil de réservation, l'annulation va déclencher l'envoi d'un mail à tous les inscrits
                     pour leur préciser l'annulation de l'animation.</p>
@@ -429,14 +437,31 @@ const formOpened = ref(false)
  * Gestion d'un événement
  */
 const selectedEvent = ref<any>(null)
-const selectedEventCanceled = computed(() => selectedEvent.value?.bilan?.annulation)
+const selectedEventCanceled = computed(() => selectedEvent.value?.cancelled || selectedEvent.value?.bilan?.annulation)
 const gtevent = ref<any>(null)
 const resas = ref<any>(null)
+
+/**
+ * Est ce que la réservation est ouverte
+ * pour l'événement courant ?
+ * 
+ * Si événement / animation annulée => non
+ * 
+ * Si événement / animation passée => non
+ * 
+ * Si période de réservation trop courte => non
+ * 
+ * Cela dépend s'il est passé => non
+ * et s'il on est dans une période correcte
+ * ATTENTION: changement au niveau de l'algo pour le PNG,
+ * le PNG préfère utiliser une date à partir de laquelle toutes les résas sont possibles,
+ * et pas sur une période glissante...
+ */
 const reservationOpened = computed(() => {
-  // Define if reservation is open
 
-  // If event is happened
+  if (selectedEvent.value.cancelled) return false
 
+  // If event is in past
   if (new Date().setHours(0, 0, 0, 0) > new Date(selectedEvent.value.begin_date).setHours(0, 0, 0, 0)) {
     return false
   }

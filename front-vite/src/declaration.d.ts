@@ -32,6 +32,7 @@ export interface ResaEvent {
   begin_date: string
   end_date: string
   published: boolean
+  cancelled: boolean
 }
 
 /**

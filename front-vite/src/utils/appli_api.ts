@@ -49,6 +49,7 @@ export const getEvents = (params: any) => {
         'massif',
         'end_date',
         'published',
+        'cancelled',
         'bilan'
       ]
     }
