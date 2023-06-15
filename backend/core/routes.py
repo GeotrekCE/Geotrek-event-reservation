@@ -156,11 +156,13 @@ def get_events():
     )
 
 
-@app_routes.route("/events/<id>")
-def get_one_event(id):
-    events = GTEvents.query.get_or_404(id)
-    results = GTEventsSchema().dump(events)
-    return jsonify(results)
+@app_routes.route("/events/<int:event_id>")
+def get_one_event(event_id):
+    """Retourne un événement de Geotrek par son identifiant."""
+    event = GTEvents.query.get(event_id)
+    if not event:
+        return jsonify({"error": f"Event #{event_id} not found"}), 404
+    return GTEventsSchema().dumps(event)
 
 
 @app_routes.route("/reservations", methods=["GET"])
