@@ -272,10 +272,9 @@ def post_reservations():
     else:
         reservation = TReservationsSchema().load(post_data, session=db.session)
 
-    # Récupération de l'événement cible, ce n'est pas un attribut de 'reservation' avant le commit.
-    # TODO: return 404? Or just let the internal server error spread?
-    event = GTEvents.query.filter_by(id=reservation.id_event).first()
-
+    event = GTEvents.query.get(reservation.id_event)
+    if not event:
+        return jsonify({"error": f"Event with ID {reservation.id_event} not found"}), 400
     if not event.is_reservation_possible_for(reservation.nb_participants):
         return "", 422
 
@@ -283,7 +282,6 @@ def post_reservations():
 
     db.session.add(reservation)
     db.session.commit()
-    # db.session.close()
 
     if not reservation.confirmed:
         send_email(
