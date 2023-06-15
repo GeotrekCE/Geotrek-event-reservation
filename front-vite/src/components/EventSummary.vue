@@ -1,7 +1,25 @@
 <template>
   <div class="grid grid-cols-1 sm:grid-cols-6 gap-x-2 gap-y-4 mt-4">
+
     <div class="col-span-1 sm:col-span-3">
-      <label for="username" class="block text-sm font-medium leading-6 text-gray-900">
+      <label class="block text-sm font-medium leading-6 text-gray-900">
+        Événement
+      </label>
+      <div class="mt-2">
+        <div
+          class="flex rounded-sm shadow-sm ring-1 ring-inset ring-gray-300 sm:max-w-md"
+        >
+          <span
+            class="block flex-1 border-0 bg-transparent p-2 text-gray-600 sm:text-sm sm:leading-6"
+          >
+            {{ event.name }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-span-1 sm:col-span-3">
+      <label class="block text-sm font-medium leading-6 text-gray-900">
         Type
       </label>
       <div class="mt-2">
@@ -18,7 +36,7 @@
     </div>
 
     <div class="col-span-1 sm:col-span-3">
-      <label for="username" class="block text-sm font-medium leading-6 text-gray-900">
+      <label class="block text-sm font-medium leading-6 text-gray-900">
         Date de début
       </label>
       <div class="mt-2">
@@ -34,7 +52,7 @@
       </div>
     </div>
     <div class="col-span-1 sm:col-span-3">
-      <label for="username" class="block text-sm font-medium leading-6 text-gray-900">
+      <label class="block text-sm font-medium leading-6 text-gray-900">
         Date de fin
       </label>
       <div class="mt-2">
@@ -50,7 +68,7 @@
       </div>
     </div>
     <div class="col-span-1 sm:col-span-3">
-      <label for="username" class="block text-sm font-medium leading-6 text-gray-900">
+      <label class="block text-sm font-medium leading-6 text-gray-900">
         Capacité
       </label>
       <div class="mt-2">
@@ -67,7 +85,7 @@
     </div>
 
     <div class="col-span-1 sm:col-span-3">
-      <label for="username" class="block text-sm font-medium leading-6 text-gray-900">
+      <label class="block text-sm font-medium leading-6 text-gray-900">
         Massif
       </label>
       <div class="mt-2">
@@ -84,16 +102,26 @@
     </div>
 
     <div class="col-span-full">
-      <label for="about" class="block text-sm font-medium leading-6 text-gray-900">Informations pratiques (fr)</label>
+      <label class="block text-sm font-medium leading-6 text-gray-900">Informations pratiques (fr)</label>
       <div class="mt-2">
-        <textarea id="about" name="about" rows="3" class="block w-full rounded-sm border-0 p-2 text-gray-600 shadow-sm ring-1 ring-inset ring-gray-300 sm:text-sm sm:leading-6" :value="event.practical_info_fr" disabled />
+        <textarea
+          rows="3"
+          class="block w-full rounded-sm border-0 p-2 text-gray-600 shadow-sm ring-1 ring-inset ring-gray-300 sm:text-sm sm:leading-6"
+          :value="event.practical_info_fr" 
+          disabled
+        />
       </div>
     </div>
 
     <div class="col-span-full">
-      <label for="about" class="block text-sm font-medium leading-6 text-gray-900">Informations pratiques (en)</label>
+      <label class="block text-sm font-medium leading-6 text-gray-900">Informations pratiques (en)</label>
       <div class="mt-2">
-        <textarea id="about" name="about" rows="3" class="block w-full rounded-sm border-0 p-2 text-gray-600 shadow-sm ring-1 ring-inset ring-gray-300 sm:text-sm sm:leading-6" :value="event.practical_info_en" disabled />
+        <textarea
+          rows="3"
+          class="block w-full rounded-sm border-0 p-2 text-gray-600 shadow-sm ring-1 ring-inset ring-gray-300 sm:text-sm sm:leading-6"
+          :value="event.practical_info_en" 
+          disabled
+        />
       </div>
     </div>
 
