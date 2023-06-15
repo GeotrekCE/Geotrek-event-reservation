@@ -77,6 +77,7 @@ class GTEvents(db.Model):
     )
     published = db.Column(db.Boolean)
     deleted = db.Column(db.Boolean)
+    cancelled = db.Column(db.Boolean)
 
     reservations = db.relationship(
         "TReservations", lazy="joined", backref=db.backref("event", lazy="joined")
