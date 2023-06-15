@@ -51,3 +51,13 @@ const CONFIGURATION = {
 * `URL_GTR` correspond à l'URL du portail Geotrek grand public
 * `DAY_BEFORE_RESA` est une variable précédemment utilisée par les Cévennes. Non utilisée à ce jour
 * `RESA_NB_DELTA` est une tolérance pour accepter une réservation qui dépasserait la capacité d'accueil de l'animation
+
+
+**Customiser les fichiers md**
+
+Afin de permettre une souplesse côté textes affichés à l'utilisateur,
+nous avons mis en place plusieurs fichiers Markdown 
+permettant via un montage docker d'écraser le contenu par défaut proposé dans le code source.
+
+* `public/page_accueil.md` : affiché sur la page d'accueil du site
+* `public/page_reservation.md` : affiché sur la page de listing des réservations de l'utilisateur
