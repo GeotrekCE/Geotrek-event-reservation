@@ -332,9 +332,6 @@ def cancel_reservation(reservation_id):
     if not is_admin and reservation.email != user_email:
         return jsonify({"error": f"Reservation #{reservation_id} does not belong to {user_email}"}), 404
 
-    if not reservation.confirmed:
-        return jsonify({"error": f"Reservation #{reservation_id} is not confirmed and cannot be cancelled"}), 400
-
     if reservation.cancelled:
         return jsonify({"error": f"Reservation #{reservation_id} has already been cancelled"}), 400
 
@@ -345,7 +342,7 @@ def cancel_reservation(reservation_id):
     db.session.add(reservation)
     db.session.commit()
 
-    if not is_admin:
+    if not is_admin and reservation.confirmed:
         # Envoi email confirmation d'annulation à l'utilisateur
         send_email(
             subject=get_mail_subject("Votre réservation a été annulée"),
