@@ -23,6 +23,11 @@
     <p-column field="prenom" header="Prénom"></p-column>
     <p-column field="email" header="email"></p-column>
     <p-column field="tel" header="Tél"></p-column>
+    <p-column field="meta_create_date" header="Créée le">
+      <template #body="{ data }">
+        {{ formatDateTime(data.meta_create_date) }}
+      </template>
+    </p-column>
     <p-column field="sum_participants" header="Total"></p-column>
     <p-column field="sum_participants_liste_attente" header="Liste d'attente"></p-column>
     <p-column field="confirmed" header="Confirmée">
@@ -230,6 +235,7 @@ import PColumn from 'primevue/column'
 import PTag from 'primevue/tag'
 import { ref } from 'vue'
 import { expandedFields } from '@/utils/fields'
+import { formatDateTime } from '@/utils/formatDate'
 import { useConfirm } from "primevue/useconfirm";
 
 const confirm = useConfirm()

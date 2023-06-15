@@ -49,7 +49,7 @@ export const getEvents = (params: any) => {
         'massif',
         'end_date',
         'published',
-        'bilan.annulation'
+        'bilan'
       ]
     }
   }
