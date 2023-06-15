@@ -47,7 +47,7 @@ const tauxRemplissage = computed(() => {
   const intPraticipantNb = parseInt(props.participantNb, 0);
   if (Number.isNaN(intPraticipantNb)) return 0;
 
-  return Math.min((props.reservationNb / intPraticipantNb) * 100, 100);
+  return Math.min(Math.round(props.reservationNb / intPraticipantNb * 100), 100);
 })
 
 </script>

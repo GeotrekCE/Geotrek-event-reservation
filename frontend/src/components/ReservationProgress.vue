@@ -25,7 +25,7 @@ export default {
       const intPraticipantNb = parseInt(this.participantNb, 0);
       if (Number.isNaN(intPraticipantNb)) return 0;
 
-      return (this.reservationNb / intPraticipantNb) * 100;
+      return Math.round((this.reservationNb / intPraticipantNb)) * 100
     }
   }
 }
