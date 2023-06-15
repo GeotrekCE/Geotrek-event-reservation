@@ -405,12 +405,12 @@ def send_login_email():
     try:
         email = request.get_json()["email"]
     except KeyError:
-        return "'email' property is mandatory", 400
+        return jsonify({"error": "'email' property is mandatory"}), 400
 
     try:
         email_info = validate_email(email, check_deliverability=False)
     except (EmailNotValidError, EmailSyntaxError) as e:
-        return f"email is not valid: {e}", 400
+        return jsonify({"error": f"email is not valid: {e}"}), 400
     clean_email = email_info.normalized
 
     token = TTokens(email=clean_email, token=generate_token())
@@ -435,7 +435,7 @@ def login():
     try:
         login_token = request.json["login_token"]
     except KeyError:
-        return "Expects a JSON body with a 'login_token' property", 400
+        return jsonify({"error": "Expects a JSON body with a 'login_token' property"}), 400
 
     # TODO: handle token expiration
     token = db.first_or_404(db.select(TTokens).filter_by(token=login_token),
