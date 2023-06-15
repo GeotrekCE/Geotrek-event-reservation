@@ -13,7 +13,11 @@
     	</div>
     	<template v-else>
     		<div v-if="success">Connexion OK. Redirection...</div>
-    		<div v-if="error">Connexion NOK</div>
+    		<div v-if="error" class="space-y-4">
+    			<p>La connexion de l'utilisateur n'a pas pu aboutir...</p>
+    			<p>Merci de recommencer la procédure avec l'envoi du mail de connexion.</p>
+    			<router-link to="/login" class="text-blue-600 visited:text-purple-600">Aller à la page de connexion</router-link>
+    		</div>
     	</template>
     </section>
   </main>
