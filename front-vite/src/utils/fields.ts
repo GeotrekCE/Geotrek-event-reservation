@@ -33,7 +33,7 @@ export const rulesFct = {
   integer: (value: any) => (!Number.isNaN(Number(value)) && value !== '') || 'Uniquement des chiffres',
   email: (value: any) => {
     const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-    return pattern.test(value) || 'Invalid e-mail.'
+    return pattern.test(value) || 'e-mail invalide.'
   },
 }
 
@@ -67,7 +67,7 @@ export const expandedFields = [{
   class: 'col-span-1 sm:col-span-3',
 }, {
   name: 'num_departement',
-  label: 'Département',
+  label: 'Lieu d\'origine',
   class: 'col-span-1 sm:col-span-3',
 }, {
   name: 'cancelled',
