@@ -2,10 +2,10 @@ import email_validator
 from flask import Flask
 from flask_cors import CORS
 from flask_mail import Mail
-from marshmallow.exceptions import ValidationError
+from marshmallow.exceptions import ValidationError as MarshmallowValidationError
 
 from core.env import db
-from core.routes import app_routes
+from core.routes import app_routes, QueryParamValidationError
 
 mail = None
 
@@ -30,7 +30,11 @@ def create_app():
     global mail
     mail = Mail(app)
 
-    @app.errorhandler(ValidationError)
+    @app.errorhandler(MarshmallowValidationError)
+    def handle_bad_request(e):
+        return str(e), 400
+
+    @app.errorhandler(QueryParamValidationError)
     def handle_bad_request(e):
         return str(e), 400
 

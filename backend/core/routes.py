@@ -101,6 +101,29 @@ def get_mail_subject(text):
     return current_app.config["ORGANISM_FOR_EMAIL_SUBJECT"] + " " + text
 
 
+class QueryParamValidationError(Exception):
+    pass
+
+
+class QueryParamValidator:
+    
+    def __init__(self, params: dict):
+        self._params = params
+    
+    def get_arg(self, name):
+        value = request.args.get(name)
+        expected_type = self._params[name]["type"]
+        if value:
+            try:
+                cast_value = expected_type(value)
+            except ValueError:
+                raise QueryParamValidationError(f"Query param '{name} is expected as {expected_type.__name__}. "
+                                                f"Received '{value}'")
+            return cast_value
+        else:
+            return self._params[name].get("default", None)
+
+
 @app_routes.route("/events")
 def get_events():
     page = request.args.get("page", 1, type=int)
@@ -168,31 +191,36 @@ def get_one_event(event_id):
 @app_routes.route("/reservations", methods=["GET"])
 @login_required
 def get_reservations():
-    page = request.args.get("page", 1, type=int)
-    limit = request.args.get("limit", 10, type=int)
+    """Retourne la liste des réservations.
 
-    event_id_arg = request.args.get("event_id", None)
-    event_id = None
-    if event_id_arg:
-        try:
-            event_id = int(event_id_arg)
-        except TypeError:
-            return "event_id query param should be an integer", 400
+    Un utilisateur ne reçoit que ses propres réservations.
+    Un admin voit les réservations de tous les utilisateurs.
+
+    Paramètres disponibles:
+
+    - pagination : 'page' (entier) le numéro de la page et 'limit' (entier) le nombre d'éléments par page.
+    - 'event_id' (entier) l'ID de l'événement auquel les réservations sont liées.
+    """
+    validator = QueryParamValidator(params={
+        "page": {"default": 1, "type": int},
+        "limit": {"default": 10, "type": int},
+        "event_id": {"type": int},
+    })
+    page = validator.get_arg("page")
+    limit = validator.get_arg("limit")
+    event_id = validator.get_arg("event_id")
 
     email = session["user"]
     is_admin = is_user_admin()
 
     query = db.session.query(TReservations)
-
     if event_id:
         query = query.filter_by(id_event=event_id)
     if not is_admin:
         query = query.filter_by(email=email)
     query = query.paginate(page=page, per_page=limit)
-
     results = TReservationsSchema(many=True).dump(query.items)
 
-    # reservations = query.all()
     return jsonify(
         {
             "page": page,
