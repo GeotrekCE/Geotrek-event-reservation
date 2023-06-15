@@ -210,24 +210,44 @@
                   :participant-nb="selectedEvent.capacity"
                   :attente-nb="selectedEvent.sum_participants_liste_attente"
                 />
-<!--                 
-                <p-button color="primary" dark class="mb-2" v-bind="editedItem" @click="addItem"
-                  v-show="reservationOpened" key="res_open">
-                  Nouvelle réservation
-                </p-button>
 
-                <div v-show="!reservationOpened">
-                  <span class="grey lighten-2 text-center px-2">
-                    Réservation non ouverte
+                <div class="my-4 text-center">
+                  <button
+                    class="rounded-sm px-3 py-2 text-sm font-medium text-white shadow-sm bg-sky-600 hover:bg-sky-500"
+                    v-if="reservationOpened"
+                    @click="statutReservation = 'form'"
+                  >
+                    Créer une nouvelle réservation
+                  </button>
                   </span>
+
+                  <p-message
+                    severity="info"
+                    :closable="false"
+                    v-else
+                    class="rounded-sm"
+                  >
+                    <p class="ml-4">Réservation non ouverte</p>
+                  </p-message>
                 </div>
- -->
+
                 <event-reservations
+                  v-if="statutReservation === 'list'"
                   :loading="loading"
                   :resas="resas"
                   @page="onPage($event)"
                   @cancel="onCancelReservation"
                   @confirm="onConfirmReservation"
+                />
+
+                <event-reservation-form
+                  v-else-if="statutReservation === 'form'"
+                  class="mt-4"
+                  @submit="saveReservation"
+                  @cancel="statutReservation = 'list'"
+                  :saving="saving"
+                  :save-error="saveError"
+                  :display-cancel="true"
                 />
 
               </p-tab-panel>
@@ -324,12 +344,21 @@
 </template>
 
 <script setup lang="ts">
-import { getEvents, getReservations, postBilan, getEvent, deleteReservation, updateReservation } from '@/utils/appli_api';
+import {
+  getEvents,
+  getReservations,
+  postBilan,
+  getEvent,
+  deleteReservation,
+  updateReservation,
+  postReservation
+} from '@/utils/appli_api';
 import ReservationProgress from '@/components/ReservationProgress.vue';
 import EventBilanForm from '@/components/EventBilanForm.vue'
 import EventCancelForm from '@/components/EventCancelForm.vue'
 import EventSummary from '@/components/EventSummary.vue'
 import EventReservations from '@/components/EventReservations.vue'
+import EventReservationForm from '@/components/EventReservationForm.vue'
 import { useEventStore } from '@/stores/events'
 import { ref, onBeforeMount, watch, computed } from 'vue'
 
@@ -494,6 +523,27 @@ async function onSaveBilan(data: Partial<ResaBilan>) {
   bilanSaving.value = false
 }
 
+
+/**
+ * Fonctions d'enregistrement de la réservation
+ */
+const statutReservation = ref<'list' | 'form'>('list')
+const saving = ref(false)
+const saveError = ref<any>(null)
+async function saveReservation(values: any) {
+  saving.value = true
+  try {
+    await postReservation({
+      id_event: selectedEvent.value.id,
+      ...values
+    })
+    await loadReservations()
+    statutReservation.value = 'list'
+  } catch (error) {
+    saveError.value = error
+  }
+  saving.value = false
+}
 
 /**
  * On fraîchit les events si un élément des options change

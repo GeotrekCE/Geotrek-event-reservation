@@ -93,12 +93,6 @@
       show-expand item-key="id_reservation" sort-by="nb" class="elevation-1" :v-if="loading">
       <template v-slot:top>
         <v-toolbar flat>
-          <reservation-progress :reservation-nb="event.sum_participants"
-            :participant-nb="event.capacity"
-            :attente-nb="event.sum_participants_liste_attente" style="width=25%">
-          </reservation-progress>
-          <v-divider class="mx-4" inset vertical></v-divider>
-          <v-spacer></v-spacer>
           <v-dialog v-model="dialog">
             <template v-slot:activator="{ editedItem }">
               <v-btn color="primary" dark class="mb-2" v-bind="editedItem" @click="addItem"
@@ -268,82 +262,4 @@ function onCancelResa(event: any, id_reservation: number) {
   })
 }
 
-
-// import { deleteReservation, postReservation } from '@/utils/appli_api'
-// import type { Resa, ResaEventFilters } from '@/declaration';
-
-// import ReservationProgress from '@/components/ReservationProgress.vue';
-/*
-export default {
-  computed: {
-
-    reservationOpened() {
-      // Define if reservation is open
-
-      // If event is happened
-
-      if (new Date().setHours(0, 0, 0, 0) > new Date(this.event.begin_date).setHours(0, 0, 0, 0)) {
-        return false
-      }
-
-      // If event in reservation period (control by DAY_BEFORE_RESA)
-      if ((CONFIGURATION.DAY_BEFORE_RESA || -1) !== -1) {
-        const resaBeginDate = new Date(this.event.begin_date);
-        resaBeginDate.setDate(resaBeginDate.getDate() - CONFIGURATION.DAY_BEFORE_RESA);
-        if (new Date().setHours(0, 0, 0, 0) >= resaBeginDate.setHours(0, 0, 0, 0)) {
-          return true;
-        }
-        return false;
-      }
-
-      return true;
-    },
-    defaultItem(): Partial<Resa> {
-      const fieldsnb = Object.keys(
-        this.liste_champs_nb
-      ).reduce((o, key) => ({ ...o, [key]: 0 }), {});
-      return {
-        ...{
-          nom: '',
-          prenom: '',
-          commentaire: '',
-          id_event: parseInt(this.$route.params.id as string, 10)
-        },
-        ...fieldsnb
-      }
-    },
-    formTitle(): string {
-      return this.editedItem.id_reservation === undefined ? 'Nouvelle réservation' : 'Editer réservation'
-    },
-    addCalculateParticipant(): boolean {
-      if (this.editedItem.liste_attente === true) return false;
-      let nbInit = 0;
-
-      // Si c'est une modification il faut soustraire le nombre de participants initial
-      if (this.editedItem.id_reservation !== undefined) {
-        const resa = this.event.reservations.filter(
-          (item: Resa) => item.id_reservation === this.editedItem.id_reservation
-        )[0];
-        nbInit = Object.keys(
-          this.liste_champs_nb
-        ).reduce(
-          (total, nb) => (
-            total + (parseInt(resa[nb], 0) || 0)
-          ), 0
-        )
-      }
-      const sumP: number = (Object.keys(this.liste_champs_nb) as Array<keyof Resa>)
-      .reduce(
-        (total, nb) => (
-          total + (parseInt(this.editedItem[nb] as string, 0) || 0)
-        ), 0
-      ) + this.event.sum_participants - nbInit;
-
-      // Faux si la sum des participant est supérieur au nb de place + delta défini dans la CONFIGURATION
-      return sumP > parseInt(this.event.capacity, 0) + CONFIGURATION.RESA_NB_DELTA
-    },
-  },
-  },
-};
-*/
 </script>
