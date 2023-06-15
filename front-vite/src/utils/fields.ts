@@ -58,17 +58,13 @@ export const expandedFields = [{
   label: fieldsClasseAge.nb_plus_12_ans,
   class: 'col-span-1 sm:col-span-2',
 }, {
-  name: 'meta_create_date',
-  label: 'Créée le',
-  class: 'col-span-1 sm:col-span-4',
-}, {
   name: 'confirmed',
   label: 'Confirmé',
-  class: 'col-span-1 sm:col-span-3',
+  class: 'col-span-1 sm:col-span-2',
 }, {
   name: 'num_departement',
   label: 'Lieu d\'origine',
-  class: 'col-span-1 sm:col-span-3',
+  class: 'col-span-1 sm:col-span-2',
 }, {
   name: 'cancelled',
   label: 'Annulée',
@@ -76,13 +72,21 @@ export const expandedFields = [{
 }, {
   name: 'cancel_by',
   label: 'Annulée par',
-  class: 'col-span-1 sm:col-span-4',
+  class: 'col-span-1 sm:col-span-2',
 }, {
   name: 'cancel_date',
   label: 'Annulée le',
-  class: 'col-span-1 sm:col-span-4',
+  class: 'col-span-1 sm:col-span-2',
 }, {
   name: 'commentaire',
   label: 'Commentaire',
-  class: 'col-span-full',
+  class: 'col-span-full mb-8',
+}, {
+  name: 'meta_create_date',
+  label: 'Date de création',
+  class: 'col-span-1 sm:col-span-5',
+}, {
+  name: 'meta_update_date',
+  label: 'Date de mise à jour',
+  class: 'col-span-1 sm:col-span-5',
 }]

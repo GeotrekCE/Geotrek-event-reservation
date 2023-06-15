@@ -16,7 +16,13 @@
         :class="{ hidden: selectedEvent }"
       >
 
-        <p-data-view :value="events" paginator :rows="5" data-key="id">
+        <p-data-view
+          :value="events"
+          paginator
+          :rows="5"
+          data-key="id"
+          @page="onPageDataView"
+        >
           <template #header>
             <form @submit.prevent="search">
               <div class="w-full flex justify-between">
@@ -47,7 +53,7 @@
                   />
                 </button>
               </div>
-              <template v-if="formOpened">
+              <div v-if="formOpened" class="space-y-4 space-x-2">
                 <p-calendar
                   v-model="filters.begin_date"
                   class="rounded-sm p-inputtext-sm"
@@ -75,7 +81,7 @@
 
                 <input type="checkbox" v-model="filters['published']" />Publiées
                 <input type="checkbox" v-model="filters['bilan.annulation']" />Annulées
-              </template>
+              </div>
 
               <div class="w-full flex justify-between items-end">
                 <button
@@ -235,9 +241,11 @@
                   v-if="statutReservation === 'list'"
                   :loading="loading"
                   :resas="resas"
-                  @page="onPage($event)"
+                  :id-event="selectedEvent.id"
+                  @page="onPageReservations"
                   @cancel="onCancelReservation"
                   @confirm="onConfirmReservation"
+                  @edit="onEditReservation"
                 />
 
                 <event-reservation-form
@@ -472,12 +480,13 @@ async function loadEvents () {
     console.error('There was an error!', error);
   }
 }
-async function loadGTEvent () {
-  gtevent.value = await getTouristicEventDetail(selectedEvent.value.id)
-}
 function search() {
   options.value.page = 0;
   loadEvents();
+}
+function onPageDataView($event: any) {
+  options.value.page = $event.page
+  loadEvents()
 }
 async function loadReservations (page: number = 0) {
   resas.value = []
@@ -486,7 +495,7 @@ async function loadReservations (page: number = 0) {
     event_id: selectedEvent.value.id 
   }) 
 }
-function onPage($event: any) {
+function onPageReservations($event: any) {
   loadReservations($event.page)
 }
 async function onCancelReservation(id_reservation: number) {
@@ -496,6 +505,10 @@ async function onCancelReservation(id_reservation: number) {
 async function onConfirmReservation(id_reservation: number) {
   await updateReservation(id_reservation, { confirmed: true })
   await loadReservations(options.value.page)
+}
+function onEditReservation(id_reservation: number) {
+
+  statutReservation.value = 'form'
 }
 
 /**
@@ -556,9 +569,9 @@ watch(
   { deep: true }
 )
 
-watch(selectedEvent, () => {
-  loadGTEvent()
-  loadReservations()
+watch(selectedEvent, async () => {
+  await loadReservations()
+  gtevent.value = await getTouristicEventDetail(selectedEvent.value.id)
 })
 
 /**
