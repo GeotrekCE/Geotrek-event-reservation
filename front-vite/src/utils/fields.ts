@@ -36,3 +36,53 @@ export const rulesFct = {
     return pattern.test(value) || 'Invalid e-mail.'
   },
 }
+
+export const expandedFields = [{
+  name: 'nb_adultes',
+  label: fieldsClasseAge.nb_adultes,
+  class: 'col-span-1 sm:col-span-2',
+}, {
+  name: 'nb_moins_6_ans',
+  label: fieldsClasseAge.nb_moins_6_ans,
+  class: 'col-span-1 sm:col-span-2',
+}, {
+  name: 'nb_6_8_ans',
+  label: fieldsClasseAge.nb_6_8_ans,
+  class: 'col-span-1 sm:col-span-2',
+}, {
+  name: 'nb_9_12_ans',
+  label: fieldsClasseAge.nb_9_12_ans,
+  class: 'col-span-1 sm:col-span-2',
+}, {
+  name: 'nb_plus_12_ans',
+  label: fieldsClasseAge.nb_plus_12_ans,
+  class: 'col-span-1 sm:col-span-2',
+}, {
+  name: 'meta_create_date',
+  label: 'Créée le',
+  class: 'col-span-1 sm:col-span-4',
+}, {
+  name: 'confirmed',
+  label: 'Confirmé',
+  class: 'col-span-1 sm:col-span-3',
+}, {
+  name: 'num_departement',
+  label: 'Département',
+  class: 'col-span-1 sm:col-span-3',
+}, {
+  name: 'cancelled',
+  label: 'Annulée',
+  class: 'col-span-1 sm:col-span-2',
+}, {
+  name: 'cancel_by',
+  label: 'Annulée par',
+  class: 'col-span-1 sm:col-span-4',
+}, {
+  name: 'cancel_date',
+  label: 'Annulée le',
+  class: 'col-span-1 sm:col-span-4',
+}, {
+  name: 'commentaire',
+  label: 'Commentaire',
+  class: 'col-span-full',
+}]

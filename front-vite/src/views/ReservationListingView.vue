@@ -13,6 +13,8 @@
     <section class="pb-12">
 
       <div v-html="markdownToHTML" class="my-8 text-base leading-7 text-gray-900 space-y-4"></div>
+    
+      <p-confirm-popup />
 
       <p-data-table
         :value="resas.results"
@@ -26,12 +28,14 @@
         :total-records="resas.total"
         :loading="loading"
         @page="onPage($event)"
+        v-model:expandedRows="expandedRows"
       >
         <template #empty>Aucune réservation trouvée.</template>
         <template #loadingicon>
           <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
         </template>
-        <p-column field="event.name" header="Événement"></p-column>
+        <p-column frozen expander />
+        <p-column frozen field="event.name" header="Événement"></p-column>
         <p-column field="event.begin_date" header="Date">
           <template #body="{data}">
             {{ formatDate(data.event?.begin_date)}}
@@ -73,13 +77,38 @@
             />
           </template>
         </p-column>
-        <p-column header="Annulation">
-          <template #body>
+        <p-column header="Actions">
+          <template #body="{ data }">
             <button
-              class="rounded-sm px-3 py-2 text-sm font-medium text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600 bg-sky-600 hover:bg-sky-500"
+              class="rounded-sm px-3 py-2 text-sm font-medium text-white shadow-sm bg-sky-600 hover:bg-sky-500"
+              @click="onCancelResa($event, data.id_reservation)"
+              v-if="!data.cancelled"
             >Annuler</button>
           </template>
         </p-column>
+
+        <template #expansion="{ data }">
+          <div class="grid grid-cols-1 sm:grid-cols-10 gap-x-2 gap-y-4 mt-4">
+            <div
+              v-for="(field) in expandedFields"
+              :key="field.name"
+              :class="field.class"
+            >
+              <label class="block text-sm font-medium leading-6 text-gray-900">{{ field.label }} : </label>
+              <span v-if="field.name !== 'commentaire'">{{ data[field.name] }}</span>
+              <template v-else>
+                <p
+                  v-for="comment in data[field.name]?.split('\n')"
+                  :key="comment"
+                >
+                  {{comment }}
+                </p>
+              </template>
+
+            </div>
+          </div>
+        </template>
+
       </p-data-table>
 
     </section>
@@ -91,19 +120,26 @@
 
 <script setup lang="ts">
 import { ref, onBeforeMount } from 'vue'
-import { getReservations } from '@/utils/appli_api'
+import { getReservations, deleteReservation } from '@/utils/appli_api'
 import { formatDate } from '@/utils/formatDate'
 import { marked } from 'marked';
+import { expandedFields } from '@/utils/fields'
 
 import PDataTable from 'primevue/datatable'
 import PColumn from 'primevue/column'
 import PTag from 'primevue/tag'
+import PConfirmPopup from 'primevue/confirmpopup'
+import { useConfirm } from "primevue/useconfirm";
+
+const confirm = useConfirm()
 
 const loading = ref(false)
 const resas = ref<{results: any[], total: number}>({results: [], total: 0})
 const error = ref(false)
 
 const markdownToHTML = ref('')
+
+const expandedRows = ref([])
 
 onBeforeMount(async () => {
   loadData()
@@ -131,5 +167,19 @@ async function loadData (page = 0, sortField = null, sortOrder = null) {
   }
   loading.value = false
 };
+
+function onCancelResa(event: any, id_reservation: number) {
+  confirm.require({
+    target: event.currentTarget,
+    message: 'Êtes vous sûr de vouloir annuler cette réservation ?',
+    icon: 'pi pi-exclamation-triangle',
+    acceptLabel: 'Oui',
+    rejectLabel: 'Non',
+    async accept () {
+      await deleteReservation(id_reservation)
+      await loadData()
+    },
+  })
+}
 
 </script>
