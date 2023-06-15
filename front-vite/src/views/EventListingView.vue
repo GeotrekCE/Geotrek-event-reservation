@@ -330,7 +330,7 @@ import PTabPanel from 'primevue/tabpanel'
 import PMessage from 'primevue/message'
 
 import { ROUTES_NAMES } from '@/router'
-import type { ResaEventFilters } from '@/declaration';
+import type { ResaEventFilters, ResaBilan } from '@/declaration';
 import { getDistricts, getTouristiceventType, getTouristicEventDetail } from '@/utils/gta_api';
 
 import { formatDate } from '@/utils/formatDate'
@@ -462,7 +462,7 @@ async function onConfirmReservation(id_reservation: number) {
 const bilanSaving = ref(false)
 const bilanError = ref<any>(null)
 const bilanEditing = ref(false)
-async function onSaveBilan(data) {
+async function onSaveBilan(data: Partial<ResaBilan>) {
   bilanSaving.value = true
   bilanError.value = null
   try {

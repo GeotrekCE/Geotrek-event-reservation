@@ -164,7 +164,7 @@ function getGtFields(main: boolean): API_FIELDS {
 }
 
 function getGtFieldValue(field: string) {
-  return field.split('.').reduce(
+  return props.gtevent && field.split('.').reduce(
     (subevent, c) => ((c in subevent) ? subevent[c] : subevent),
     props.gtevent
   );
