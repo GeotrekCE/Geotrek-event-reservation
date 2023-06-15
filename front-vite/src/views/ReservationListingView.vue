@@ -14,8 +14,6 @@
 
       <div v-html="markdownToHTML" class="my-8 text-base leading-7 text-gray-900 space-y-4"></div>
     
-      <p-confirm-popup />
-
       <p-data-table
         :value="resas.results"
         data-key="id_reservation"
@@ -128,7 +126,6 @@ import { expandedFields } from '@/utils/fields'
 import PDataTable from 'primevue/datatable'
 import PColumn from 'primevue/column'
 import PTag from 'primevue/tag'
-import PConfirmPopup from 'primevue/confirmpopup'
 import { useConfirm } from "primevue/useconfirm";
 
 const confirm = useConfirm()

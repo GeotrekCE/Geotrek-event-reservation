@@ -1,5 +1,4 @@
 <template>
-  <p-confirm-popup />
   <p-data-table
     :value="resas.results"
     data-key="id_reservation"
@@ -229,7 +228,6 @@
 import PDataTable from 'primevue/datatable'
 import PColumn from 'primevue/column'
 import PTag from 'primevue/tag'
-import PConfirmPopup from 'primevue/confirmpopup'
 import { ref } from 'vue'
 import { expandedFields } from '@/utils/fields'
 import { useConfirm } from "primevue/useconfirm";

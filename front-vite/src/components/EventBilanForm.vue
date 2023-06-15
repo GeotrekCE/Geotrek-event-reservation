@@ -109,7 +109,7 @@ import { ref } from 'vue'
 import type { ResaBilan } from '@/declaration';
 
 const props = defineProps(['saving', 'originalData', 'error'])
-const emits = defineEmits(['input'])
+const emits = defineEmits(['submit'])
 
 const bilan = ref<ResaBilan>({
   commentaire: '',
@@ -122,7 +122,7 @@ const bilan = ref<ResaBilan>({
 })
 
 function onSubmit() {
-  emits('input', bilan.value)
+  emits('submit', bilan.value)
 }
 
 

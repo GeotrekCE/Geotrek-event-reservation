@@ -125,7 +125,7 @@
                   {{ data.name }}
                 </span>
                 <div class="min-w-0 flex-auto">
-                  <p class="text-sm font-medium leading-6 text-gray-900">{{ data.type.type }}</p>
+                  <p class="text-sm font-medium leading-6 text-gray-900">{{ data.type?.type }}</p>
                   <p class="mt-1 truncate text-xs leading-5 text-gray-500">{{ data.massif }}</p>
                 </div>
               </div>
@@ -276,7 +276,7 @@
                     :saving="bilanSaving"
                     :error="bilanError"
                     :original-data="selectedEvent.bilan"
-                    @input="onSaveBilan"
+                    @submit="onSaveBilan"
                   />
 
                 </div>
@@ -288,18 +288,11 @@
                     Annulation
                   </span>
                 </template>
-                <!-- <event-cancel-form
-                  :bilan="selectedEvent.bilan"
-                  :canceled="selectedEventCanceled"
-                  :id_event="selectedEvent.id"
-                  @input="onSaveBilan"
-                  class="ml-auto"
-                /> -->
-                <button
-                  class="ml-auto md:ml-2 md:mr-0 rounded-sm px-3 py-2 text-sm font-medium text-white drop-shadow-md bg-red-600 hover:bg-red-400"
-                >
-                  <i class="pi pi-exclamation-triangle" /> {{ selectedEventCanceled ? 'Dé annuler' : 'Annuler' }}
-                </button>
+                <event-cancel-form
+                  :raison-annulation="selectedEvent.bilan?.raison_annulation"
+                  :annulation="selectedEventCanceled"
+                  @submit="onSaveBilan"
+                />
               </p-tab-panel>
             </p-tab-view>
           </template>
@@ -321,6 +314,7 @@
 import { getEvents, getReservations, postBilan, getEvent, deleteReservation, updateReservation } from '@/utils/appli_api';
 import ReservationProgress from '@/components/ReservationProgress.vue';
 import EventBilanForm from '@/components/EventBilanForm.vue'
+import EventCancelForm from '@/components/EventCancelForm.vue'
 import EventSummary from '@/components/EventSummary.vue'
 import EventReservations from '@/components/EventReservations.vue'
 import { useEventStore } from '@/stores/events'
@@ -462,7 +456,6 @@ async function onConfirmReservation(id_reservation: number) {
   await loadReservations(options.value.page)
 }
 
-
 /**
  * Gestion du bilan
  */
@@ -485,7 +478,6 @@ async function onSaveBilan(data) {
   }
   bilanSaving.value = false
 }
-
 
 
 /**

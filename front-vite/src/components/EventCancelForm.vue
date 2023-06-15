@@ -1,103 +1,95 @@
 <template>
-  <v-dialog v-model="dialogCancel" max-width="600px">
-    <template v-slot:activator="{ props }">
-      <v-btn color="error" dark v-bind="props" @click="editItem">
-        {{ titleCancel }}
-      </v-btn>
-    </template>
-    <v-card>
-      <v-card-title>
-        <span v-if="!canceled" class="text-h5">Annuler animation</span>
-        <span v-else class="text-h5">Etes vous sur de vouloir dé-annuler l'animation?</span>
-      </v-card-title>
-      <v-card-text>
-        <v-container v-if="!canceled">
-          <v-form ref="form" v-model="formValid" lazy-validation>
-            <v-row>
-              <v-col cols="12">
-                <v-textarea outlined label="Raison annulation"
-                  v-model="editedItem.raison_annulation" :rules="[rules.required]"></v-textarea>
-              </v-col>
-            </v-row>
-          </v-form>
-        </v-container>
-        <v-container v-else>
-          <strong></strong>
-        </v-container>
-      </v-card-text>
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn color="blue darken-1" @click="dialogCancel = false">
-          Fermer
-        </v-btn>
-        <v-btn color="blue darken-1" @click="cancelAnimation" :disabled="!formValid">
-          Enregistrer
-        </v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
+  <vv-form
+    :validation-schema="formSchema"
+    :initial-values="formValues"
+    as=""
+    v-slot="{ values, errors }"
+    :validateOnMount="true"
+  >
+    <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-10">
+      <div class="col-span-full">
+        <label for="raison_annulation" class="block text-sm font-medium leading-6 text-gray-900">Raison de l'annulation</label>
+        <div class="mt-2">
+          <vv-field
+            id="raison_annulation"
+            name="raison_annulation"
+            rows="3"
+            as="textarea"
+            class="block w-full rounded-sm border-0 p-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+          />
+          <vv-error-message name="raison_annulation" />
+        </div>
+      </div>
+
+    </div>
+    <div class="my-6 flex justify-center">
+      <button
+        class="rounded-sm px-3 py-2 text-sm font-medium text-white shadow-sm disabled:bg-red-100 disabled:text-black disabled:cursor-not-allowed"
+        :class="{
+          'bg-red-600': !saving,
+          'hover:bg-red-500': !saving,
+          'bg-red-100': saving,
+          'hover:bg-red-100': saving,
+          'text-black': saving,
+        }"
+        :disabled="Object.keys(errors).length > 0 || saving"
+        @click="onSubmit($event, values)"
+      >
+        <i class="pi pi-exclamation-triangle mr-2" /> 
+        <span v-if="annulation">
+          {{ saving ? 'Dé annulation en cours...' : 'Dé annuler l\'animation' }}
+        </span>
+        <span v-else>
+          {{ saving ? 'Annulation en cours...' : 'Annuler l\'animation' }}
+        </span>
+        
+      </button>
+      <span v-if="error" class="text-red-500">
+       Une erreur est survenue : {{ error }}...
+      </span>
+    </div>
+  </vv-form>
 </template>
 
-<script lang="ts">
-import type { ResaBilan } from '@/declaration';
-import { postBilan } from '@/utils/appli_api'
-import { rulesFct } from '@/utils/fields'
+<script setup lang="ts">
+import { Form as VvForm, Field as VvField, ErrorMessage as VvErrorMessage } from 'vee-validate'
+import * as yup from 'yup'
 
-export default {
+import { useConfirm } from "primevue/useconfirm";
 
-  data() {
-    return {
-      dialogCancel: false,
-      editedItem: {} as ResaBilan,
-      formValid: true
-    };
-  },
-  props: ['bilan', 'canceled', 'id_event', 'user'],
-  computed: {
-    titleCancel() {
-      if (this.canceled) {
-        return 'De-annuler';
-      }
-      return 'Annuler';
-    },
-    rules() {
-      return rulesFct;
-    },
-  },
-  mounted() {
-  },
-  methods: {
-    editItem() {
-      if (this.bilan) {
-        this.editedItem = { ...this.bilan };
-      }
-      this.editedItem.annulation = !this.canceled;
-      if (this.editedItem.annulation) {
-        setTimeout(() => {
-          // @ts-expect-error
-          this.$refs.form?.validate();
-        }, 500);
-      }
-      this.dialogCancel = true;
-    },
+const confirm = useConfirm()
 
-    cancelAnimation() {
-      // Set digitizer
-      this.editedItem.id_numerisateur = this.user.id_role;
-      this.editedItem.id_event = this.id_event;
-      if (this.editedItem.annulation === false) {
-        this.editedItem.raison_annulation = '';
-      }
-      postBilan(this.editedItem).then(() => {
-        this.$emit('reloadEvent');
-      });
+const props = defineProps(['saving', 'annulation', 'raisonAnnulation', 'error'])
+const emits = defineEmits(['submit'])
 
-      this.dialogCancel = false
-    },
-  },
+const formValues = {
+  raison_annulation: props.raisonAnnulation
 }
+const formSchema = yup.object().shape({
+  raison_annulation: yup.string().required().label('Raison de l\'annulation'),
+})
+async function onSubmit (event: any, values: any) {
+  confirm.require({
+    target: event.target,
+    message: props.annulation 
+      ? 'Êtes vous sûr de vouloir dé-annuler cette animation ?'
+      : 'Êtes vous sûr de vouloir annuler cette animation ?',
+    icon: 'pi pi-exclamation-triangle',
+    acceptLabel: 'Oui',
+    rejectLabel: 'Non',
+    async accept () {
+      emits('submit', {
+        annulation: !props.annulation,
+        ...values
+      })
+    },
+  })
+}
+
 </script>
 
-<style>
-
+<style scoped>
+span[role='alert'] {
+  color: var(--red-500);
+}
 </style>

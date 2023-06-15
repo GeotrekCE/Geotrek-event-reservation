@@ -87,6 +87,8 @@
     />
 
   -->
+  <p-confirm-popup />
+
 </template>
 
 <script setup lang="ts">
@@ -95,6 +97,7 @@ import { storeToRefs } from 'pinia'
 import { useAuthStore } from '@/stores/auth'
 // import { useAppStore } from '@/stores/app'
 import { ref } from 'vue'
+import PConfirmPopup from 'primevue/confirmpopup'
 
 const authStore = useAuthStore()
 // const appStore = useAppStore()
