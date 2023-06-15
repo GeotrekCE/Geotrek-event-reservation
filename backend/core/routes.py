@@ -320,6 +320,11 @@ def update_reservation(reservation_id):
 @app_routes.route("/reservations/<reservation_id>", methods=["DELETE"])
 @login_required
 def cancel_reservation(reservation_id):
+    """Annule une réservation.
+
+    Si la réservation était en état confirmée et est annulée par l'utilisateur 2 emails sont envoyés. Une confirmation
+    d'annulation pour l'utilisateur et une notification que des places se sont libérés pour les admins.
+    """
     is_admin = is_user_admin()
 
     # Check : la réservation existe
@@ -334,7 +339,6 @@ def cancel_reservation(reservation_id):
 
     if reservation.cancelled:
         return jsonify({"error": f"Reservation #{reservation_id} has already been cancelled"}), 400
-
 
     reservation.cancelled = True
     reservation.cancel_data = datetime.now()
