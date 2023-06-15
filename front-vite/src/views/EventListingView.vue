@@ -107,12 +107,15 @@
           </template>
           <template #list="{ data }">
             <router-link
-              class="flex justify-between gap-x-6 p-5 hover:bg-gray-100 hover:shadow-inner border-b border-gray-200"
+              class="flex justify-between gap-x-6 p-5 hover:bg-gray-200 hover:shadow-inner border-b border-gray-200"
               :to="{ name: ROUTES_NAMES.EVENT_DETAIL, params: { id: data.id }}"
               :class="{
                 'bg-red-300': data.bilan?.annulation,
                 'hover:bg-red-100': data.bilan?.annulation,
                 'hover:bg-gray-100': !data.bilan?.annulation,
+                'bg-gray-100': data.id === selectedEvent.id,
+                'bg-red-200': data.bilan?.annulation && data.id === selectedEvent.id,
+                'shadow-inner': data.id === selectedEvent.id,
               }"
               @click="selectedEvent = data"
             >
@@ -135,6 +138,7 @@
                   :reservation-nb="data.sum_participants"
                   :participant-nb="data.capacity"
                   :attente-nb="data.sum_participants_liste_attente"
+                  :display-text="false"
                 />
                 {{ formatDate(data.begin_date) || '?' }} 
                 <span v-if="data.end_date">
@@ -198,7 +202,7 @@
                 />
 
               </p-tab-panel>
-              <p-tab-panel header="Réservations" class="mx-0 px-0">
+              <p-tab-panel header="Réservations">
 
                 <reservation-progress
                   class="my-4"
@@ -288,6 +292,15 @@
                     Annulation
                   </span>
                 </template>
+
+                <p-message severity="warn" :closable="false">
+                  <div class="space-y-4">
+                    <p>L'annulation d'une animation doit d'abord être faite dans GeoTrek.</p>
+                    <p>À partir de l'outil de réservation, l'annulation va déclencher l'envoi d'un mail à tous les inscrits
+                    pour leur préciser l'annulation de l'animation.</p>
+                  </div>
+                </p-message>
+
                 <event-cancel-form
                   :raison-annulation="selectedEvent.bilan?.raison_annulation"
                   :annulation="selectedEventCanceled"
@@ -472,6 +485,8 @@ async function onSaveBilan(data: Partial<ResaBilan>) {
       ...data
     })
     selectedEvent.value = await getEvent(selectedEvent.value.id)
+    const eventIndex = events.value.findIndex(r => r.id === selectedEvent.value.id)
+    events.value[eventIndex] = selectedEvent.value
     bilanEditing.value = false
   } catch (error) {
     bilanError.value = error

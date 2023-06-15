@@ -42,9 +42,10 @@
     <p-column field="cancelled" header="Annulée">
       <template #body="{ data }">
         <p-tag
+          v-if="data.cancelled"
           class="rounded-sm"
-          :value="data.cancelled ? 'Annulée' : ''"
-          :severity="data.cancelled ? 'danger' : 'success'"
+          value="Annulée"
+          severity="danger"
         />
       </template>
     </p-column>

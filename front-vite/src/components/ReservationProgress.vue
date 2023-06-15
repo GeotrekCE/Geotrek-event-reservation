@@ -2,8 +2,10 @@
   <p-progress-bar
     :value="tauxRemplissage"
     :pt="{ value: { style: { background: colorRemplissage } } }"
+    class="border border-solid border-gray-500 rounded-sm"
   >
-    {{ reservationNb }} / {{ participantNb }} + ({{ attenteNb }})
+    <span v-if="displayText">{{ reservationNb }} / {{ participantNb }} + ({{ attenteNb }})</span>
+    <span v-else>{{ tauxRemplissage }} %</span>
   </p-progress-bar>
 </template>
 
@@ -11,7 +13,25 @@
 import PProgressBar from 'primevue/progressbar';
 import { computed } from 'vue';
 
-const props = defineProps(['reservationNb', 'participantNb', 'attenteNb'])
+const props = defineProps({
+  reservationNb: {
+    type: Number,
+    required: true
+  },
+  participantNb: {
+    type: String,
+    required: true
+  },
+  attenteNb: {
+    type: Number,
+    required: true
+  },
+  displayText: {
+    type: Boolean,
+    required: false,
+    default :true
+  }
+})
 
 const colorRemplissage = computed(() => {
   const intPraticipantNb = parseInt(props.participantNb, 0);
