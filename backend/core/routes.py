@@ -495,15 +495,6 @@ def post_bilans():
     return jsonify({"msg": "Données sauvegardées"})
 
 
-@app_routes.route("/reservations/<id_reservation>", methods=["DELETE"])
-@login_required
-def delete_reservations(id_reservation):
-    reservation = TReservations.query.get_or_404(id_reservation)
-    db.session.delete(reservation)
-    db.session.commit()
-    return jsonify({"msg": "Données supprimées"})
-
-
 @app_routes.route("/stats/global", methods=["GET"])
 @login_admin_required
 def get_stats_global():
