@@ -1,5 +1,5 @@
 import email_validator
-from flask import Flask
+from flask import Flask, jsonify
 from flask_cors import CORS
 from flask_mail import Mail
 from marshmallow.exceptions import ValidationError as MarshmallowValidationError
@@ -32,10 +32,10 @@ def create_app():
 
     @app.errorhandler(MarshmallowValidationError)
     def handle_bad_request(e):
-        return str(e), 400
+        return jsonify({"error": str(e)}), 400
 
     @app.errorhandler(QueryParamValidationError)
     def handle_bad_request(e):
-        return str(e), 400
+        return jsonify({"error": str(e)}), 400
 
     return app
