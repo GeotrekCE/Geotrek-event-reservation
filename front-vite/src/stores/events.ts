@@ -7,7 +7,7 @@ export const useEventStore = defineStore('event', () => {
       begin_date: undefined,
       end_date: undefined,
       search_name: undefined,
-      'bilan.annulation': undefined,
+      cancelled: undefined,
       published: true,
     })
 

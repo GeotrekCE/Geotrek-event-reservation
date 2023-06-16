@@ -79,7 +79,7 @@ export interface ResaEventFilters {
   begin_date: string 
   end_date: string 
   search_name?: string 
-  'bilan.annulation'?: string 
+  cancelled?: boolean
   published?: boolean
   type_id: string[]
   massif: string[]

@@ -393,7 +393,7 @@ import EventCancelForm from '@/components/EventCancelForm.vue'
 import EventSummary from '@/components/EventSummary.vue'
 import EventReservations from '@/components/EventReservations.vue'
 import EventReservationForm from '@/components/EventReservationForm.vue'
-import { useEventStore } from '@/stores/events'
+// import { useEventStore } from '@/stores/events'
 import { ref, onBeforeMount, watch, computed } from 'vue'
 
 import PDataView from 'primevue/dataview'
@@ -412,7 +412,7 @@ import { getDistricts, getTouristiceventType, getTouristicEventDetail } from '@/
 import { formatDate } from '@/utils/formatDate'
 import { fieldsClasseAge } from '@/utils/fields'
 
-const eventStore = useEventStore()
+// const eventStore = useEventStore()
 
 /**
  * Données des événements / animations
