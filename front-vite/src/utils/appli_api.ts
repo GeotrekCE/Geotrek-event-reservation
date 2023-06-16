@@ -1,4 +1,4 @@
-import type { ResaEvent } from '@/declaration';
+import type { ResaEvent, Resa } from '@/declaration';
 import { getApiData, postApiData, deleteApiData, putApiData } from './api';
 
 
@@ -8,7 +8,8 @@ import { getApiData, postApiData, deleteApiData, putApiData } from './api';
 export interface DataConfirmReservation {
   resa_token: string;
 }
-export const confirmReservation = (data: DataConfirmReservation) => postApiData(CONFIGURATION.URL_APPLICATION, 'reservations/confirm', data)
+export const confirmReservation = (data: DataConfirmReservation): Promise<Resa> => 
+  postApiData(CONFIGURATION.URL_APPLICATION, 'reservations/confirm', data)
 
 export async function getReservations (params: Record<string, any> = {}) {
   return getApiData(CONFIGURATION.URL_APPLICATION, 'reservations', {

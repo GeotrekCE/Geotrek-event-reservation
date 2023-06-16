@@ -23,11 +23,11 @@
       <p>
         Nous avons bien enregistré la confirmation de votre réservation.
       </p>
-      <p>
-        Votre réservation a été <strong>acceptée</strong>, vous allez recevoir un email précisant cela... (texte à modifier)
+      <p v-if="!listeAttente">
+        Votre réservation a été <strong>acceptée</strong>, vous allez recevoir un email de confirmation.
       </p>
-      <p>
-        Votre réservation a été mise en <strong>liste d'attente</strong>, il n'y a plus assez de place pour cet événement.
+      <p v-else>
+        <strong>Malheureusement</strong>, votre réservation a été mise en <strong>liste d'attente</strong>, il n'y a plus assez de place pour cet événement.
       </p>
       <p>
         Dans le cas où des places venaient à se libérer, vous serez informé par email ou contacté par le parc directement.
@@ -69,12 +69,14 @@ const name = currentRoute.query.name
 const loading = ref(false)
 const success = ref(false)
 const error = ref<any>(null)
+const listeAttente = ref(false)
 
 onBeforeMount(async () => {
   loading.value = true
   try {
-    await confirmReservation({resa_token: token})
+    const resa = await confirmReservation({resa_token: token})
     success.value = true
+    listeAttente.value = resa.liste_attente
   } catch(e) {
     console.error(e)
     error.value = e

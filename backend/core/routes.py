@@ -371,7 +371,7 @@ def confirm_reservation():
         resa.liste_attente = False
     else:
         resa.liste_attente = True
-
+    
     resa.confirmed = True
 
     db.session.add(resa)
@@ -379,7 +379,7 @@ def confirm_reservation():
 
     send_confirmation_email(resa)
 
-    return "", 204
+    return TReservationsSchema().dumps(resa), 200
 
 
 @app_routes.route("/reservations/<reservation_id>", methods=["PUT"])
