@@ -23,15 +23,19 @@
       <p>
         Nous avons bien enregistré la confirmation de votre réservation.
       </p>
-      <p v-if="!listeAttente">
-        Votre réservation a été <strong>acceptée</strong>, vous allez recevoir un email de confirmation.
-      </p>
-      <p v-else>
-        <strong>Malheureusement</strong>, votre réservation a été mise en <strong>liste d'attente</strong>, il n'y a plus assez de place pour cet événement.
-      </p>
-      <p>
-        Dans le cas où des places venaient à se libérer, vous serez informé par email ou contacté par le parc directement.
-      </p>
+      <template v-if="!listeAttente">
+        <p>
+          Votre réservation a été <strong>acceptée</strong>, vous allez recevoir un email de confirmation.
+        </p>
+      </template>
+      <template v-else>
+        <p>
+          <strong>Malheureusement</strong>, votre réservation a été mise en <strong>liste d'attente</strong>, il n'y a plus assez de place pour cet événement.
+        </p>
+        <p>
+          Dans le cas où des places venaient à se libérer, vous serez informé par email ou contacté par le parc directement.
+        </p>
+      </template>
     </div>
     <div v-else class="space-y-6">
       <p>
