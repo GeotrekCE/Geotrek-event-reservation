@@ -38,22 +38,22 @@ export const postLogin = (data: any) => postApiData(CONFIGURATION.URL_APPLICATIO
 export const getEvents = (params: any) => {
   const getparams = {
     ...params,
-    ...{
-      fields: [
-        'id',
-        'begin_date',
-        'sum_participants',
-        'capacity',
-        'sum_participants_liste_attente',
-        'type',
-        'name',
-        'massif',
-        'end_date',
-        'published',
-        'cancelled',
-        'bilan'
-      ]
-    }
+    // ...{
+    //   fields: [
+    //     'id',
+    //     'begin_date',
+    //     'sum_participants',
+    //     'capacity',
+    //     'sum_participants_liste_attente',
+    //     'type',
+    //     'name',
+    //     'massif',
+    //     'end_date',
+    //     'published',
+    //     'cancelled',
+    //     'bilan'
+    //   ]
+    // }
   }
   return getApiData(CONFIGURATION.URL_APPLICATION, 'events', getparams);
 }
