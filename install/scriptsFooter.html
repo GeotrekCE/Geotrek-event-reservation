@@ -1,3 +1,6 @@
+<script>
+const reservationOpeningDate = new Date('2023-06-26');
+
 function insertReservationLink(url) {
     if (document.getElementById("reservation-link") !== null)
         // Le lien a déjà été inséré.
@@ -18,26 +21,40 @@ function insertReservationLink(url) {
         className: "mx-4 desktop:mx-18 mt-2 desktop:mt-10 relative"
     });
 
-    const reservation_link = Object.assign(document.createElement('a'), {
-        href: `http://png-resa-demo.geotrek.fr/resa/${event_id}`,
-        innerText: "S'inscrire à l'événement",
-        className: "text-primary1 p-2 border-solid border border-primary1 rounded-lg bg-white",
-        id: "reservation-link"
-    });
+    const today = new Date();
+    if (today > reservationOpeningDate) {
+        const reservation_link = Object.assign(document.createElement('a'), {
+            href: `http://png-resa-demo.geotrek.fr/resa/${event_id}`,
+            innerText: "S'inscrire à l'événement",
+            style: "background-color: #aec900; color: white;",
+            className: "text-primary1 p-2 font-bold border-solid border border-primary1 rounded-lg bg-white",
+            id: "reservation-link"
+        });
+        resa_div.appendChild(reservation_link);
+    } else {
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        const formattedOpeningDate = reservationOpeningDate.toLocaleDateString("fr-FR", options);
+        const openingMessage = Object.assign(document.createElement('p'), {
+            innerText: `Les inscriptions aux événements ouvriront le ${formattedOpeningDate}.`,
+            className: "text-primary1 p-2 font-bold border border-primary1 rounded-lg bg-white",
+            id: "reservation-link"
+        });
+        resa_div.appendChild(openingMessage);
+    }
 
-    resa_div.appendChild(reservation_link);
     reference_element.parentElement.insertBefore(resa_div, reference_element);
 }
 
 // Wait for the load of next router
-var routeChange = setInterval(async function() {
-  if (window.next && window.next.router) {
-    window.next.router.events.on('routeChangeComplete', async function(url) {
-        setTimeout((e) => insertReservationLink(url), 1000);
-    });
-    insertReservationLink(window.location.toString());
-    clearInterval(routeChange)
-  }
+var routeChange = setInterval(async function () {
+    if (window.next && window.next.router) {
+        window.next.router.events.on('routeChangeComplete', async function (url) {
+            setTimeout((e) => insertReservationLink(url), 1000);
+        });
+        insertReservationLink(window.location.toString());
+        clearInterval(routeChange)
+    }
 }, 100)
 
 window.onload = setTimeout((e) => insertReservationLink(window.location.toString()), 1500);
+</script>
