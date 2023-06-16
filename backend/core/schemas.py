@@ -84,7 +84,7 @@ class TReservationsCreateByAdminSchema(TReservationsSchema):
         )
 
     confirmed = auto_field(load_default=True)
-    liste_attente = fields.Boolean(required=True)
+    liste_attente = fields.Boolean()
 
 
 class TReservationsUpdateSchema(SQLAlchemySchema):
