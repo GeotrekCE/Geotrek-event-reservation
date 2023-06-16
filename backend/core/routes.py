@@ -61,8 +61,9 @@ def send_confirmation_email(reservation):
             recipients=[reservation.email],
             html=render_template(
                 "resa_confirmed_mail.html",
-                nb_places=reservation.nb_participants,
-                event=reservation.event.name
+                reservation=stringify(reservation),
+                event=stringify(reservation.event),
+                portal_link=get_portal_link(reservation)
             )
         )
     else:
@@ -71,8 +72,9 @@ def send_confirmation_email(reservation):
             recipients=[reservation.email],
             html=render_template(
                 "confirmation_mail_on_liste_attente.html",
-                nb_places=reservation.nb_participants,
-                event=reservation.event.name
+                reservation=stringify(reservation),
+                event=stringify(reservation.event),
+                portal_link=get_portal_link(reservation)
             )
         )
 
@@ -89,12 +91,64 @@ def get_confirmation_link(reservation):
     return f"{protocol}{hostname}{front_path}?token={reservation.token}"
 
 
+def get_portal_link(reservation):
+    from flask import current_app
+    protocol = "http://" if current_app.config["DEBUG"] else "https://"
+    hostname = current_app.config["PUBLIC_SERVER_NAME"]
+    front_path = current_app.config["FRONTEND_PORTAL_PATHNAME"]
+    return f"{protocol}{hostname}{front_path}?email={reservation.email}"
+
+
 def get_login_link(token):
     from flask import current_app
     protocol = "http://" if current_app.config["DEBUG"] else "https://"
     hostname = current_app.config["PUBLIC_SERVER_NAME"]
     front_path = current_app.config["FRONTEND_LOGIN_PATHNAME"]
     return f"{protocol}{hostname}{front_path}?token={token}"
+
+
+def _get_property_names(model_object):
+    from sqlalchemy.ext.hybrid import hybrid_property
+    return [
+        p for p in dir(model_object)
+        if not p.startswith("_")
+           and (
+                   type(model_object.__class__.__dict__.get(p)) == property
+                   or type(model_object.__class__.__dict__.get(p)) == hybrid_property
+           )
+    ]
+
+
+def _get_orm_attribute_names(model_object):
+    return [a for a in model_object.__dict__.keys() if not a.startswith("_")]
+
+
+def stringify(model_object):
+    """Prend une instance de modèle et retourne un dict avec les attributs de l'ORM, les properties et les
+        hybrid properties en clé. Les valeurs sont stringifiées :
+
+        - None -> "--"
+        - True -> "Oui"
+        - False -> "None"
+    """
+    rv = {}
+
+    def process(attributes):
+        for a in attributes:
+            v = getattr(model_object, a)
+            print(a, v)
+            if v is None:
+                v = "--"
+            elif v is True:
+                v = "Oui"
+            elif v is False:
+                v = "Non"
+            rv[a] = v
+
+    process(_get_orm_attribute_names(model_object))
+    process(_get_property_names(model_object))
+
+    return rv
 
 
 def get_mail_subject(text):
@@ -285,12 +339,14 @@ def post_reservations():
 
     if not reservation.confirmed:
         send_email(
-            subject="Lien pour confirmer votre demande de réservation",
+            subject=get_mail_subject("Lien pour confirmer votre demande de réservation"),
             recipients=[reservation.email],
             html=render_template(
                 "please_confirm_resa_mail.html",
                 confirmation_link=get_confirmation_link(reservation),
-                event=reservation.event.name
+                portal_link=get_portal_link(reservation),
+                event=stringify(reservation.event),
+                reservation=stringify(reservation)
             )
         )
     else:
@@ -381,8 +437,8 @@ def cancel_reservation(reservation_id):
             recipients=[reservation.email],
             html=render_template(
                 "resa_cancelled_mail.html",
-                reservation=reservation,
-                event=reservation.event
+                reservation=stringify(reservation),
+                event=stringify(reservation.event)
             )
         )
 
@@ -392,8 +448,8 @@ def cancel_reservation(reservation_id):
             recipients=current_app.config["ADMIN_EMAILS"],
             html=render_template(
                 "admin_resa_cancelled_mail.html",
-                reservation=reservation,
-                event=reservation.event
+                reservation=stringify(reservation),
+                event=stringify(reservation.event)
             )
         )
 
@@ -419,7 +475,7 @@ def send_login_email():
     db.session.commit()
 
     send_email(
-        "Lien de connexion sur site de réservation du PNG",
+        get_mail_subject("Lien de connexion sur site de réservation du PNG"),
         recipients=[email],
         html=render_template(
             "login_mail.html",

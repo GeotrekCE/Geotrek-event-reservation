@@ -14,6 +14,9 @@ PUBLIC_SERVER_NAME =
 # The path for the confirmed reservation page on the frontend, for instance: '/resaconfirm'.
 FRONTEND_CONFIRMED_PATHNAME =
 
+# The path for the landing page on the frontend, for instance: '/login'.
+FRONTEND_PORTAL_PATHNAME =
+
 # The path for the successfull login page on the frontend, for instance: '/login/callback'.
 FRONTEND_LOGIN_PATHNAME =
 

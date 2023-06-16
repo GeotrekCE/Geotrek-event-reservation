@@ -1,8 +1,7 @@
 <h1>Confirmation d'annulation de votre réservation pour {{ event.name }}</h1>
 
-<p>Bonjour,</p>
-
 <p>Nous vous confirmons avoir pris en compte l'annulation de votre réservation pour <strong>{{ reservation.nb_places }}
-    personnes</strong> pour l'événement <strong>{{ event.name }}</strong> ayant lieu le {{ event.begin_date }}.</p>
+    personnes</strong> pour l'événement <strong>{{ event.name }}</strong> ayant lieu le
+    {{ event.begin_date|format_datetime }}.</p>
 
 <p>Merci de nous avoir prévenu !</p>

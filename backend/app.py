@@ -1,3 +1,4 @@
+from babel.dates import format_date as babel_format_date, format_time as babel_format_time
 import email_validator
 from flask import Flask, jsonify
 from flask_cors import CORS
@@ -37,5 +38,15 @@ def create_app():
     @app.errorhandler(QueryParamValidationError)
     def handle_bad_request(e):
         return jsonify({"error": str(e)}), 400
+
+    @app.template_filter()
+    def format_date(value):
+        format_string = "EEEE d MMMM"
+        return babel_format_date(value, format_string, locale="fr_FR")
+
+    @app.template_filter()
+    def format_time(value):
+        format_string = "H'h'mm"
+        return babel_format_time(value, format_string, locale="fr_FR")
 
     return app

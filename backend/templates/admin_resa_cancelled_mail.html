@@ -1,5 +1,5 @@
 <p>Une réservation pour <strong>{{ reservation.nb_participants }} personnes</strong> a été annulée pour l'événement
-    <strong>{{ event.name }}</strong>.</p>
+    <strong>{{ event.name }}</strong> du {{ event.begin_date|format_date }}.</p>
 
 <h2>Informations de la réservation annulée</h2>
 
@@ -10,29 +10,27 @@
     <li>Prénom : {{ reservation.prenom }}</li>
     <li>Nb de participants : {{ reservation.nb_participants }}</li>
     <li>Sur liste d'attente : {{ reservation.liste_attente }}</li>
-    <li>Date de réservation :{{ reservation.meta_create_date }}</li>
+    <li>Date de réservation : le {{ reservation.meta_create_date|format_date }} à {{ reservation.meta_create_date|format_time }}</li>
 </ul>
 
 <p>Détails :</p>
 
 <ul>
     <li>Nb d'adultes : {{ reservation.nb_adultes }}</li>
-    <li>Nb de -6ans : {{ reservation.nb_moins_6_ans }}</li>
+    <li>Nb de -6 ans : {{ reservation.nb_moins_6_ans }}</li>
     <li>Nb de 6-8 ans : {{ reservation.nb_6_8_ans }}</li>
     <li>Nb de 9-12 ans : {{ reservation.nb_9_12_ans }}</li>
     <li>Nb de +12 ans : {{ reservation.nb_plus_12_ans }}</li>
 </ul>
 
-<p>Commentaire :</p>
-
-<p>{{ reservation.commentaire }}</p>
+<p>Commentaire : {{ reservation.commentaire }}</p>
 
 <h2>Informations de l'événement : {{ event.name }}</h2>
 
 <ul>
-    <li>Date de début : {{ event.begin_date }}</li>
-    <li>Date de fin : {{ event.end_date }}</li>
-    <li>Capacité : {{ event.capacity }}</li>
+    <li>Date de début : {{ event.begin_date|format_date }}</li>
+    <li>Date de fin : {{ event.end_date|format_date }}</li>
+    <li>Capacité : {{ event.capacity }} personnes</li>
     <li>Nb de participants (actualisé) : {{ event.sum_participants }}</li>
     <li>Nb de personnes en liste d'attente : {{ event.sum_participants_liste_attente }}</li>
 </ul>
