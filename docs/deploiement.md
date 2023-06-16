@@ -55,7 +55,7 @@ const CONFIGURATION = {
   URL_APPLICATION: 'http://localhost:5000',
   URL_GTA: 'http://localhost:8000',
   URL_GTR: 'http://localhost:8000',
-  DAY_BEFORE_RESA: 15,
+  DAY_BEFORE_RESA: -1,
   RESA_NB_DELTA: 3,
   RESA_BEGINNING_DATE: new Date('2023-06-26')  
 }
@@ -64,7 +64,7 @@ const CONFIGURATION = {
 * `URL_APPLICATION` correspond à l'API du serveur backend Flask
 * `URL_GTA` correspond à l'URL du portail Geotrek Admin
 * `URL_GTR` correspond à l'URL du portail Geotrek grand public
-* `DAY_BEFORE_RESA` est une variable précédemment utilisée par les Cévennes. Non utilisée à ce jour (voir `RESA_BEGINNING_DATE`)
+* `DAY_BEFORE_RESA` est une variable précédemment utilisée par les Cévennes. Non utilisée à ce jour (voir `RESA_BEGINNING_DATE`) : mettre -1
 * `RESA_NB_DELTA` est une tolérance pour accepter une réservation qui dépasserait la capacité d'accueil de l'animation
 * `RESA_BEGINNING_DATE` est la date à partir de laquelle l'outil permet de créer une réservation
 
