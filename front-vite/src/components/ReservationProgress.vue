@@ -19,8 +19,9 @@ const props = defineProps({
     required: true
   },
   participantNb: {
-    type: String,
-    required: true
+    type: Number,
+    required: true,
+    default: 0
   },
   attenteNb: {
     type: Number,
@@ -34,20 +35,18 @@ const props = defineProps({
 })
 
 const colorRemplissage = computed(() => {
-  const intPraticipantNb = parseInt(props.participantNb, 0);
-  if (Number.isNaN(intPraticipantNb)) return 'blue-grey';
+  if (props.participantNb === 0) return 'blue-grey';
 
-  if (props.reservationNb / intPraticipantNb > 1) return 'red';
-  if (props.reservationNb / intPraticipantNb > 0.75) return 'lime accent-4';
-  if (props.reservationNb / intPraticipantNb > 0.5) return 'lime';
+  if (props.reservationNb / props.participantNb > 1) return 'red';
+  if (props.reservationNb / props.participantNb > 0.75) return 'lime accent-4';
+  if (props.reservationNb / props.participantNb > 0.5) return 'lime';
   return 'green';
 })
 
 const tauxRemplissage = computed(() => {
-  const intPraticipantNb = parseInt(props.participantNb, 0);
-  if (Number.isNaN(intPraticipantNb)) return 0;
+  if (props.participantNb === 0) return 0;
 
-  return Math.min(Math.round(props.reservationNb / intPraticipantNb * 100), 100);
+  return Math.min(Math.round(props.reservationNb / props.participantNb * 100), 100);
 })
 
 </script>
