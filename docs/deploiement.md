@@ -12,6 +12,11 @@
 
 ## Déploiement
 
+### Lien de réservation dans Geotrek Rando
+
+Il faut ajouter le script `install/scriptsFooter.html` dans la customization de Geotrek Rando.
+L'emplacement est `<geotrek-rando>/customization/html/scriptsFooter.html`.
+
 ### Déployer le backend
 
 Le déploiement en prod est plutôt pensé pour utiliser docker. Les fichiers suivants sont fournis :
