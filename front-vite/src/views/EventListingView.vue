@@ -455,7 +455,7 @@ const formOpened = ref(false)
  * Gestion d'un événement
  */
 const selectedEvent = ref<any>(null)
-const selectedEventCanceled = computed(() => selectedEvent.value?.cancelled || selectedEvent.value?.bilan?.annulation)
+const selectedEventCanceled = computed(() => selectedEvent.value?.cancelled === true || selectedEvent.value?.bilan?.annulation === true)
 const gtevent = ref<any>(null)
 const resas = ref<any>({ results: [], total: 0 })
 
