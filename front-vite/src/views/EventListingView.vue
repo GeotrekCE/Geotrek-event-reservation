@@ -12,7 +12,7 @@
     <main class="flex flex-grow gap-x-4">
 
       <nav
-        class="md:block w-full md:w-1/4 2xl:w-1/5 bg-gray-100 shadow-xl"
+        class="md:block w-full md:w-1/4 bg-gray-100 shadow-xl"
         :class="{ hidden: selectedEvent }"
       >
 
@@ -155,7 +155,7 @@
 
       </nav>
 
-      <section class="w-full md:w-3/4 2xl:w-4/5" v-if="selectedEvent">
+      <section class="w-full md:w-3/4" v-if="selectedEvent">
 
         <div class="md:hidden h-12 flex items-center cursor-pointer" @click="selectedEvent = null">
           <i class="pi pi-chevron-left" />Retourner au résultats
@@ -191,7 +191,7 @@
               <h2 class="text-red font-medium text-xl">Animation annulée</h2>
               <div>
                 <strong> Raison: </strong>
-                <span>{{ selectedEvent.bilan.raison_annulation }}</span>
+                <span>{{ selectedEvent.bilan?.raison_annulation }}</span>
               </div>
             </div>
 
@@ -218,17 +218,16 @@
                 <div class="my-4 text-center">
                   <button
                     class="rounded-sm px-3 py-2 text-sm font-medium text-white shadow-sm bg-sky-600 hover:bg-sky-500"
-                    v-if="reservationOpened"
+                    v-if="reservationOpened && statutReservation === 'list'"
                     @click="statutReservation = 'form'"
                   >
                     Créer une nouvelle réservation
                   </button>
-                  </span>
 
                   <p-message
                     severity="info"
                     :closable="false"
-                    v-else
+                    v-else-if="!reservationOpened"
                     class="rounded-sm"
                   >
                     <p class="ml-4">Réservation non ouverte</p>
@@ -249,11 +248,13 @@
                 <event-reservation-form
                   v-else-if="statutReservation === 'form'"
                   class="mt-4"
-                  @submit="saveReservation"
-                  @cancel="statutReservation = 'list'"
+                  @submit="onSubmitReservation"
+                  @cancel="onCloseReservation"
                   :saving="saving"
                   :save-error="saveError"
                   :display-cancel="true"
+                  :original-values="resaToEdit || {}"
+                  :display-admin-fields="true"
                 />
 
               </p-tab-panel>
@@ -388,7 +389,7 @@ import PTabPanel from 'primevue/tabpanel'
 import PMessage from 'primevue/message'
 
 import { ROUTES_NAMES } from '@/router'
-import type { ResaEventFilters, ResaBilan } from '@/declaration';
+import type { ResaEventFilters, ResaBilan, Resa } from '@/declaration';
 import { getDistricts, getTouristiceventType, getTouristicEventDetail } from '@/utils/gta_api';
 
 import { formatDate } from '@/utils/formatDate'
@@ -439,7 +440,7 @@ const formOpened = ref(false)
 const selectedEvent = ref<any>(null)
 const selectedEventCanceled = computed(() => selectedEvent.value?.cancelled || selectedEvent.value?.bilan?.annulation)
 const gtevent = ref<any>(null)
-const resas = ref<any>(null)
+const resas = ref<any>({ results: [], total: 0 })
 
 /**
  * Est ce que la réservation est ouverte
@@ -514,7 +515,7 @@ function onPageDataView($event: any) {
   loadEvents()
 }
 async function loadReservations (page: number = 0) {
-  resas.value = []
+  resas.value = { results: [], total: 0 }
   resas.value = await getReservations({
     page: page + 1,
     event_id: selectedEvent.value.id 
@@ -532,6 +533,10 @@ async function onConfirmReservation(id_reservation: number) {
   await loadReservations(options.value.page)
 }
 function onEditReservation(id_reservation: number) {
+  const currentResa = resas.value.results?.find((r: Resa) => r.id_reservation === id_reservation)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { event, ...rest } = currentResa
+  resaToEdit.value = rest
 
   statutReservation.value = 'form'
 }
@@ -568,19 +573,32 @@ async function onSaveBilan(data: Partial<ResaBilan>) {
 const statutReservation = ref<'list' | 'form'>('list')
 const saving = ref(false)
 const saveError = ref<any>(null)
-async function saveReservation(values: any) {
+const resaToEdit = ref<Resa | null>(null)
+async function onSubmitReservation({ liste_attente, ...values }: Partial<Resa>) {
   saving.value = true
+  saveError.value = null
   try {
-    await postReservation({
-      id_event: selectedEvent.value.id,
-      ...values
-    })
+    if (resaToEdit.value?.id_reservation) {
+      await updateReservation(resaToEdit.value?.id_reservation, {
+        liste_attente,
+        ...values
+      })
+    } else {
+      await postReservation({
+        id_event: selectedEvent.value.id,
+        ...values
+      })
+    }
     await loadReservations()
     statutReservation.value = 'list'
   } catch (error) {
     saveError.value = error
   }
   saving.value = false
+}
+function onCloseReservation() {
+  statutReservation.value = 'list'
+  resaToEdit.value = null
 }
 
 /**

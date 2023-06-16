@@ -120,7 +120,11 @@ const lienExport = CONFIGURATION.URL_APPLICATION + '/export_reservation/'
 defineProps({
   resas: {
     type: Object,
-    required: true
+    required: false,
+    default: () => ({
+      results: [],
+      total: 0
+    })
   },
   loading: {
     type: Boolean,
@@ -148,4 +152,33 @@ function onCancelResa(event: any, id_reservation: number) {
   })
 }
 
+/*
+function addCalculateParticipant(): boolean {
+  if (this.editedItem.liste_attente === true) return false;
+  let nbInit = 0;
+
+  // Si c'est une modification il faut soustraire le nombre de participants initial
+  if (this.editedItem.id_reservation !== undefined) {
+    const resa = this.event.reservations.filter(
+      (item: Resa) => item.id_reservation === this.editedItem.id_reservation
+    )[0];
+    nbInit = Object.keys(
+      this.liste_champs_nb
+    ).reduce(
+      (total, nb) => (
+        total + (parseInt(resa[nb], 0) || 0)
+      ), 0
+    )
+  }
+  const sumP: number = (Object.keys(this.liste_champs_nb) as Array<keyof Resa>)
+  .reduce(
+    (total, nb) => (
+      total + (parseInt(this.editedItem[nb] as string, 0) || 0)
+    ), 0
+  ) + this.event.sum_participants - nbInit;
+
+  // Faux si la sum des participant est supérieur au nb de place + delta défini dans la CONFIGURATION
+  return sumP > parseInt(this.event.capacity, 0) + CONFIGURATION.RESA_NB_DELTA
+}
+*/
 </script>

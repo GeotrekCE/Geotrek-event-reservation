@@ -191,6 +191,52 @@
         </div>
       </div>
 
+      <div class="border-b border-gray-900/10 pb-12" v-if="displayAdminFields">
+        <h2 class="text-base font-medium leading-7 text-gray-900">Informations administrateurs</h2>
+        <p class="mt-1 text-sm leading-6 text-gray-600">
+          Informations saisissables uniquement par les administrateurs.
+        </p>
+
+        <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-10">
+          <div class="sm:col-span-2">
+            <label for="liste_attente" class="block text-sm font-medium leading-6 text-gray-900">En liste d'attente</label>
+            <div class="mt-2">
+              <vv-field
+                name="liste_attente"
+                id="liste_attente"
+                as="select"
+                class="block w-full rounded-sm border-0 p-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 text-sm leading-6 h-10"
+              >
+                <option :value="true">Sur liste d'attente</option>
+                <option :value="false">Comptabilisée</option>
+              </vv-field>
+
+              <vv-error-message
+                name="liste_attente"
+              />
+            </div>
+          </div>
+          <div class="sm:col-span-2">
+            <label for="confirmed" class="block text-sm font-medium leading-6 text-gray-900">Confirmée par le créateur</label>
+            <div class="mt-2">
+              <vv-field
+                name="confirmed"
+                id="confirmed"
+                as="select"
+                class="block w-full rounded-sm border-0 p-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 text-sm leading-6 h-10"
+              >
+                <option :value="true">Confirmée</option>
+                <option :value="false">En attente de confirmation</option>
+              </vv-field>
+
+              <vv-error-message
+                name="confirmed"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="border-b border-gray-900/10 pb-12">
         <h2 class="text-base font-medium leading-7 text-gray-900">Commentaire</h2>
         <p class="mt-1 text-sm leading-6 text-gray-600">
@@ -264,7 +310,7 @@ import { Form as VvForm, Field as VvField, ErrorMessage as VvErrorMessage } from
 import * as yup from 'yup'
 
 const emits = defineEmits(['submit', 'cancel'])
-defineProps({
+const props = defineProps({
   saving: {
     type: Boolean,
     required: true
@@ -275,6 +321,16 @@ defineProps({
     default: ''
   },
   displayCancel: {
+    type: Boolean,
+    required: false,
+    default: false
+  },
+  originalValues: {
+    type: Object,
+    required: false,
+    default: () => ({})
+  },
+  displayAdminFields: {
     type: Boolean,
     required: false,
     default: false
@@ -293,14 +349,26 @@ const formSchema = yup.object().shape({
   nb_6_8_ans: yup.number().min(0).default(0).label('6 - 8 ans'),
   nb_9_12_ans: yup.number().min(0).default(0).label('9 - 12 ans'),
   nb_plus_12_ans: yup.number().min(0).default(0).label('Plus de 12 ans'),
+  liste_attente: yup.bool().label('En liste d\'attente'),
+  confirmed: yup.bool().label('Confirmée par le créateur'),
 });
 
+
+
 const formValues = {
-  nb_adultes: 0,
-  nb_moins_6_ans: 0,
-  nb_6_8_ans: 0,
-  nb_9_12_ans: 0,
-  nb_plus_12_ans: 0,
+  email: props.originalValues.email,
+  tel: props.originalValues.tel,
+  nom: props.originalValues.nom,
+  prenom: props.originalValues.prenom,
+  num_departement: props.originalValues.num_departement,
+  commentaire: props.originalValues.commentaire,
+  nb_adultes: props.originalValues.nb_adultes || 0,
+  nb_moins_6_ans: props.originalValues.nb_moins_6_ans || 0,
+  nb_6_8_ans: props.originalValues.nb_6_8_ans || 0,
+  nb_9_12_ans: props.originalValues.nb_9_12_ans || 0,
+  nb_plus_12_ans: props.originalValues.nb_plus_12_ans || 0,
+  liste_attente: props.originalValues.liste_attente,
+  confirmed: props.originalValues.confirmed,
 }
 </script>
 

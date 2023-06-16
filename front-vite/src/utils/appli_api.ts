@@ -29,7 +29,7 @@ export const updateReservation = (id: number, data: any) => putApiData(CONFIGURA
 /**
  * Authentification
  */
-export const postLogin = (data: any) => postApiData(CONFIGURATION.URL_APPLICATION, 'auth/login', data, false);
+export const postLogin = (data: any) => postApiData(CONFIGURATION.URL_APPLICATION, 'auth/login', data);
 
 /**
  * Événements / Animations
