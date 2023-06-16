@@ -49,21 +49,24 @@ Voici le contenu du fichier `config.js` :
 // URL_GTR: url de l'application geotrek
 // DAY_BEFORE_RESA: nombre de jours avant la date de debut de l'animation ou l'inscription est possible (si -1 aucune limitation de date)
 // RESA_NB_DELTA: nombre de participants surnuméraire acepté en plus du nombre de participants spécifiés dans geotrek
+// RESA_BEGINNING_DATE: date à partir de laquelle les réservations sont ouvertes (PNG)
 
 const CONFIGURATION = {
   URL_APPLICATION: 'http://localhost:5000',
   URL_GTA: 'http://localhost:8000',
   URL_GTR: 'http://localhost:8000',
   DAY_BEFORE_RESA: 15,
-  RESA_NB_DELTA: 3
+  RESA_NB_DELTA: 3,
+  RESA_BEGINNING_DATE: new Date('2023-06-25')  
 }
 ```
 
 * `URL_APPLICATION` correspond à l'API du serveur backend Flask
 * `URL_GTA` correspond à l'URL du portail Geotrek Admin
 * `URL_GTR` correspond à l'URL du portail Geotrek grand public
-* `DAY_BEFORE_RESA` est une variable précédemment utilisée par les Cévennes. Non utilisée à ce jour
+* `DAY_BEFORE_RESA` est une variable précédemment utilisée par les Cévennes. Non utilisée à ce jour (voir `RESA_BEGINNING_DATE`)
 * `RESA_NB_DELTA` est une tolérance pour accepter une réservation qui dépasserait la capacité d'accueil de l'animation
+* `RESA_BEGINNING_DATE` est la date à partir de laquelle l'outil permet de créer une réservation
 
 
 **Customiser les fichiers md**
