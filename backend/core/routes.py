@@ -369,7 +369,7 @@ def cancel_reservation(reservation_id):
         return jsonify({"error": f"Reservation #{reservation_id} has already been cancelled"}), 400
 
     reservation.cancelled = True
-    reservation.cancel_data = datetime.now()
+    reservation.cancel_date = datetime.now()
     reservation.cancel_by = "admin" if is_admin else "utilisateur"
     db.session.add(reservation)
     db.session.commit()
