@@ -1,7 +1,8 @@
 <template>
-  <div>
-    <vue-highcharts :options="config" ref="currentGraphs"></vue-highcharts>
-  </div>
+  <vue-highcharts
+    :options="config"
+    ref="currentGraphs"
+  />
 </template>
 
 <script lang="ts">

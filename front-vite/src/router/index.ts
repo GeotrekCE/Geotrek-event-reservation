@@ -7,8 +7,6 @@ import LoginView from '@/views/LoginView.vue';
 import LoginCallbackView from '@/views/LoginCallbackView.vue';
 import LogoutView from '@/views/LogoutView.vue';
 
-// import BilanStats from '@/views/BilanStats.vue';
-
 export const ROUTES_NAMES = {
   HOME: 'HOME',
   LOGIN: 'LOGIN',
@@ -80,11 +78,14 @@ const routes = [
       requiresAdmin: true 
     },
   }, {
-/*    path: ROUTES_PATHS.STATS,
+    path: ROUTES_PATHS.STATS,
     name: ROUTES_NAMES.STATS,
-    component: BilanStats,
-    // meta: { requiresAuth: true },
-  }, {*/
+    component: () => import('@/views/StatsView.vue'),
+    meta: { 
+      requiresAuth: true,
+      requiresAdmin: true 
+    },
+  }, {
     path: ROUTES_PATHS.RESA_FORM,
     name: ROUTES_NAMES.RESA_FORM,
     component: () => import('@/views/ReservationFormView.vue'),
