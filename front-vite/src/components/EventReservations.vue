@@ -38,8 +38,11 @@
         {{ formatDateTime(data.meta_create_date) }}
       </template>
     </p-column>
-    <p-column field="sum_participants" header="Total"></p-column>
-    <p-column field="sum_participants_liste_attente" header="Liste d'attente"></p-column>
+    <p-column header="Nombre d'inscrits">
+      <template #body="{ data }">
+        {{ data.liste_attente ? data.sum_participants_liste_attente : data.sum_participants }}
+      </template>      
+    </p-column>
     <p-column field="confirmed" header="Confirmée">
       <template #body="{ data }">
         <p-tag
