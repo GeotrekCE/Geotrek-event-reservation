@@ -12,4 +12,7 @@ declare let CONFIGURATION: {
   // Nombre de participants surnuméraire accepté
   // en plus du nombre de participants spécifiés dans GeoTrek
   RESA_NB_DELTA: number
+
+  // Date à partir de laquelle les réservations sont ouvertes (PNG)
+  RESA_BEGINNING_DATE: Date
 }

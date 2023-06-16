@@ -11,8 +11,23 @@
     </div>
   </header>
 
+  <main class="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8 px-4 py-6" v-if="!isResaOpened">
+    <section class="pb-12 mx-auto space-y-4">
+      <p>
+        Nous sommes désolés, les réservations ne sont pas encore ouvertes.
+      </p>
+      <p>
+        Vous pouvez revenir à partir du {{ resaBeginningDateDisplay }}.
+      </p>
+      <p>
+        À très bientôt !
+      </p>
+    </section>
+  </main>
+
   <main
     class="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8 px-4 py-6"
+    v-else
   >
     <section
       class="border-b border-gray-900/10 pb-12"
@@ -113,12 +128,18 @@
 import { ref, onBeforeMount } from 'vue'
 import { useRoute } from 'vue-router'
 import { getEvent, postReservation } from '@/utils/appli_api';
-import { formatDate } from '@/utils/formatDate'
+import { formatDate, formatDateTime } from '@/utils/formatDate'
 import EventSummary from '@/components/EventSummary.vue'
 import EventReservationForm from '@/components/EventReservationForm.vue'
 
 const currentRoute = useRoute()
 const geotrekId = currentRoute.params.geotrekid
+
+const today = new Date()
+
+const isResaOpened = today > CONFIGURATION.RESA_BEGINNING_DATE
+
+const resaBeginningDateDisplay = formatDateTime(CONFIGURATION.RESA_BEGINNING_DATE.toISOString())
 
 const STATUS = {
   PRISTINE: 'PRISTINE',
@@ -142,6 +163,7 @@ const eventError = ref('')
  */
 const event = ref<any>(null)
 onBeforeMount(async () => {
+  if (!isResaOpened) return
   loadingEvent.value = true
   try {
     event.value = await getEvent(geotrekId)
