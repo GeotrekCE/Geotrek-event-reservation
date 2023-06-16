@@ -57,7 +57,7 @@ const CONFIGURATION = {
   URL_GTR: 'http://localhost:8000',
   DAY_BEFORE_RESA: 15,
   RESA_NB_DELTA: 3,
-  RESA_BEGINNING_DATE: new Date('2023-06-25')  
+  RESA_BEGINNING_DATE: new Date('2023-06-26')  
 }
 ```
 
