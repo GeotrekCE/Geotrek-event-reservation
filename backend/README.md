@@ -36,3 +36,65 @@ comme recommandé.
 
 Sur un environnement de dev il est plus simple d'utiliser psycopg2-binary qui évite d'installer les paquets nécessaires
 pour compiler les sources sur sa machine.
+
+
+# Déploiement
+
+## Configurer le backend
+
+Un exemple de configuration est donné : `backend/config/config.py.sample`.
+
+Certains paramètres n'ont pas de valeur par défaut et doivent obligatoirement être fournis. Il s'agit de :
+
+- PUBLIC_SERVER_NAME
+- ADMIN_EMAILS
+- SECRET_KEY
+- MAIL_DEFAULT_SENDER
+
+La description des paramètres et des exemples de valeurs sont dans le fichier `.sample`.
+
+
+## Configurer la connexion à la BD Geotrek
+
+De plus vous aurez certainement besoin de modifier les paramètres par défaut de connexion à la BD. La configuration par
+défaut se connecte en HTTP sur le localhost avec le port standard 5432 et les identifiants par défaut de geotrek. Les
+éléments de configuration peuvent être écrasés individuellement par des variables d'environnement. Par exemple :
+
+GEOTREK_DB_PASSWORD=unmotdepasseplussecure
+
+Voir `backend/config/config.py.sample` pour les autres paramètres.
+
+Plusieurs configuration sont possibles :
+
+1. dev local
+2. la BD se trouve sur un serveur distant 
+3. docker png-web + la BD se trouve sur le docker host
+4. docker png-web + docker postgres Geotrek BD dans la même stack docker-compose
+
+### 1. dev local
+
+Utiliser la valeurs par défaut de la configuration.
+
+### 2. la BD se trouve sur un serveur distant
+
+Définir variable d'environnement : `GEOTREK_DB_HOST=server.distant.net`
+
+### 3. docker png-web + la BD se trouve sur le docker host
+
+Configuration du docker-compose.yml d'exemple : `GEOTREK_DB_HOST` est laissé vide et le `entrypoint.sh` se charge de
+trouver l'IP de la passerelle dans le conteneur.
+
+### 4. docker png-web + docker postgres Geotrek BD dans la même stack docker-compose
+
+Créer un réseau docker et indiquer le nom du service de la BD Geotrek dans le `docker.env`
+
+
+## Fournir la configuration au conteneur docker
+
+Le backend s'attend à trouver un fichier `./backend/config/config.py` (par rapport au répertoire du projet dans le conteneur docker).
+
+Il est conseillé de fournir ce fichier en montant un volume dans le conteneur, par exemple :
+
+`docker run -v /path/to/config:/opt/png-resa/backend/config` -p 127.0.0.1:8000:8000 png-resa`
+
+C'est cette approche qui est utilisée dans le `docker-compose.yml` fourni en exemple.

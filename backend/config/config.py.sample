@@ -8,21 +8,23 @@ ORGANISM_FOR_EMAIL_SUBJECT = ""
 
 # --- Application settings ---
 
-# The PUBLIC_SERVER_NAME of the application, default None, for instance: 'www.png-resa.fr' or 'localhost:5000'.
+# L'adresse où écoute le frontend du portail de réservation, par exemple : 'www.png-resa.fr' ou 'localhost:5000'.
 PUBLIC_SERVER_NAME =
 
-# The path for the confirmed reservation page on the frontend, for instance: '/resaconfirm'.
-FRONTEND_CONFIRMED_PATHNAME =
-
-# The path for the landing page on the frontend, for instance: '/login'.
-FRONTEND_PORTAL_PATHNAME =
-
-# The path for the successfull login page on the frontend, for instance: '/login/callback'.
-FRONTEND_LOGIN_PATHNAME =
-
-# A list of emails for admins, for instance: ['admin@png-resa.fr', 'teddy@png-it.fr']. This is used to give permissions,
-# not to actually send emails.
+# La liste des emails des administrateurs du portail, par exemple :
+# ADMIN_EMAILS = ['admin@png-resa.fr', 'teddy@png-it.fr']
+# Ces emails sont utilisés pour donner les permissions admin à l'authentification et pour recevoir les notifications
+# d'annulation de réservations par les utilisateurs.
 ADMIN_EMAILS =
+
+# Le path sur le frontend pour générer le lien de confirmation de réservation qui est envoyé par email.
+FRONTEND_CONFIRMED_PATHNAME = "/resaconfirm"
+
+# Le path sur le frontend pour générer le lien vers le portail qui est ajouté dans les emails.
+FRONTEND_PORTAL_PATHNAME = "/login"
+
+# Le path sur le frontend pour générer le lien de connexion envoyé par email.
+FRONTEND_LOGIN_PATHNAME = "/login/callback"
 
 
 # --- Database settings ---
@@ -38,15 +40,27 @@ SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 # --- Flask settings ---
 
+# SECRET_KEY chiffre les cookies de session, il faut indiquer une chaîne de caractères aléatoires à garder hors
+# du code source.
+# Exemple pour générer une chaîne :
+# $ python -c 'import secrets; print(secrets.token_hex())'
+# > '192b9bdd22ab9ed4d12e236c78afcb9a393ec15f71bbf5dc987d54727823bcbf'
+SECRET_KEY =
+
 URL_APPLICATION = "http://localhost:5000"
 PASS_METHOD = 'hash'
 COOKIE_EXPIRATION = 43200
 COOKIE_AUTORENEW = True
 TRAP_ALL_EXCEPTIONS = False
-SECRET_KEY='the random string'
 
 
 # --- Flask Mail settings ---
+
+# MAIL_DEFAULT_SENDER: default None, paramètre obligatoire même en mode dev/test.
+MAIL_DEFAULT_SENDER =
+
+# MAIL_SUPPRESS_SEND: default app.testing, paramètre utile pour le développement sans serveur SMTP.
+#MAIL_SUPPRESS_SEND = True
 
 # MAIL_SERVER: default ‘localhost’
 # MAIL_PORT: default 25
@@ -55,8 +69,5 @@ SECRET_KEY='the random string'
 # MAIL_DEBUG: default app.debug
 # MAIL_USERNAME: default None
 # MAIL_PASSWORD: default None
-# MAIL_DEFAULT_SENDER: default None
-# MAIL_DEFAULT_SENDER: default None
 # MAIL_MAX_EMAILS: default None
-# MAIL_SUPPRESS_SEND: default app.testing
 # MAIL_ASCII_ATTACHMENTS: default False

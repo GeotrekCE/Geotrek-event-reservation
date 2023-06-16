@@ -3,8 +3,8 @@
 ## Description de la stack technique
 
 * Backend
-  * Flask + SQLAlchemy + ?
-  * Geotrek vx.x.x ?
+  * Flask + SQLAlchemy + Marshmallow + Flask extensions
+  * Testé avec Geotrek Admin v2.98.0 et Geotrek Rando 3.13.6
 * Frontend
   * Vue 3 + TypeScript + Vite
   * Tailwind CSS
@@ -13,6 +13,19 @@
 ## Déploiement
 
 ### Déployer le backend
+
+Le déploiement en prod est plutôt pensé pour utiliser docker. Les fichiers suivants sont fournis :
+
+- docker-compose.yml
+- backend/Dockerfile
+- backend/docker.env
+- backend/entrypoint.sh
+
+Un fichier de configuration `config.py` est à fournir au backend. Plus d'infos sur `backend/README.md`.
+
+Le backend du portail de réservation se connecte directement sur la base de données de Geotrek Admin en lecture seule.
+La procédure pour créer le schéma et les tables attendus est détaillée ainsi que les possibilités pour fournir
+les infos de connexion au backend.
 
 ### Déployer le frontend
 
