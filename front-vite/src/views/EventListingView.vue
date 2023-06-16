@@ -215,14 +215,6 @@
             <div v-html='selectedEvent.description_teaser'></div>
 
             <p-tab-view>
-              <p-tab-panel header="Résumé">
-
-                <event-summary
-                  :event="selectedEvent"
-                  :gtevent="gtevent"
-                />
-
-              </p-tab-panel>
               <p-tab-panel header="Réservations">
 
                 <reservation-progress
@@ -272,6 +264,14 @@
                   :display-cancel="true"
                   :original-values="resaToEdit || {}"
                   :display-admin-fields="true"
+                />
+
+              </p-tab-panel>
+              <p-tab-panel header="Résumé">
+
+                <event-summary
+                  :event="selectedEvent"
+                  :gtevent="gtevent"
                 />
 
               </p-tab-panel>
