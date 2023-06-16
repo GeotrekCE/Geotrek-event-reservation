@@ -89,11 +89,11 @@ class GTEvents(db.Model):
 
     @hybrid_property
     def sum_participants(self):
-        return sum(r.sum_participants for r in self.reservations if r.confirmed)
+        return sum(r.sum_participants for r in self.reservations if r.confirmed and not r.cancelled)
 
     @hybrid_property
     def sum_participants_liste_attente(self):
-        return sum(r.sum_participants_liste_attente for r in self.reservations if r.confirmed)
+        return sum(r.sum_participants_liste_attente for r in self.reservations if r.confirmed and not r.cancelled)
 
     @hybrid_property
     def massif(self):
