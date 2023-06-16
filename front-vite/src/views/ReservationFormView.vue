@@ -131,6 +131,7 @@ import { getEvent, postReservation } from '@/utils/appli_api';
 import { formatDate, formatDateTime } from '@/utils/formatDate'
 import EventSummary from '@/components/EventSummary.vue'
 import EventReservationForm from '@/components/EventReservationForm.vue'
+import type { ResaEvent } from '@/declaration';
 
 const currentRoute = useRoute()
 const geotrekId = currentRoute.params.geotrekid
@@ -161,16 +162,19 @@ const eventError = ref('')
 /**
  * Chargement de l'événement corrélé
  */
-const event = ref<any>(null)
+const event = ref<ResaEvent | null>(null)
 onBeforeMount(async () => {
   if (!isResaOpened) return
   loadingEvent.value = true
   try {
     event.value = await getEvent(geotrekId)
+    if (event.value.cancelled) {
+      eventError.value = `L'animation n° ${geotrekId} (${event.value.name}) a été annulée. Il est impossible d'effectuer une réservation.`
+    }
   } catch (error: any) {
     switch (error.message) {
       case "NOT FOUND":
-        eventError.value = `L'événement n° ${geotrekId} n'a pas été trouvé. Il est impossible d'effectuer une réservation`
+        eventError.value = `L'animation n° ${geotrekId} n'a pas été trouvée. Il est impossible d'effectuer une réservation`
         break
       default:
         eventError.value = "Une erreur est survenue. Il est impossible d'effecuter une réservation. Merci de prendre contact avec le parc."
