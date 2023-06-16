@@ -68,14 +68,16 @@ const routes = [
     name: ROUTES_NAMES.EVENT_LISTING,
     component: () => import('@/views/EventListingView.vue'),
     meta: { 
-      requiresAuth: true 
+      requiresAuth: true,
+      requiresAdmin: true
     },
   }, {
     path: ROUTES_PATHS.EVENT_DETAIL,
     name: ROUTES_NAMES.EVENT_DETAIL,
     component: () => import('@/views/EventListingView.vue'),
     meta: { 
-      requiresAuth: true 
+      requiresAuth: true,
+      requiresAdmin: true 
     },
   }, {
 /*    path: ROUTES_PATHS.STATS,
@@ -113,24 +115,51 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const authStore = useAuthStore()
-  // instead of having to check every route record with
-  // to.matched.some(record => record.meta.requiresAuth)
-  // if (to.path !== ROUTES_PATHS.LOGIN) {
-  //   authStore.redirectOnLogin = to.path
-  // }
-  if (
-    to.name !== ROUTES_NAMES.LOGIN
-    && !authStore.isAuth
-    && to.meta.requiresAuth
-  ) {
-    // this route requires auth, check if logged in
-    // if not, redirect to login page.
-    next({
-      path: ROUTES_PATHS.LOGIN,
-      replace: true,
-    });
+
+  // if we want to display login page
+  if (to.name===ROUTES_NAMES.LOGIN) {
+    // but user is already auth
+    if (authStore.isAuth) {
+      // we go to event listing if user is admin
+      if (authStore.isAdmin) {
+        next({
+          path: ROUTES_PATHS.EVENT_LISTING,
+          replace: true
+        })
+      } else {
+        // we go to resa listing if user is not admin
+        next({
+          path: ROUTES_PATHS.RESA_LISTING,
+          replace: true
+        })
+      }
+    }
+  } else {
+    // we are going to a route that may require auth
+    if (to.meta.requiresAuth) {
+      // if user is not auth, go to login
+      if (!authStore.isAuth) {
+        next({
+          path: ROUTES_PATHS.LOGIN,
+          replace: true,
+        });
+      } else if (
+        to.meta.requiresAdmin && 
+        !authStore.isAdmin
+      ){
+        // if the route need admin permission
+        // but user is not ad admin
+        // go to home page     
+        next({
+          path: ROUTES_PATHS.HOME,
+          replace: true,
+        }); 
+      }
+
+    }
   }
   next();
+
 })
 
 export default router;

@@ -1,8 +1,6 @@
 import { pinia } from '@/plugins/pinia'
 import { useAppStore } from '@/stores/app'
 
-const appStore = useAppStore(pinia)
-
 function buildGetUrl (baseUrl: string, urlRelative: string, params: Record<string, any> = {}): URL {
   const url = new URL(`${baseUrl}/${urlRelative}`);
   Object.keys(params)
@@ -50,7 +48,7 @@ export function getApiData (baseUrl: string, route: string, params?: any) {
   return callFetchApi('GET', url, optionsHeaders);
 }
 
-export function postApiData (baseUrl: string, route: string, postData: any, message = true) {
+export function postApiData (baseUrl: string, route: string, postData: any /*, message = true */) {
   const fetchParams = {
     method: 'POST',
     credentials: 'include',

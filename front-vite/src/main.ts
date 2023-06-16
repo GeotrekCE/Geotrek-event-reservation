@@ -15,15 +15,34 @@ import 'primeicons/primeicons.css'
 
 import './index.css'
 
+import { useAuthStore } from './stores/auth'
+
 
 import App from './App.vue'
 
-const app = createApp(App)
+/**
+ * Check the auth
+ */
+async function boot() {
+  /**
+   * First, check the auth of user before creating Vue App
+   */
+  const authStore = useAuthStore(pinia)
+  await authStore.checkAuth()
 
-app.use(PrimeVue)
-app.use(ConfirmationService)
+  /**
+   * Now, we know if user is auth or not,
+   * render the app
+   */
+  const app = createApp(App)
 
-app.use(pinia)
-app.use(router)
+  app.use(PrimeVue)
+  app.use(ConfirmationService)
 
-app.mount('#app')
+  app.use(pinia)
+  app.use(router)
+
+  app.mount('#app')
+}
+
+boot()

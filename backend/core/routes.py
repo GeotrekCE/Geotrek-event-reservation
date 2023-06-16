@@ -507,6 +507,22 @@ def login():
     }), 200
 
 
+@app_routes.route("/ping", methods=["GET"])
+def ping():
+    from flask import current_app
+    if 'user' in session:
+        return jsonify({
+            "is_admin": session['user'] in current_app.config["ADMIN_EMAILS"],
+            "email": session['user']
+        }), 200
+    else:
+        return "A logged-in user is required", 403
+
+@app_routes.route('/logout')
+def logout():
+    session.clear()
+    return "", 200
+
 @app_routes.route("/export_reservation/<id>", methods=["GET"])
 @login_admin_required
 def export_reservation(id):

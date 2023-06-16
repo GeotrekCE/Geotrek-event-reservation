@@ -47,11 +47,14 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useAuthStore } from '@/stores/auth'
+import { useRoute } from 'vue-router';
 
-const email = ref('')
 const loading = ref(false)
 const success = ref(false)
 const error = ref(false)
+
+const route = useRoute()
+const email = ref(route.query.email as string)
 
 const authStore = useAuthStore()
 function login() {
@@ -66,10 +69,5 @@ function login() {
   }
   loading.value = false
 }
-
-/**
- * We first logout the user ? (retrieved from the original source code)
- */
-authStore.logout()
 
 </script>
