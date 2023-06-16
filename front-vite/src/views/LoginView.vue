@@ -34,9 +34,9 @@
           Un email de connexion vient de vous être envoyé.<br/>
           En cliquant sur le lien contenu dans ce dernier, vous pourrez vous connecter.
         </div>
-        <div v-if="error">
+        <div v-if="error" class="text-red-500">
           Une erreur est survenue pendant la demande de votre lien de connexion.<br/>
-          Merci d'esasyer à nouveau.<br/>
+          Merci d'essayer à nouveau.<br/>
           Si vous n'arrivez pas à obtenir le lien de connexion, merci de prendre contact avec le parc.        
         </div>
       </form>
@@ -57,12 +57,12 @@ const route = useRoute()
 const email = ref(route.query.email as string)
 
 const authStore = useAuthStore()
-function login() {
+async function login() {
   if (!email.value) return
   loading.value = true
   error.value = false
   try {
-    authStore.sendLoginEmail(email.value)
+    await authStore.sendLoginEmail(email.value)
     success.value = true
   } catch {
     error.value = true

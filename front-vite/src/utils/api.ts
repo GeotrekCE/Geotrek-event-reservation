@@ -20,7 +20,6 @@ async function callFetchApi (
   const baseParams = { method }
   const fetchParams = { ...baseParams, ...optionsHeaders }
 
-
   const response = await fetch(url, fetchParams)
 
   if (response.status >= 400) {
