@@ -25,7 +25,7 @@
         >
           <template #header>
             <form @submit.prevent="search">
-              <div class="w-full flex justify-between">
+              <div class="w-full flex justify-between mb-4">
                 <span class="p-input-icon-right w-full">
                   <i class="pi pi-search" />
                   <p-input-text
@@ -53,34 +53,51 @@
                   />
                 </button>
               </div>
-              <div v-if="formOpened" class="space-y-4 space-x-2">
+              <div v-if="formOpened" class="space-y-4">
                 <p-calendar
                   v-model="filters.begin_date"
-                  class="rounded-sm p-inputtext-sm"
+                  class="rounded-sm p-inputtext-sm w-64 mr-2"
                   placeholder="Date de début"
+                  dateFormat="dd/mm/yy"
+                  showIcon
+                  showButtonBar
                 />
                 <p-calendar
                   v-model="filters.end_date"
-                  class="rounded-sm p-inputtext-sm"
+                  class="rounded-sm p-inputtext-sm w-64"
                   placeholder="Date de fin"
+                  dateFormat="dd/mm/yy"
+                  showIcon
+                  showButtonBar
                 />
                 <p-multi-select
                   v-model="filters.massif"
                   display="chip"
                   :options="districts"
                   placeholder="Massifs"
-                  class="w-full md:w-20rem rounded-sm p-inputtext-sm"
+                  class="rounded-sm p-inputtext-sm w-64 mr-2"
                 />
                 <p-multi-select
                   v-model="filters.type_id"
                   display="chip"
                   :options="eventtypes"
+                  data-key="id"
+                  option-label="name"
+                  option-value="id"
                   placeholder="Type"
-                  class="w-full md:w-20rem rounded-sm p-inputtext-sm"
+                  class="rounded-sm p-inputtext-sm w-64"
                 />
 
-                <input type="checkbox" v-model="filters['published']" />Publiées
-                <input type="checkbox" v-model="filters['bilan.annulation']" />Annulées
+                <div class="flex items-center">
+                  <input type="checkbox" v-model="filters['published']" class="mr-2" />
+                  <label>Publiées</label>
+                </div>
+
+                <div class="flex items-center">
+                  <input type="checkbox" v-model="filters['cancelled']" class="mr-2" />
+                  <label>Annulées</label>
+                </div>
+
               </div>
 
               <div class="w-full flex justify-between items-end">
@@ -488,13 +505,21 @@ async function loadEvents () {
   const {
     page, itemsPerPage, sortBy, sortDesc
   } = options.value;
-  let params = {
+  let params: Record<string, any> = {
     limit: itemsPerPage,
     page: page + 1,
     sortBy,
     sortDesc
   };
-  params = { ...params, ...eventStore.filters }
+  Object.keys(filters.value).forEach((key: string) => {
+    const currentValue = filters.value[key as keyof ResaEventFilters]
+    if (currentValue) {
+      params[key] = currentValue
+      if (currentValue instanceof Date) {
+        params[key] = currentValue.toISOString()
+      }
+    } 
+  })
   try {
     const data = await getEvents(params)
     events.value = data.results;
@@ -626,7 +651,10 @@ onBeforeMount(async () => {
   const districtsResponse = await getDistricts()
   districts.value = districtsResponse.results.map((item: any) => item.name)
   const eventtypesResponse = await getTouristiceventType()
-  eventtypes.value = eventtypesResponse.results.map((item: any) => item.name)
+  eventtypes.value = eventtypesResponse.results.map((item: any) => ({
+    id: item.id,
+    name: item.type.fr
+  }))
 })
 
 </script>

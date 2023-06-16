@@ -17,7 +17,7 @@
       </div>
       <div class="hidden lg:flex lg:gap-x-12" v-if="isAuth">
         <template v-if="isAdmin">
-          <router-link to="/events" class="text-sm font-medium leading-6 text-gray-900">Animations (en cours)</router-link>
+          <router-link to="/events" class="text-sm font-medium leading-6 text-gray-900">Animations</router-link>
           <router-link to="/stats" class="text-sm font-medium leading-6 text-gray-900">Statistiques (à migrer)</router-link>  
         </template>
         <template v-else>
@@ -54,7 +54,7 @@
           <div class="-my-6 divide-y divide-gray-500/10">
             <div class="space-y-2 py-6">
               <template v-if="isAdmin">
-                <router-link to="/events" class="text-sm font-medium leading-6 text-gray-900">Animations (en cours)</router-link>
+                <router-link to="/events" class="text-sm font-medium leading-6 text-gray-900">Animations</router-link>
                 <router-link to="/stats" class="text-sm font-medium leading-6 text-gray-900">Statistiques (à migrer)</router-link>  
               </template>
               <template v-else>

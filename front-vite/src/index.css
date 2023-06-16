@@ -45,3 +45,19 @@ html, body, #app {
   color: var(--primary-color);
 }
  
+.p-datepicker .p-datepicker-header {
+  padding: unset;
+}
+.p-datepicker table th,
+.p-datepicker table td {
+  padding: 0.25rem;
+}
+.p-datepicker table th > span,
+.p-datepicker table td > span {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.p-datepicker.p-component {
+  width: 15rem;
+}
