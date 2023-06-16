@@ -44,11 +44,24 @@
         <p-column field="nb_6_8_ans" header="6/8 ans"></p-column>
         <p-column field="nb_9_12_ans" header="9/12 ans"></p-column>
         <p-column field="nb_plus_12_ans" header="+12 ans"></p-column>
-        <p-column field="liste_attente" header="Comptabilisée">
+        <p-column field="confirmed" header="Statut">
           <template #body="{ data }">
+
             <p-tag
               class="rounded-sm"
-              v-if="data.liste_attente === null"
+              v-if="data.cancelled"
+              value="Annulée"
+              severity="danger"
+            />
+            <p-tag
+              class="rounded-sm"
+              v-else-if="!data.confirmed"
+              value="À confirmer"
+              severity="warning"
+            />
+            <p-tag
+              class="rounded-sm"
+              v-else-if="data.liste_attente === null"
               value="Non traité"
               severity="info"
             />
@@ -63,15 +76,6 @@
               v-else-if="!data.liste_attente"
               value="OK"
               severity="success"
-            />
-          </template>
-        </p-column>
-        <p-column field="confirmed" header="Statut">
-          <template #body="{ data }">
-            <p-tag
-              class="rounded-sm"
-              :value="data.confirmed ? 'Confirmé' : 'À confirmer'"
-              :severity="data.confirmed ? 'success' : 'warning'"
             />
           </template>
         </p-column>
