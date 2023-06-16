@@ -5,6 +5,8 @@ services:
     container_name: png-web
     env_file:
       - png-resa/backend/docker.env
+    volumes:
+      - ./png-resa/backend/config:/opt/png-resa/config
     networks:
       - png-resa-network
 
