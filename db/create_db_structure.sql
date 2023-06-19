@@ -54,6 +54,19 @@ CREATE TABLE animations.t_animations_bilans (
       REFERENCES tourism_touristicevent(id)
 );
 
+DROP TABLE  IF EXISTS animations.t_event_info ;
+
+CREATE TABLE animations.t_event_info (
+    id_event_info serial4 NOT NULL,
+    id_event int4 NOT NULL  UNIQUE,
+    info_rdv TEXT DEFAULT '',
+    meta_create_date timestamp without time zone DEFAULT now(),
+    meta_update_date timestamp without time zone,
+    CONSTRAINT t_event_info_pkey PRIMARY KEY (id_event_info),
+    CONSTRAINT fk_id_event FOREIGN KEY(id_event)
+      REFERENCES tourism_touristicevent(id)
+);
+
 DROP TABLE  IF EXISTS animations.t_tokens;
 
 CREATE TABLE animations.t_tokens (

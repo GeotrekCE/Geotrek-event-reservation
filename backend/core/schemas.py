@@ -8,6 +8,7 @@ from core.models import (
     GTEventType,
     TAnimationsBilans,
     VExportBilan,
+    TEventInfo,
 )
 
 
@@ -129,6 +130,22 @@ class TAnimationsBilansSchema(SQLAlchemyAutoSchema):
         load_instance = True
         include_fk = True
         include_relationships = True
+
+
+class TEventInfoSchema(SQLAlchemyAutoSchema):
+    class Meta:
+        model = TEventInfo
+        load_instance = False
+        include_fk = True
+        include_relationships = True
+        dump_only = (
+            "meta_create_date",
+            "meta_update_date",
+        )
+        exclude = (
+            "id_event",
+            "id_event_info",
+        )
 
 
 class GTEventsSchema(SQLAlchemyAutoSchema):

@@ -199,6 +199,16 @@ class TAnimationsBilans(db.Model):
     id_event = db.Column(db.Integer, db.ForeignKey("public.tourism_touristicevent.id"))
 
 
+class TEventInfo(db.Model):
+    __tablename__ = "t_event_info"
+    __table_args__ = {"schema": "animations"}
+    id_event_info = db.Column(db.Integer, primary_key=True)
+    id_event = db.Column(db.Integer, db.ForeignKey("public.tourism_touristicevent.id"))
+    info_rdv = db.Column(db.Unicode, default="")
+    meta_create_date = db.Column(db.DateTime, default=datetime.datetime.now)
+    meta_update_date = db.Column(db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
+
+
 class VExportBilan(db.Model):
     __tablename__ = "v_export_bilans_global"
     __table_args__ = {"schema": "animations"}

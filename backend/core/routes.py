@@ -6,7 +6,7 @@ from email_validator import validate_email, EmailNotValidError, EmailSyntaxError
 from flask import jsonify, request, Blueprint, render_template, session, current_app
 from flask_mail import Message
 
-from core.models import db, GTEvents, TReservations, VExportBilan, TTokens
+from core.models import db, GTEvents, TReservations, VExportBilan, TTokens, TEventInfo
 from core.repository import query_stats_bilan, query_stats_animations_per_month
 from core.schemas import (
     GTEventsSchema,
@@ -15,6 +15,7 @@ from core.schemas import (
     TReservationsCreateByAdminSchema,
     TAnimationsBilansSchema,
     VExportBilanSchema,
+    TEventInfoSchema,
 )
 from core.utils import to_csv_resp, transform_obj_to_flat_list
 
@@ -628,3 +629,47 @@ def get_export_events():
     results = VExportBilanSchema(many=True).dump(events)
     fields = VExportBilan.__table__.columns.keys()
     return to_csv_resp("export_bilan", results, fields, ";")
+
+
+@app_routes.route("/events/<int:event_id>/info", methods=["GET"])
+@login_admin_required
+def get_event_info(event_id):
+    """Retourne les infos liées à l'événement indiqué.
+
+    S'il n'y a pas d'infos enregistrées un TEventInfo vide est créé et enregistré.
+    """
+    event_info = TEventInfo.query.filter_by(id_event=event_id).first()
+
+    if not event_info:
+        event = GTEvents.query.get(event_id)
+        if not event:
+            return jsonify({"error": f"Event #{event_id} not found"}), 404
+        event_info = TEventInfo(id_event=event_id)
+
+        db.session.add(event_info)
+        db.session.commit()
+
+    return TEventInfoSchema().dumps(event_info)
+
+
+@app_routes.route("/events/<int:event_id>/info", methods=["PUT"])
+@login_admin_required
+def set_event_info(event_id):
+    """Met à jour les infos liées à l'événement indiqué."""
+    post_data = request.get_json()
+    event_info = TEventInfo.query.filter_by(id_event=event_id).first()
+
+    if not event_info:
+        event = GTEvents.query.get(event_id)
+        if not event:
+            return jsonify({"error": f"Event #{event_id} not found"}), 400
+        event_info = TEventInfo(id_event=event_id)
+
+    validated_data = TEventInfoSchema().load(post_data, session=db.session)
+    for k, v in validated_data.items():
+        setattr(event_info, k, v)
+
+    db.session.add(event_info)
+    db.session.commit()
+
+    return TEventInfoSchema().dumps(event_info)
