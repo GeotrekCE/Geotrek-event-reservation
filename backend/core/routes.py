@@ -287,6 +287,68 @@ def get_reservations():
     )
 
 
+class EventIsFull(Exception):
+    pass
+
+
+class BodyParamValidationError(Exception):
+    pass
+
+
+def _post_reservations_by_user(post_data):
+    reservation = TReservationsSchema().load(post_data, session=db.session)
+
+    event = GTEvents.query.get(reservation.id_event)
+    if not event:
+        raise BodyParamValidationError(f"Event with ID {reservation.id_event} not found")
+
+    if not event.is_reservation_possible_for(reservation.nb_participants):
+        raise EventIsFull
+
+    reservation.token = generate_token()
+
+    db.session.add(reservation)
+    db.session.commit()
+
+    send_email(
+        subject=get_mail_subject("Lien pour confirmer votre demande de réservation"),
+        recipients=[reservation.email],
+        html=render_template(
+            "please_confirm_resa_mail.html",
+            confirmation_link=get_confirmation_link(reservation),
+            portal_link=get_portal_link(reservation),
+            event=stringify(reservation.event),
+            reservation=stringify(reservation)
+        )
+    )
+
+    return reservation
+
+
+def _post_reservations_by_admin(post_data):
+    reservation = TReservationsCreateByAdminSchema().load(post_data, session=db.session)
+
+    event = GTEvents.query.get(reservation.id_event)
+    if not event:
+        raise BodyParamValidationError(f"Event with ID {reservation.id_event} not found")
+
+    if not event.is_reservation_possible_for(reservation.nb_participants):
+        raise EventIsFull
+
+    if reservation.confirmed and reservation.liste_attente is None:
+        if event.sum_participants + reservation.nb_participants <= event.capacity:
+            reservation.liste_attente = False
+        else:
+            reservation.liste_attente = True
+
+    db.session.add(reservation)
+    db.session.commit()
+
+    send_confirmation_email(reservation)
+
+    return reservation
+
+
 @app_routes.route("/reservations", methods=["POST"])
 def post_reservations():
     """Crée une réservation.
@@ -309,7 +371,7 @@ def post_reservations():
     Si authentifié en tant qu'admin, la réservation est créée confirmée par défaut. Les propriétés supplémentaires
     acceptées sont :
 
-    liste_attente (required)
+    liste_attente (si pas de valeur donnée -> définie en fonction du remplissage de l'événement)
     confirmed (default True)
 
     Selon l'état de la réservation le mail correspondant est envoyé à l'adresse email indiquée.
@@ -322,35 +384,9 @@ def post_reservations():
     post_data = request.get_json()
 
     if is_admin:
-        reservation = TReservationsCreateByAdminSchema().load(post_data, session=db.session)
+        reservation = _post_reservations_by_admin(post_data)
     else:
-        reservation = TReservationsSchema().load(post_data, session=db.session)
-
-    event = GTEvents.query.get(reservation.id_event)
-    if not event:
-        return jsonify({"error": f"Event with ID {reservation.id_event} not found"}), 400
-    if not event.is_reservation_possible_for(reservation.nb_participants):
-        return "", 422
-
-    reservation.token = generate_token()
-
-    db.session.add(reservation)
-    db.session.commit()
-
-    if not reservation.confirmed:
-        send_email(
-            subject=get_mail_subject("Lien pour confirmer votre demande de réservation"),
-            recipients=[reservation.email],
-            html=render_template(
-                "please_confirm_resa_mail.html",
-                confirmation_link=get_confirmation_link(reservation),
-                portal_link=get_portal_link(reservation),
-                event=stringify(reservation.event),
-                reservation=stringify(reservation)
-            )
-        )
-    else:
-        send_confirmation_email(reservation)
+        reservation = _post_reservations_by_user(post_data)
 
     return TReservationsSchema().dumps(reservation)
 

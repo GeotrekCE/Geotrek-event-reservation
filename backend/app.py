@@ -6,7 +6,7 @@ from flask_mail import Mail
 from marshmallow.exceptions import ValidationError as MarshmallowValidationError
 
 from core.env import db
-from core.routes import app_routes, QueryParamValidationError
+from core.routes import app_routes, QueryParamValidationError, EventIsFull
 
 mail = None
 
@@ -36,8 +36,12 @@ def create_app():
         return jsonify({"error": str(e)}), 400
 
     @app.errorhandler(QueryParamValidationError)
-    def handle_bad_request(e):
+    def handle_bad_query_param_error(e):
         return jsonify({"error": str(e)}), 400
+
+    @app.errorhandler(EventIsFull)
+    def handle_event_is_full_error(e):
+        return jsonify({"error": "Réservation ou placement sur liste d'attente impossible, l'événement est complet"}), 422
 
     @app.template_filter()
     def format_date(value):

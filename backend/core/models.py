@@ -156,7 +156,7 @@ class TReservations(db.Model):
 
     @hybrid_property
     def sum_participants(self):
-        if not self.liste_attente:
+        if self.liste_attente is False:
             return (
                 self.nb_adultes
                 + self.nb_moins_6_ans
@@ -168,7 +168,7 @@ class TReservations(db.Model):
 
     @hybrid_property
     def sum_participants_liste_attente(self):
-        if self.liste_attente:
+        if self.liste_attente is True:
             return (
                 self.nb_adultes
                 + self.nb_moins_6_ans
