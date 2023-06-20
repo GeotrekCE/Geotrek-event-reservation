@@ -82,9 +82,8 @@ class GTEvents(db.Model):
     reservations = db.relationship(
         "TReservations", lazy="joined", backref=db.backref("event", lazy="joined")
     )
-
     bilan = db.relationship("TAnimationsBilans", lazy="joined", uselist=False)
-
+    info = db.relationship("TEventInfo", lazy="joined", uselist=False)
     type = db.relationship("GTEventType", lazy="joined")
 
     @hybrid_property

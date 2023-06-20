@@ -4,7 +4,6 @@ import secrets
 
 from email_validator import validate_email, EmailNotValidError, EmailSyntaxError
 from flask import jsonify, request, Blueprint, render_template, session, current_app
-from flask_mail import Message
 
 from core.models import db, GTEvents, TReservations, VExportBilan, TTokens, TEventInfo
 from core.repository import query_stats_bilan, query_stats_animations_per_month
@@ -17,7 +16,8 @@ from core.schemas import (
     VExportBilanSchema,
     TEventInfoSchema,
 )
-from core.utils import to_csv_resp, transform_obj_to_flat_list
+from core.utils import to_csv_resp, transform_obj_to_flat_list, send_email, get_mail_subject, stringify
+
 
 app_routes = Blueprint("app_routes", __name__)
 
@@ -46,13 +46,6 @@ def login_admin_required(f):
 def is_user_admin():
     email = session.get("user")
     return email and email in current_app.config["ADMIN_EMAILS"]
-
-
-def send_email(subject, recipients, html):
-    msg = Message(subject=subject, recipients=recipients, html=html)
-    print("email sent", msg)
-    from app import mail
-    mail.send(msg)
 
 
 def send_confirmation_email(reservation):
@@ -106,54 +99,6 @@ def get_login_link(token):
     hostname = current_app.config["PUBLIC_SERVER_NAME"]
     front_path = current_app.config["FRONTEND_LOGIN_PATHNAME"]
     return f"{protocol}{hostname}{front_path}?token={token}"
-
-
-def _get_property_names(model_object):
-    from sqlalchemy.ext.hybrid import hybrid_property
-    return [
-        p for p in dir(model_object)
-        if not p.startswith("_")
-           and (
-                   type(model_object.__class__.__dict__.get(p)) == property
-                   or type(model_object.__class__.__dict__.get(p)) == hybrid_property
-           )
-    ]
-
-
-def _get_orm_attribute_names(model_object):
-    return [a for a in model_object.__dict__.keys() if not a.startswith("_")]
-
-
-def stringify(model_object):
-    """Prend une instance de modèle et retourne un dict avec les attributs de l'ORM, les properties et les
-        hybrid properties en clé. Les valeurs sont stringifiées :
-
-        - None -> "--"
-        - True -> "Oui"
-        - False -> "None"
-    """
-    rv = {}
-
-    def process(attributes):
-        for a in attributes:
-            v = getattr(model_object, a)
-            print(a, v)
-            if v is None:
-                v = "--"
-            elif v is True:
-                v = "Oui"
-            elif v is False:
-                v = "Non"
-            rv[a] = v
-
-    process(_get_orm_attribute_names(model_object))
-    process(_get_property_names(model_object))
-
-    return rv
-
-
-def get_mail_subject(text):
-    return current_app.config["ORGANISM_FOR_EMAIL_SUBJECT"] + " " + text
 
 
 class QueryParamValidationError(Exception):
