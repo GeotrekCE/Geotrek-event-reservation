@@ -649,3 +649,4 @@ def send_event_cancellation_emails(event_id):
             )
         )
     db.session.commit()
+    return "", 200
