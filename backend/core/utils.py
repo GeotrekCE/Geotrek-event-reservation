@@ -82,7 +82,6 @@ def stringify(model_object):
     def process(attributes):
         for a in attributes:
             v = getattr(model_object, a)
-            print(a, v)
             if v is None:
                 v = "--"
             elif v is True:
