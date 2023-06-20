@@ -577,7 +577,7 @@ def get_export_events():
 
 
 @app_routes.route("/events/<int:event_id>/info", methods=["GET"])
-@login_admin_required
+@login_required
 def get_event_info(event_id):
     """Retourne les infos liées à l'événement indiqué.
 
