@@ -28,7 +28,7 @@ async function callFetchApi (
   }
 
   if (response.status >= 400) {
-    throw Error(response.statusText + '\n' + data?.error);
+    throw Error(data?.error);
   }
 
   return data

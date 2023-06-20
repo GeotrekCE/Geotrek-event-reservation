@@ -348,7 +348,7 @@ def confirm_reservation():
 
     event = resa.event
     if not event.is_reservation_possible_for(resa.nb_participants):
-        return "", 422
+        raise EventIsFull
     elif event.sum_participants + resa.nb_participants <= event.capacity:
         resa.liste_attente = False
     else:
