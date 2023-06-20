@@ -27,6 +27,7 @@
         :loading="loading"
         @page="onPage($event)"
         v-model:expandedRows="expandedRows"
+        @row-expand="onRowExpand"
       >
         <template #empty>Aucune réservation trouvée.</template>
         <template #loadingicon>
@@ -108,6 +109,20 @@
               </template>
 
             </div>
+            <div v-if="data.infos" class="col-span-full">
+              <label class="block text-sm font-medium leading-6 text-gray-900">Informations de rendez-vous : </label>
+              <template v-if="data.infos.info_rdv">
+                <p
+                  v-for="comment in data.infos.info_rdv?.split('\n')"
+                  :key="comment"
+                >
+                  {{comment }}
+                </p>
+              </template>
+              <p v-else>
+                Aucune information à ce jour
+              </p>
+            </div>
           </div>
         </template>
 
@@ -122,7 +137,7 @@
 
 <script setup lang="ts">
 import { ref, onBeforeMount } from 'vue'
-import { getReservations, deleteReservation } from '@/utils/appli_api'
+import { getReservations, deleteReservation, getEventInfo } from '@/utils/appli_api'
 import { formatDate } from '@/utils/formatDate'
 import { marked } from 'marked';
 import { expandedFields } from '@/utils/fields'
@@ -181,6 +196,14 @@ function onCancelResa(event: any, id_reservation: number) {
       await loadData()
     },
   })
+}
+
+async function onRowExpand(event: any) {
+  console.log(event.data.id_event)
+  const infos = await getEventInfo(event.data.id_event)
+  event.data.infos = {
+    info_rdv: infos.info_rdv
+  }
 }
 
 </script>
