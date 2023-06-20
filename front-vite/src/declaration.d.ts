@@ -36,6 +36,14 @@ export interface ResaEvent {
 }
 
 /**
+ * Information d'un événement
+ * Données issues du endpoint events/{id}/info
+ */
+export interface ResaEventInfo {
+  info_rdv: string
+}
+
+/**
  * Statistiques utilisées dans la page BilanStats
  */
 export interface Statistics {

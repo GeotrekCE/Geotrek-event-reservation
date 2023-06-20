@@ -1,4 +1,4 @@
-import type { ResaEvent, Resa } from '@/declaration';
+import type { ResaEvent, Resa, ResaEventInfo } from '@/declaration';
 import { getApiData, postApiData, deleteApiData, putApiData } from './api';
 
 
@@ -59,6 +59,10 @@ export const getEvents = (params: any) => {
 }
 
 export const getEvent = (id: any): Promise<ResaEvent> => getApiData(CONFIGURATION.URL_APPLICATION, `events/${id}`);
+
+export const getEventInfo = (id: any): Promise<ResaEventInfo> => getApiData(CONFIGURATION.URL_APPLICATION, `events/${id}/info`);
+
+export const putEventInfo = (id: any, data: Partial<ResaEventInfo>): Promise<ResaEventInfo> => putApiData(CONFIGURATION.URL_APPLICATION, `events/${id}/info`, data);
 
 export const postBilan = (data: any) => postApiData(CONFIGURATION.URL_APPLICATION, 'bilans', data);
 

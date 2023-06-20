@@ -268,8 +268,29 @@
                 />
 
               </p-tab-panel>
-              <p-tab-panel header="Résumé">
+              <p-tab-panel header="Résumé / RDV">
 
+                  <div>
+                  <h2 class="text-base mt-4 font-medium leading-7 text-gray-900">Informations pour le rendez-vous</h2>
+                  <p class="mt-1 text-sm leading-6 text-gray-600">
+                    Ces informations sont utiles lors de l'envoi de l'email aux utilisateurs. Ces informations n'apparaissent pas dans Geotrek.
+                  </p>
+
+                  <textarea
+                    class="mt-2 w-full flex-1 overflow-scroll min-h-[6rem] rounded-sm shadow-sm ring-1 ring-inset ring-gray-300 max-h-[10rem] p-2 text-gray-600 sm:text-sm sm:leading-6"
+                    v-model="selectedEventInfoRDV.info_rdv"
+                    :disabled="infosSaving"
+                  />
+                  <button
+                    class="block mx-auto mt-2 rounded-sm px-3 py-2 text-sm font-medium text-white shadow-sm bg-sky-600 hover:bg-sky-500"
+                    @click="onSaveInfos"
+                    :disabled="infosSaving"
+                  >
+                    {{ infosSaving ? 'Modification en cours...' : 'Modifier les informations' }}
+                  </button>
+                </div>
+
+                <h2 class="text-base mt-4 font-medium leading-7 text-gray-900">Résumé de l'animation</h2>
                 <event-summary
                   :event="selectedEvent"
                   :gtevent="gtevent"
@@ -386,7 +407,9 @@ import {
   getEvent,
   deleteReservation,
   updateReservation,
-  postReservation
+  postReservation,
+  getEventInfo,
+  putEventInfo
 } from '@/utils/appli_api';
 import ReservationProgress from '@/components/ReservationProgress.vue';
 import EventBilanForm from '@/components/EventBilanForm.vue'
@@ -407,7 +430,7 @@ import PTabPanel from 'primevue/tabpanel'
 import PMessage from 'primevue/message'
 
 import { ROUTES_NAMES } from '@/router'
-import type { ResaEventFilters, ResaBilan, Resa } from '@/declaration';
+import type { ResaEventFilters, ResaBilan, Resa, ResaEventInfo } from '@/declaration';
 import { getDistricts, getTouristiceventType, getTouristicEventDetail } from '@/utils/gta_api';
 
 import { formatDate, formatDateTime } from '@/utils/formatDate'
@@ -457,6 +480,7 @@ const formOpened = ref(false)
  */
 const selectedEvent = ref<any>(null)
 const selectedEventCanceled = computed(() => selectedEvent.value?.cancelled === true || selectedEvent.value?.bilan?.annulation === true)
+const selectedEventInfoRDV = ref<ResaEventInfo>({})
 const gtevent = ref<any>(null)
 const resas = ref<any>({ results: [], total: 0 })
 
@@ -620,6 +644,27 @@ async function onSaveBilan(data: Partial<ResaBilan>) {
   bilanSaving.value = false
 }
 
+/**
+ * Gestion des infos
+ */
+const infosSaving = ref(false)
+const infosError = ref<any>(null)
+async function onSaveInfos() {
+  infosSaving.value = true
+  infosError.value = null
+  try {
+    selectedEventInfoRDV.value = await putEventInfo(
+      selectedEvent.value.id, {
+        info_rdv: selectedEventInfoRDV.value.info_rdv
+      }
+    )
+    infosSaving.value = false
+  } catch (error) {
+    infosError.value = error
+  }
+  infosSaving.value = false
+}
+
 
 /**
  * Fonctions d'enregistrement de la réservation
@@ -667,8 +712,10 @@ watch(
 )
 
 watch(selectedEvent, async () => {
+  selectedEventInfoRDV.value = ''
   await loadReservations()
   gtevent.value = await getTouristicEventDetail(selectedEvent.value.id)
+  selectedEventInfoRDV.value = await getEventInfo(selectedEvent.value.id)
 })
 
 /**
