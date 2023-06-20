@@ -66,6 +66,8 @@ export const putEventInfo = (id: any, data: Partial<ResaEventInfo>): Promise<Res
 
 export const postBilan = (data: any) => postApiData(CONFIGURATION.URL_APPLICATION, 'bilans', data);
 
+export const sendEmailCancellation = (id: number) => postApiData(CONFIGURATION.URL_APPLICATION, `events/${id}/cancel-reservations`)
+
 /**
  * Statistiques
  */

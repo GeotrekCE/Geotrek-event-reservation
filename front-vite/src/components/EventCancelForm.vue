@@ -22,9 +22,9 @@
       </div>
 
     </div>
-    <div class="my-6 flex justify-center">
+    <div class="my-6">
       <button
-        class="rounded-sm px-3 py-2 text-sm font-medium text-white shadow-sm disabled:bg-red-100 disabled:text-black disabled:cursor-not-allowed"
+        class="rounded-sm block mx-auto px-3 py-2 text-sm font-medium text-white shadow-sm disabled:bg-red-100 disabled:text-black disabled:cursor-not-allowed"
         :class="{
           'bg-red-600': !saving,
           'hover:bg-red-500': !saving,
@@ -44,9 +44,10 @@
         </span>
         
       </button>
-      <span v-if="error" class="text-red-500">
-       Une erreur est survenue : {{ error }}...
-      </span>
+      <div v-if="error" class="text-red-500">
+        Une erreur est survenue :
+        <p>{{ error }}</p>
+      </div>
     </div>
   </vv-form>
 </template>

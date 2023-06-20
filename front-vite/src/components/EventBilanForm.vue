@@ -97,9 +97,12 @@
       >
         {{ saving ? 'Enregistrement en cours...' : 'Enregistrer bilan' }}
       </button>
-      <span v-if="error" class="text-red-500">
-       Une erreur est survenue : {{ error }}...
-      </span>
+
+      <div v-if="error" class="text-red-500">
+        Une erreur est survenue :
+        <p>{{ error }}</p>
+      </div>
+
     </div>
   </form>
 </template>

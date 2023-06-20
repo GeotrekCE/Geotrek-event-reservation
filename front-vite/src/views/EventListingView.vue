@@ -380,6 +380,7 @@
                 <event-cancel-form
                   :raison-annulation="selectedEvent.bilan?.raison_annulation"
                   :annulation="selectedEventCanceled"
+                  :error="bilanError"
                   @submit="onSaveBilan"
                 />
               </p-tab-panel>
@@ -432,7 +433,8 @@ import {
   updateReservation,
   postReservation,
   getEventInfo,
-  putEventInfo
+  putEventInfo,
+  sendEmailCancellation
 } from '@/utils/appli_api';
 import { getDistricts, getTouristiceventType, getTouristicEventDetail } from '@/utils/gta_api';
 import { isReservationOpened } from '@/utils/isReservationOpened'
@@ -571,14 +573,17 @@ async function onSaveBilan(data: Partial<ResaBilan>) {
   bilanSaving.value = true
   bilanError.value = null
   try {
-    await postBilan({
+    const newBilan = await postBilan({
       id_event: selectedEvent.value.id,
       id_bilan: selectedEvent.value.bilan?.id_bilan,
       ...data
     })
-    selectedEvent.value = await getEvent(selectedEvent.value.id)
-    const eventIndex = events.value.findIndex(r => r.id === selectedEvent.value.id)
-    events.value[eventIndex] = selectedEvent.value
+    if (newBilan.annulation === true) {
+      await sendEmailCancellation(selectedEventId.value)
+    }
+    selectedEvent.value = await getEvent(selectedEventId.value)
+    const eventIndex = events.value.findIndex(r => r.id === selectedEventId.value)
+    if (eventIndex > -1) events.value[eventIndex] = selectedEvent.value
     bilanEditing.value = false
   } catch (error) {
     bilanError.value = error

@@ -1,6 +1,3 @@
-import { pinia } from '@/plugins/pinia'
-import { useAppStore } from '@/stores/app'
-
 function buildGetUrl (baseUrl: string, urlRelative: string, params: Record<string, any> = {}): URL {
   const url = new URL(`${baseUrl}/${urlRelative}`);
   Object.keys(params)
@@ -22,15 +19,16 @@ async function callFetchApi (
 
   const response = await fetch(url, fetchParams)
 
-  if (response.status >= 400) {
-    throw Error(response.statusText);
-  }
-  let data = { msg: '' }
+  let data = { msg: '', error: '' }
   try {
     data = await response.json()
   } catch {
     // we have an error with API server, sometimes the response is not JSON
     // but we don't throw error, just we pass it silently
+  }
+
+  if (response.status >= 400) {
+    throw Error(response.statusText + '\n' + data?.error);
   }
 
   return data
@@ -47,7 +45,7 @@ export function getApiData (baseUrl: string, route: string, params?: any) {
   return callFetchApi('GET', url, optionsHeaders);
 }
 
-export function postApiData (baseUrl: string, route: string, postData: any /*, message = true */) {
+export function postApiData (baseUrl: string, route: string, postData?: any /*, message = true */) {
   const fetchParams = {
     method: 'POST',
     credentials: 'include',
