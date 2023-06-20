@@ -43,6 +43,43 @@
         {{ data.liste_attente ? data.sum_participants_liste_attente : data.sum_participants }}
       </template>      
     </p-column>
+
+    <p-column field="confirmed" header="Statut">
+      <template #body="{ data }">
+
+        <p-tag
+          class="rounded-sm"
+          v-if="data.cancelled"
+          value="Annulée"
+          severity="danger"
+        />
+        <p-tag
+          class="rounded-sm"
+          v-else-if="!data.confirmed"
+          value="À confirmer"
+          severity="warning"
+        />
+        <p-tag
+          class="rounded-sm"
+          v-else-if="data.liste_attente === null"
+          value="Non traité"
+          severity="info"
+        />
+        <p-tag
+          class="rounded-sm"
+          v-else-if="data.liste_attente"
+          value="Liste d'attente"
+          severity="warning"
+        />
+        <p-tag
+          class="rounded-sm"
+          v-else-if="!data.liste_attente"
+          value="OK"
+          severity="success"
+        />
+      </template>
+    </p-column>
+    <!--
     <p-column field="confirmed" header="Confirmée">
       <template #body="{ data }">
         <p-tag
@@ -62,6 +99,7 @@
         />
       </template>
     </p-column>
+    -->
     <p-column header="Actions">
       <template #body="{ data }">
         <button
