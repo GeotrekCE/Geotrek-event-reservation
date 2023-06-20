@@ -546,8 +546,8 @@ def post_bilans():
 
     db.session.add(bilan)
     db.session.commit()
-    db.session.close()
-    return jsonify({"msg": "Données sauvegardées"})
+
+    return TAnimationsBilansSchema().dumps(bilan)
 
 
 @app_routes.route("/stats/global", methods=["GET"])
