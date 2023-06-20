@@ -618,3 +618,34 @@ def set_event_info(event_id):
     db.session.commit()
 
     return TEventInfoSchema().dumps(event_info)
+
+
+@app_routes.route("/events/<int:event_id>/cancel-reservations", methods=["POST"])
+@login_admin_required
+def send_event_cancellation_emails(event_id):
+    event = GTEvents.query.get(event_id)
+    if not event:
+        return jsonify({"error": f"Event #{event_id} not found"}), 404
+
+    if not event.cancelled:
+        return jsonify({"error": f"Event #{event_id} is not cancelled in Geotrek"}), 400
+
+    if not event.bilan.annulation:
+        return jsonify({"error": f"Event #{event_id} bilan is not cancelled"}), 400
+
+    reservations = [r for r in event.reservations if not r.cancelled and not r.liste_attente and r.confirmed]
+    for reservation in reservations:
+        reservation.cancelled = True
+        reservation.cancel_date = datetime.now()
+        reservation.cancel_by = "événement"
+        db.session.add(reservation)
+        send_email(
+            subject=get_mail_subject(f"{event.name} est annulé"),
+            recipients=[reservation.email],
+            html=render_template(
+                "event_cancelled_mail.html",
+                event=stringify(event),
+                reservation=stringify(reservation)
+            )
+        )
+    db.session.commit()
