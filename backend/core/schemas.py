@@ -155,6 +155,7 @@ class GTEventsSchema(SQLAlchemyAutoSchema):
         load_instance = True
         exclude = (
             "reservations",
+            "info",
         )
 
     type = fields.Nested(lambda: GTEventTypeSchema)

@@ -1,5 +1,7 @@
 <h1>RDV demain pour {{ event.name }} !</h1>
 
-<p>RDV {{ event.hour }} à {{ event.meeting_point }}</p>
+<p>RDV {{ event.start_time|format_time }} à : {{ event.meeting_point }}</p>
+
+<h2>Informations supplémentaires</h2>
 
 <p>{{ event_info.info_rdv }}</p>

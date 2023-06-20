@@ -98,3 +98,29 @@ Il est conseillé de fournir ce fichier en montant un volume dans le conteneur, 
 `docker run -v /path/to/config:/opt/png-resa/backend/config` -p 127.0.0.1:8000:8000 png-resa`
 
 C'est cette approche qui est utilisée dans le `docker-compose.yml` fourni en exemple.
+
+
+## Configurer l'envoi de l'email de rappel
+
+Un script est disponible qui envoie un mail de rappel à chacun des participants des événements ayant lieu le lendemain :
+`backend/send_email_rappel.py`.
+
+L'email est envoyé uniquement aux participants qui ne sont pas sur liste d'attente.
+
+Le script peut être déclenché avec un job cron. Par exemple dans `/etc/crontab` (à ajuster selon son système) :
+
+```shell
+# Pour exécuter script.sh tous les jours à 17:10.
+10 17  * *  * nomdutilisateur script.sh
+```
+
+Pour lancer le script avec docker :
+
+`docker compose run --rm png-web python send_email_rappel.py`
+
+Pour lancer le script en-dehors de docker : pas d'autre pré-requis que d'activer le virtualenv.
+
+```shell
+source venv/bin/activate
+python send_email_rappel.py
+```
