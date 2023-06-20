@@ -46,11 +46,15 @@ def create_app():
     @app.template_filter()
     def format_date(value):
         format_string = "EEEE d MMMM"
+        if not value or value == "--":
+            return ""
         return babel_format_date(value, format_string, locale="fr_FR")
 
     @app.template_filter()
     def format_time(value):
         format_string = "H'h'mm"
+        if not value or value == "--":
+            return ""
         return babel_format_time(value, format_string, locale="fr_FR")
 
     return app
