@@ -135,10 +135,10 @@
               :class="{
                 'bg-red-300 hover:bg-red-100': data.bilan?.annulation || data.cancelled,
                 'hover:bg-gray-100': !data.bilan?.annulation && !data.cancelled,
-                'bg-gray-100 shadow-inner border-r-4 border-solid border-gray-500 border-b-0': data.id === selectedEvent?.id,
-                'bg-red-200 border-red-500': (data.bilan?.annulation || data.cancelled) && data.id === selectedEvent?.id,
+                'bg-gray-100 shadow-inner border-r-4 border-solid border-gray-500 border-b-0': data.id === selectedEventId,
+                'bg-red-200 border-red-500': (data.bilan?.annulation || data.cancelled) && data.id === selectedEventId,
               }"
-              @click="selectedEvent = data"
+              @click="selectedEventId = data.id"
             >
               <div class="flex flex-col gap-x-4">
                 <span>
@@ -239,7 +239,7 @@
                     v-else-if="!reservationOpened.value"
                     class="rounded-sm text-left"
                   >
-                    <p class="ml-4">Réservation non ouverte</p>
+                    <p class="ml-4">Réservation fermée</p>
                     <p class="ml-4">{{ reservationOpened.text }}</p>
                   </p-message>
                 </div>
@@ -401,6 +401,7 @@
 
 <script setup lang="ts">
 import { ref, onBeforeMount, watch, computed } from 'vue'
+import { useRoute } from 'vue-router'
 
 import ReservationProgress from '@/components/ReservationProgress.vue';
 import EventBilanForm from '@/components/EventBilanForm.vue'
@@ -439,13 +440,14 @@ import { formatDateString } from '@/utils/formatDate'
 import { fieldsClasseAge } from '@/utils/fields'
 
 // const eventStore = useEventStore()
+const currentRoute = useRoute()
 
 /**
  * Données des événements / animations
  */
 const totalEvents = ref(0)
 const numberOfPages = ref(0)
-const events = ref<{id: string}[]>([])
+const events = ref<{id: number}[]>([])
 const loading = ref(true)
 const options = ref({
   sortBy: ['begin_date'],
@@ -481,6 +483,7 @@ const formOpened = ref(false)
  * Gestion d'un événement
  */
 const selectedEvent = ref<any>(null)
+const selectedEventId = ref(parseInt(currentRoute.params.id as string))
 const selectedEventCanceled = computed(() => selectedEvent.value?.cancelled === true || selectedEvent.value?.bilan?.annulation === true)
 const selectedEventInfoRDV = ref<ResaEventInfo>({
   info_rdv: ''
@@ -627,7 +630,7 @@ async function onSubmitReservation({ liste_attente, ...values }: Partial<Resa>) 
         ...values
       })
     }
-    await loadReservations()
+    await loadSelectedEvent()
     statutReservation.value = 'list'
   } catch (error) {
     saveError.value = error
@@ -650,17 +653,28 @@ watch(
   { deep: true }
 )
 
-watch(selectedEvent, async () => {
+watch(selectedEventId, loadSelectedEvent)
+
+async function loadSelectedEvent () {
+  if (!selectedEventId.value) return
+  selectedEvent.value = await getEvent(selectedEventId.value)
+  /**
+   * Si l'événement existe dans le listing,
+   * on le câble aussi à cette nouvelle référence vue
+   */
+  const eventIndex = events.value.findIndex(r => r.id === selectedEventId.value)
+  if (eventIndex > -1) events.value[eventIndex] = selectedEvent.value
   await loadReservations()
-  gtevent.value = await getTouristicEventDetail(selectedEvent.value.id)
-  selectedEventInfoRDV.value = await getEventInfo(selectedEvent.value.id)
-})
+  gtevent.value = await getTouristicEventDetail(selectedEventId.value)
+  selectedEventInfoRDV.value = await getEventInfo(selectedEventId.value)
+}
 
 /**
  * Chargement initial : événements + glossaires
  */
 onBeforeMount(async () => {
-  loadEvents()
+  await loadEvents()
+  await loadSelectedEvent()
   filters.value = defaultFilters.value;
   const districtsResponse = await getDistricts()
   districts.value = districtsResponse.results.map((item: any) => item.name)

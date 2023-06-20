@@ -18,7 +18,7 @@
               </v-btn>
               <div v-show="!reservationOpened">
                 <span class="grey lighten-2 text-center px-2">
-                  Réservation non ouverte
+                  Réservation fermée
                 </span>
               </div>
             </template>
