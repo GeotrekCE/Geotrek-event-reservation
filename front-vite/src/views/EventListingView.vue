@@ -249,6 +249,7 @@
                   :loading="loading"
                   :resas="resas"
                   :id-event="selectedEvent.id"
+                  :error-cancellation="reservationError"
                   @page="onPageReservations"
                   @cancel="onCancelReservation"
                   @confirm="onConfirmReservation"
@@ -493,6 +494,7 @@ const selectedEventInfoRDV = ref<ResaEventInfo>({
 const gtevent = ref<any>(null)
 const resas = ref<any>({ results: [], total: 0 })
 const reservationOpened = computed(() => isReservationOpened(selectedEvent.value))
+const reservationError = ref('')
 
 /**
  * Fonction de chargement des événements
@@ -547,8 +549,13 @@ function onPageReservations($event: any) {
   loadReservations($event.page)
 }
 async function onCancelReservation(id_reservation: number) {
-  await deleteReservation(id_reservation)
-  await loadReservations(options.value.page)
+  reservationError.value = ''
+  try {
+    await deleteReservation(id_reservation)
+    await loadReservations(options.value.page)
+  } catch (error) {
+    reservationError.value = error as string
+  }
 }
 async function onConfirmReservation(id_reservation: number) {
   await updateReservation(id_reservation, { confirmed: true })

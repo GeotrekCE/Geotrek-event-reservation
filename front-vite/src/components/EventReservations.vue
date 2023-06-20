@@ -9,6 +9,12 @@
       Exporter les données de réservation
     </a>
   </p>
+
+  <div v-if="errorCancellation" class="text-red-500">
+    Une erreur est survenue :
+    <p>{{ errorCancellation }}</p>
+  </div>
+
   <p-data-table
     :value="resas.results"
     data-key="id_reservation"
@@ -174,6 +180,10 @@ defineProps({
   idEvent: {
     type: Number,
     required: true
+  },
+  errorCancellation: {
+    type: String,
+    required: false
   }
 })
 const emits = defineEmits(['page', 'cancel', 'confirm', 'edit'])

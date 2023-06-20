@@ -14,6 +14,11 @@
 
       <div v-html="markdownToHTML" class="my-8 text-base leading-7 text-gray-900 space-y-4"></div>
     
+      <div v-if="errorCancellation" class="text-red-500 my-4">
+        Une erreur est survenue :
+        <p>{{ errorCancellation }}</p>
+      </div>
+
       <p-data-table
         :value="resas.results"
         data-key="id_reservation"
@@ -152,6 +157,7 @@ const confirm = useConfirm()
 const loading = ref(false)
 const resas = ref<{results: any[], total: number}>({results: [], total: 0})
 const error = ref(false)
+const errorCancellation = ref('')
 
 const markdownToHTML = ref('')
 
@@ -192,8 +198,13 @@ function onCancelResa(event: any, id_reservation: number) {
     acceptLabel: 'Oui',
     rejectLabel: 'Non',
     async accept () {
-      await deleteReservation(id_reservation)
-      await loadData()
+      errorCancellation.value = ''
+      try {
+        await deleteReservation(id_reservation)
+        await loadData()
+      } catch (error) {
+        errorCancellation.value = error as string
+      }
     },
   })
 }
