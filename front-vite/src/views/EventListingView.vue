@@ -133,10 +133,10 @@
               class="flex justify-between gap-x-6 p-5 hover:bg-gray-200 hover:shadow-inner border-b border-gray-200"
               :to="{ name: ROUTES_NAMES.EVENT_DETAIL, params: { id: data.id }}"
               :class="{
-                'bg-red-300 hover:bg-red-100': data.bilan?.annulation || data.cancelled,
-                'hover:bg-gray-100': !data.bilan?.annulation && !data.cancelled,
+                'bg-red-300 hover:bg-red-100': data.cancelled,
+                'hover:bg-gray-100': !data.cancelled,
                 'bg-gray-100 shadow-inner border-r-4 border-solid border-gray-500 border-b-0': data.id === selectedEventId,
-                'bg-red-200 border-red-500': (data.bilan?.annulation || data.cancelled) && data.id === selectedEventId,
+                'bg-red-200 border-red-500': data.cancelled && data.id === selectedEventId,
               }"
               @click="selectedEventId = data.id"
             >
@@ -486,7 +486,7 @@ const formOpened = ref(false)
  */
 const selectedEvent = ref<any>(null)
 const selectedEventId = ref(parseInt(currentRoute.params.id as string))
-const selectedEventCanceled = computed(() => selectedEvent.value?.cancelled === true || selectedEvent.value?.bilan?.annulation === true)
+const selectedEventCanceled = computed(() => selectedEvent.value?.cancelled === true)
 const selectedEventInfoRDV = ref<ResaEventInfo>({
   info_rdv: ''
 })
@@ -581,9 +581,7 @@ async function onSaveBilan(data: Partial<ResaBilan>) {
     if (newBilan.annulation === true) {
       await sendEmailCancellation(selectedEventId.value)
     }
-    selectedEvent.value = await getEvent(selectedEventId.value)
-    const eventIndex = events.value.findIndex(r => r.id === selectedEventId.value)
-    if (eventIndex > -1) events.value[eventIndex] = selectedEvent.value
+    await loadSelectedEvent()
     bilanEditing.value = false
   } catch (error) {
     bilanError.value = error
