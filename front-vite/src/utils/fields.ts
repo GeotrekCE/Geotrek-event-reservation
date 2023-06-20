@@ -78,6 +78,10 @@ export const expandedFields = [{
   label: 'Annulée le',
   class: 'col-span-1 sm:col-span-2',
 }, {
+  name: 'liste_attente',
+  label: 'Sur liste d\'attente',
+  class: 'col-span-1 sm:col-span-2',
+}, {
   name: 'commentaire',
   label: 'Commentaire',
   class: 'col-span-full mb-8',
