@@ -227,7 +227,7 @@
                 <div class="my-4 text-center">
                   <button
                     class="rounded-sm px-3 py-2 text-sm font-medium text-white shadow-sm bg-sky-600 hover:bg-sky-500"
-                    v-if="reservationOpened && statutReservation === 'list'"
+                    v-if="reservationOpened.value && statutReservation === 'list'"
                     @click="statutReservation = 'form'"
                   >
                     Créer une nouvelle réservation
@@ -236,10 +236,11 @@
                   <p-message
                     severity="info"
                     :closable="false"
-                    v-else-if="!reservationOpened"
-                    class="rounded-sm"
+                    v-else-if="!reservationOpened.value"
+                    class="rounded-sm text-left"
                   >
                     <p class="ml-4">Réservation non ouverte</p>
+                    <p class="ml-4">{{ reservationOpened.text }}</p>
                   </p-message>
                 </div>
 
@@ -409,7 +410,7 @@ import { ROUTES_NAMES } from '@/router'
 import type { ResaEventFilters, ResaBilan, Resa } from '@/declaration';
 import { getDistricts, getTouristiceventType, getTouristicEventDetail } from '@/utils/gta_api';
 
-import { formatDate } from '@/utils/formatDate'
+import { formatDate, formatDateTime } from '@/utils/formatDate'
 import { fieldsClasseAge } from '@/utils/fields'
 
 // const eventStore = useEventStore()
@@ -473,28 +474,56 @@ const resas = ref<any>({ results: [], total: 0 })
  * et s'il on est dans une période correcte
  * ATTENTION: changement au niveau de l'algo pour le PNG,
  * le PNG préfère utiliser une date à partir de laquelle toutes les résas sont possibles,
- * et pas sur une période glissante...
+ * et pas sur une période glissante... => les 2 sont possibles.
  */
 const reservationOpened = computed(() => {
 
-  if (selectedEvent.value.cancelled) return false
-
-  // If event is in past
-  if (new Date().setHours(0, 0, 0, 0) > new Date(selectedEvent.value.begin_date).setHours(0, 0, 0, 0)) {
-    return false
+  // Si l'événement est annulé
+  if (selectedEvent.value.cancelled) return {
+    value: false,
+    text: 'Animation annulée'
   }
 
-  // If event in reservation period (control by DAY_BEFORE_RESA)
-  if ((CONFIGURATION.DAY_BEFORE_RESA || -1) !== -1) {
+  // Si l'événement est dans le passé
+  if (new Date().setHours(0, 0, 0, 0) > new Date(selectedEvent.value.begin_date).setHours(0, 0, 0, 0)) {
+    return {
+      value: false,
+      text: 'L\'animation s\'est déjà déroulée.'
+    } 
+  }
+
+  // Si DAY_BEFORE_RESA est renseigné
+  if (CONFIGURATION.DAY_BEFORE_RESA !== null) {
+    // S'il est à -1 => c'est ouvert
+    if (CONFIGURATION.DAY_BEFORE_RESA === -1) return {
+      value: true
+    } 
+
+    // Si la date du jour est avant la période de réservation => pas possible
     const resaBeginDate = new Date(selectedEvent.value.begin_date);
     resaBeginDate.setDate(resaBeginDate.getDate() - CONFIGURATION.DAY_BEFORE_RESA);
-    if (new Date().setHours(0, 0, 0, 0) >= resaBeginDate.setHours(0, 0, 0, 0)) {
-      return true;
+    if (new Date().setHours(0, 0, 0, 0) < resaBeginDate.setHours(0, 0, 0, 0)) {
+      return {
+        text: 'L\'animation ne peut pas encore être réservée. (à partir du ' + formatDateTime(resaBeginDate.toISOString()) + ')',
+        value: false
+      } 
     }
-    return false;
+
+  // Si RESA_BEGINNING_DATE est renseigné
+  } else if (CONFIGURATION.RESA_BEGINNING_DATE !== null) {
+    // Si la date du jour est avant la date d'ouverture des réservations => pas possible
+    if (new Date().setHours(0, 0, 0, 0) < CONFIGURATION.RESA_BEGINNING_DATE.valueOf()) {
+      return {
+        text: 'L\'animation ne peut pas encore être réservée. (à partir du ' + formatDateTime(CONFIGURATION.RESA_BEGINNING_DATE.toISOString()) + ')',
+        value: false
+      } 
+    }
   }
 
-  return true;
+  // Dans tous les autres cas, c'est possible
+  return {
+    value: true
+  } 
 })
 
 /**
