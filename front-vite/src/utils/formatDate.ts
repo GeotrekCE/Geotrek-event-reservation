@@ -3,14 +3,21 @@
  * 
  * @param date Date à transformer de type YYYY-MM-DD
  */
-export function formatDate(date?: string): string {
+export function formatDateString(date?: string): string {
   if (!date) return '';
   const [year, month, day] = date.split('-');
   return `${day}/${month}/${year}`;
 }
 
-export function formatDateTime(date?: string): string {
+export function formatDateTimeString(date?: string): string {
   if (!date) return '';
   const [year, month, day] = date.substring(0, 10).split('-');
   return `${day}/${month}/${year}`;
+}
+
+export function formatDateTime(date?: Date): string {
+  if (!date) return '';
+  const dayDate = date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()
+  const month = date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1
+  return `${dayDate}/${month}/${date.getFullYear()}`;
 }

@@ -161,9 +161,9 @@
                   :attente-nb="data.sum_participants_liste_attente"
                   :display-text="false"
                 />
-                {{ formatDate(data.begin_date) || '?' }} 
+                {{ formatDateString(data.begin_date) || '?' }} 
                 <span v-if="data.end_date">
-                  - {{ formatDate(data.end_date) }}
+                  - {{ formatDateString(data.end_date) }}
                 </span>
               </div>
             </router-link>
@@ -400,25 +400,14 @@
 </template>
 
 <script setup lang="ts">
-import {
-  getEvents,
-  getReservations,
-  postBilan,
-  getEvent,
-  deleteReservation,
-  updateReservation,
-  postReservation,
-  getEventInfo,
-  putEventInfo
-} from '@/utils/appli_api';
+import { ref, onBeforeMount, watch, computed } from 'vue'
+
 import ReservationProgress from '@/components/ReservationProgress.vue';
 import EventBilanForm from '@/components/EventBilanForm.vue'
 import EventCancelForm from '@/components/EventCancelForm.vue'
 import EventSummary from '@/components/EventSummary.vue'
 import EventReservations from '@/components/EventReservations.vue'
 import EventReservationForm from '@/components/EventReservationForm.vue'
-// import { useEventStore } from '@/stores/events'
-import { ref, onBeforeMount, watch, computed } from 'vue'
 
 import PDataView from 'primevue/dataview'
 import PCalendar from 'primevue/calendar'
@@ -430,10 +419,23 @@ import PTabPanel from 'primevue/tabpanel'
 import PMessage from 'primevue/message'
 
 import { ROUTES_NAMES } from '@/router'
-import type { ResaEventFilters, ResaBilan, Resa, ResaEventInfo } from '@/declaration';
-import { getDistricts, getTouristiceventType, getTouristicEventDetail } from '@/utils/gta_api';
 
-import { formatDate, formatDateTime } from '@/utils/formatDate'
+import type { ResaEventFilters, ResaBilan, Resa, ResaEventInfo } from '@/declaration';
+
+import {
+  getEvents,
+  getReservations,
+  postBilan,
+  getEvent,
+  deleteReservation,
+  updateReservation,
+  postReservation,
+  getEventInfo,
+  putEventInfo
+} from '@/utils/appli_api';
+import { getDistricts, getTouristiceventType, getTouristicEventDetail } from '@/utils/gta_api';
+import { isReservationOpened } from '@/utils/isReservationOpened'
+import { formatDateString } from '@/utils/formatDate'
 import { fieldsClasseAge } from '@/utils/fields'
 
 // const eventStore = useEventStore()
@@ -480,75 +482,12 @@ const formOpened = ref(false)
  */
 const selectedEvent = ref<any>(null)
 const selectedEventCanceled = computed(() => selectedEvent.value?.cancelled === true || selectedEvent.value?.bilan?.annulation === true)
-const selectedEventInfoRDV = ref<ResaEventInfo>({})
+const selectedEventInfoRDV = ref<ResaEventInfo>({
+  info_rdv: ''
+})
 const gtevent = ref<any>(null)
 const resas = ref<any>({ results: [], total: 0 })
-
-/**
- * Est ce que la réservation est ouverte
- * pour l'événement courant ?
- * 
- * Si événement / animation annulée => non
- * 
- * Si événement / animation passée => non
- * 
- * Si période de réservation trop courte => non
- * 
- * Cela dépend s'il est passé => non
- * et s'il on est dans une période correcte
- * ATTENTION: changement au niveau de l'algo pour le PNG,
- * le PNG préfère utiliser une date à partir de laquelle toutes les résas sont possibles,
- * et pas sur une période glissante... => les 2 sont possibles.
- */
-const reservationOpened = computed(() => {
-
-  // Si l'événement est annulé
-  if (selectedEvent.value.cancelled) return {
-    value: false,
-    text: 'Animation annulée'
-  }
-
-  // Si l'événement est dans le passé
-  if (new Date().setHours(0, 0, 0, 0) > new Date(selectedEvent.value.begin_date).setHours(0, 0, 0, 0)) {
-    return {
-      value: false,
-      text: 'L\'animation s\'est déjà déroulée.'
-    } 
-  }
-
-  // Si DAY_BEFORE_RESA est renseigné
-  if (CONFIGURATION.DAY_BEFORE_RESA !== null) {
-    // S'il est à -1 => c'est ouvert
-    if (CONFIGURATION.DAY_BEFORE_RESA === -1) return {
-      value: true
-    } 
-
-    // Si la date du jour est avant la période de réservation => pas possible
-    const resaBeginDate = new Date(selectedEvent.value.begin_date);
-    resaBeginDate.setDate(resaBeginDate.getDate() - CONFIGURATION.DAY_BEFORE_RESA);
-    if (new Date().setHours(0, 0, 0, 0) < resaBeginDate.setHours(0, 0, 0, 0)) {
-      return {
-        text: 'L\'animation ne peut pas encore être réservée. (à partir du ' + formatDateTime(resaBeginDate.toISOString()) + ')',
-        value: false
-      } 
-    }
-
-  // Si RESA_BEGINNING_DATE est renseigné
-  } else if (CONFIGURATION.RESA_BEGINNING_DATE !== null) {
-    // Si la date du jour est avant la date d'ouverture des réservations => pas possible
-    if (new Date().setHours(0, 0, 0, 0) < CONFIGURATION.RESA_BEGINNING_DATE.valueOf()) {
-      return {
-        text: 'L\'animation ne peut pas encore être réservée. (à partir du ' + formatDateTime(CONFIGURATION.RESA_BEGINNING_DATE.toISOString()) + ')',
-        value: false
-      } 
-    }
-  }
-
-  // Dans tous les autres cas, c'est possible
-  return {
-    value: true
-  } 
-})
+const reservationOpened = computed(() => isReservationOpened(selectedEvent.value))
 
 /**
  * Fonction de chargement des événements
@@ -712,7 +651,6 @@ watch(
 )
 
 watch(selectedEvent, async () => {
-  selectedEventInfoRDV.value = ''
   await loadReservations()
   gtevent.value = await getTouristicEventDetail(selectedEvent.value.id)
   selectedEventInfoRDV.value = await getEventInfo(selectedEvent.value.id)

@@ -46,7 +46,7 @@
           <span
             class="block flex-1 border-0 bg-transparent text-gray-600 sm:text-sm sm:leading-6"
           >
-            {{ formatDate(event.begin_date) || 'Non renseigné' }}
+            {{ formatDateString(event.begin_date) || 'Non renseigné' }}
           </span>
         </div>
       </div>
@@ -62,7 +62,7 @@
           <span
             class="block flex-1 border-0 bg-transparent text-gray-600 sm:text-sm sm:leading-6"
           >
-            {{ formatDate(event.end_date) || 'Non renseigné' }}
+            {{ formatDateString(event.end_date) || 'Non renseigné' }}
           </span>
         </div>
       </div>
@@ -153,7 +153,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { gtApiFields, type API_FIELDS } from '@/utils/fields'
-import { formatDate } from '@/utils/formatDate'
+import { formatDateString } from '@/utils/formatDate'
 
 const props = defineProps({
   event: {

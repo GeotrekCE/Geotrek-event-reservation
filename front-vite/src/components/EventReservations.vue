@@ -35,7 +35,7 @@
     <p-column field="tel" header="Tél"></p-column>
     <p-column field="meta_create_date" header="Créée le">
       <template #body="{ data }">
-        {{ formatDateTime(data.meta_create_date) }}
+        {{ formatDateTimeString(data.meta_create_date) }}
       </template>
     </p-column>
     <p-column header="Nombre d'inscrits">
@@ -113,7 +113,7 @@ import PColumn from 'primevue/column'
 import PTag from 'primevue/tag'
 import { ref } from 'vue'
 import { expandedFields } from '@/utils/fields'
-import { formatDateTime } from '@/utils/formatDate'
+import { formatDateTimeString } from '@/utils/formatDate'
 import { useConfirm } from "primevue/useconfirm";
 
 const confirm = useConfirm()

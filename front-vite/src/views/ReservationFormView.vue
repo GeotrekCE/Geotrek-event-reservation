@@ -11,13 +11,13 @@
     </div>
   </header>
 
-  <main class="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8 px-4 py-6" v-if="!isResaOpened">
+  <main class="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8 px-4 py-6" v-if="!reservationOpened.value">
     <section class="pb-12 mx-auto space-y-4">
       <p>
         Nous sommes désolés, les réservations ne sont pas encore ouvertes.
       </p>
-      <p>
-        Vous pouvez revenir à partir du {{ resaBeginningDateDisplay }}.
+      <p v-if="reservationOpened.text">
+        {{ reservationOpened.text }}
       </p>
       <p>
         À très bientôt !
@@ -54,7 +54,7 @@
 
         <p>
           Vous vous apprêtez à effectuer une réservation pour l'animation
-          <span class="font-medium" v-if="event">{{ event.name }} ({{ formatDate(event.begin_date) }})</span>
+          <span class="font-medium" v-if="event">{{ event.name }} ({{ formatDateString(event.begin_date) }})</span>
           proposé par le Parc National de Guadeloupe.
         </p>
 
@@ -125,22 +125,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onBeforeMount } from 'vue'
+import { ref, onBeforeMount, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { getEvent, postReservation } from '@/utils/appli_api';
-import { formatDate, formatDateTime } from '@/utils/formatDate'
+import { formatDateString } from '@/utils/formatDate'
 import EventSummary from '@/components/EventSummary.vue'
 import EventReservationForm from '@/components/EventReservationForm.vue'
 import type { ResaEvent } from '@/declaration';
+import { isReservationOpened, isReservationGloballyOpened } from '@/utils/isReservationOpened'
 
 const currentRoute = useRoute()
 const geotrekId = currentRoute.params.geotrekid
-
-const today = new Date()
-
-const isResaOpened = today > CONFIGURATION.RESA_BEGINNING_DATE
-
-const resaBeginningDateDisplay = formatDateTime(CONFIGURATION.RESA_BEGINNING_DATE.toISOString())
 
 const STATUS = {
   PRISTINE: 'PRISTINE',
@@ -164,7 +159,7 @@ const eventError = ref('')
  */
 const event = ref<ResaEvent | null>(null)
 onBeforeMount(async () => {
-  if (!isResaOpened) return
+  if (!isReservationGloballyOpened()) return
   loadingEvent.value = true
   try {
     event.value = await getEvent(geotrekId)
@@ -181,6 +176,12 @@ onBeforeMount(async () => {
     }
   }
   loadingEvent.value = false
+})
+
+const reservationOpened = computed(() => {
+  if (!event.value) {
+    return isReservationGloballyOpened()
+  } else return isReservationOpened(event.value)
 })
 
 /**

@@ -37,7 +37,7 @@
         <p-column frozen field="event.name" header="Événement"></p-column>
         <p-column field="event.begin_date" header="Date">
           <template #body="{data}">
-            {{ formatDate(data.event?.begin_date)}}
+            {{ formatDateString(data.event?.begin_date)}}
           </template>
         </p-column>
         <p-column field="nb_adultes" header="adultes"></p-column>
@@ -138,7 +138,7 @@
 <script setup lang="ts">
 import { ref, onBeforeMount } from 'vue'
 import { getReservations, deleteReservation, getEventInfo } from '@/utils/appli_api'
-import { formatDate } from '@/utils/formatDate'
+import { formatDateString } from '@/utils/formatDate'
 import { marked } from 'marked';
 import { expandedFields } from '@/utils/fields'
 
