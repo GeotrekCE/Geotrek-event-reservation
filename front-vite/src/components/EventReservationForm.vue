@@ -343,7 +343,7 @@ const formSchema = yup.object().shape({
   nom: yup.string().required().label('Nom'),
   prenom: yup.string().required().label('Prénom'),
   num_departement: yup.string().required().oneOf(['guadeloupe', 'hexagone', 'autre']).label('Lieu d\'origine'),
-  commentaire: yup.string().label('Commentaire'),
+  commentaire: yup.string().nullable().label('Commentaire'),
   nb_adultes: yup.number().min(0).default(0).label('Adulte(s)'),
   nb_moins_6_ans: yup.number().min(0).default(0).label('Moins de 6 ans'),
   nb_6_8_ans: yup.number().min(0).default(0).label('6 - 8 ans'),
