@@ -55,7 +55,7 @@
         <p>
           Vous vous apprêtez à effectuer une réservation pour l'animation
           <span class="font-medium" v-if="event">{{ event.name }} ({{ formatDateString(event.begin_date) }})</span>
-          proposé par le Parc National de Guadeloupe.
+          proposé par le {{ parkLabel }}.
         </p>
 
         <h2
@@ -136,6 +136,8 @@ import { isReservationOpened, isReservationGloballyOpened } from '@/utils/isRese
 
 const currentRoute = useRoute()
 const geotrekId = currentRoute.params.geotrekid
+
+const parkLabel = CONFIGURATION.PARK_LABEL
 
 const STATUS = {
   PRISTINE: 'PRISTINE',

@@ -9,7 +9,7 @@
   <main class="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8 px-4 py-6">
     <section class="pb-12 mx-auto">
     	<p class="mb-8">
-        Bienvenue sur l'outil de gestion des réservations d'événement du Parc National de Guadeloupe.
+        Bienvenue sur l'outil de gestion des réservations d'événement du {{ parkLabel }}.
     	</p>
 
       <p class="flex items-center">
@@ -37,6 +37,8 @@ import { useAuthStore } from '@/stores/auth'
 
 const markdownToHTML = ref('')
 const loading = ref(false)
+
+const parkLabel = CONFIGURATION.PARK_LABEL
 
 const authStore = useAuthStore()
 

@@ -26,4 +26,7 @@ declare let CONFIGURATION: {
   // en plus du nombre de participants spécifiés dans GeoTrek
   RESA_NB_DELTA: number
 
+  // Label du parc utilisant l'outil
+  PARK_LABEL: 'Parc National de ...'
+
 }

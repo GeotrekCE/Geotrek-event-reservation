@@ -1,15 +1,17 @@
 // URL_APPLICATION: Url de l'application backend
 // URL_GTA: url de l'application geotrek admin
 // URL_GTR: url de l'application geotrek public
-// DAY_BEFORE_RESA: nombre de jours avant la date de debut de l'animation ou l'inscription est possible (si -1 aucune limitation de date)
 // RESA_NB_DELTA: nombre de participants surnuméraire acepté en plus du nombre de participants spécifiés dans geotrek
+// DAY_BEFORE_RESA: nombre de jours avant la date de debut de l'animation ou l'inscription est possible (si -1 aucune limitation de date)
 // RESA_BEGINNING_DATE: date à partir de laquelle les réservations sont ouvertes (PNG)
+// PARK_LABEL: label du parc utilisant l'outil
 
 const CONFIGURATION = {
   URL_APPLICATION: 'URL_BACKEND',
   URL_GTA: 'URL_GEOTREK_ADMIN',
   URL_GTR: 'URL_GEOTREK_PUBLIC',
-  DAY_BEFORE_RESA: -1,
   RESA_NB_DELTA: 3,
-  RESA_BEGINNING_DATE: new Date('2023-06-26')
+  DAY_BEFORE_RESA: -1,
+  RESA_BEGINNING_DATE: new Date('2023-06-26'),
+  PARK_LABEL: 'Parc National de ...'
 };
