@@ -344,7 +344,11 @@ def confirm_reservation():
     """Expects the reservation's token in the request body as JSON: {"resa_token": "12345abcde"}, if the corresponding
     reservation exists it is confirmed and a confirmation mail is sent."""
     token = request.get_json()["resa_token"]
-    resa = db.first_or_404(db.select(TReservations).filter_by(token=token), description="Reservation not found")
+
+    resa = TReservations.query.filter_by(token=token).first()
+    if not resa:
+        return jsonify({"error": "The token is invalid"}), 404
+
     if resa.confirmed:
         return jsonify({"error": "Reservation already confirmed"}), 400
 
