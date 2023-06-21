@@ -9,15 +9,16 @@ from core.utils import send_email, get_mail_subject, stringify
 def send_email_rappel_pour(event):
     recipients = [r.email for r in event.reservations if not r.cancelled and r.confirmed and not r.liste_attente]
     print(f"Envoi mail de rappel pour événement {event.name}. Destinataires : {recipients}")
-    send_email(
-        subject=get_mail_subject(f"{event.name}, c'est demain !"),
-        recipients=recipients,
-        html=render_template(
-            "rappel_event.html",
-            event=stringify(event),
-            event_info=stringify(event.info),
+    for recipient in recipients:
+        send_email(
+            subject=get_mail_subject(f"{event.name}, c'est demain !"),
+            recipients=[recipient],
+            html=render_template(
+                "rappel_event.html",
+                event=stringify(event),
+                event_info=stringify(event.info),
+            )
         )
-    )
 
 
 if __name__ == "__main__":
