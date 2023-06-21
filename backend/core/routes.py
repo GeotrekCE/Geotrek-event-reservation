@@ -415,7 +415,7 @@ def cancel_reservation(reservation_id):
     if not is_admin and reservation.confirmed:
         # Envoi email confirmation d'annulation à l'utilisateur
         send_email(
-            subject=get_mail_subject("Votre réservation a été annulée"),
+            subject=get_mail_subject("Votre réservation a bien été annulée"),
             recipients=[reservation.email],
             html=render_template(
                 "resa_cancelled_mail.html",
