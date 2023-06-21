@@ -124,3 +124,19 @@ Pour lancer le script en-dehors de docker : pas d'autre pré-requis que d'active
 source venv/bin/activate
 python send_email_rappel.py
 ```
+
+## Configurer les loggers
+
+Afficher le rendu des emails envoyés : descendre le niveau de log pour le nom `core` et ses descendants.
+
+```python
+{
+    'loggers': {
+        'core': {
+            'level': 'DEBUG',
+        },
+    },
+}
+```
+
+Attention : l'initialisation du handler `log_file` échouera si le répertoire de destination n'existe pas.

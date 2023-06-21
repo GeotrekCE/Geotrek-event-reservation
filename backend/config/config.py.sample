@@ -26,6 +26,41 @@ FRONTEND_PORTAL_PATHNAME = "/login"
 # Le path sur le frontend pour générer le lien de connexion envoyé par email.
 FRONTEND_LOGIN_PATHNAME = "/login/callback"
 
+# dictConfig Python standard, passé au module `logging` à l'initialisation de l'app Flask.
+LOGGING = {
+    'version': 1,
+    'formatters': {
+        'simple': {
+            'format': '%(levelname)s %(asctime)s %(name)s %(message)s'
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+        },
+        'log_file': {
+            'level': 'INFO',
+            'class': 'logging.handlers.TimedRotatingFileHandler',
+            'formatter': 'simple',
+            'filename': 'var/log/png_resa.log',
+            'when': 'midnight',
+
+            'backup'
+            'Count': 30,
+        },
+    },
+    'loggers': {
+        'core': {
+            'level': 'INFO',
+        },
+    },
+    'root': {
+        'handlers': ['console', 'log_file'],
+    }
+}
+
 
 # --- Database settings ---
 

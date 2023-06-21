@@ -10,5 +10,7 @@ export GEOTREK_DB_HOST=${GEOTREK_DB_HOST:-`ip route | grep default | sed 's/.* \
 
 cd /opt/png-resa
 
+mkdir -p ./var/log
+
 # Execute COMMAND argument or CMD instruction
 exec $@
