@@ -1,3 +1,4 @@
+from datetime import timedelta
 import os
 
 # --- Content settings ---
@@ -81,6 +82,12 @@ SQLALCHEMY_TRACK_MODIFICATIONS = False
 # $ python -c 'import secrets; print(secrets.token_hex())'
 # > '192b9bdd22ab9ed4d12e236c78afcb9a393ec15f71bbf5dc987d54727823bcbf'
 SECRET_KEY =
+
+# Définit la durée de validité du cookie de session qui garde les utilisateurs connectés, 31 jours par défaut.
+PERMANENT_SESSION_LIFETIME = timedelta(days=31)
+
+# Définit si le cookie de session doit être prolongé à chaque requête, oui par défaut.
+SESSION_REFRESH_EACH_REQUEST = True
 
 URL_APPLICATION = "http://localhost:5000"
 PASS_METHOD = 'hash'

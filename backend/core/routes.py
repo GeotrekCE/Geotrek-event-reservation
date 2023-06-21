@@ -483,6 +483,7 @@ def login():
 
     # Set a Session Cookie in the response.
     session['user'] = token.email
+    session.permanent = True
     from flask import current_app
 
     return jsonify({
