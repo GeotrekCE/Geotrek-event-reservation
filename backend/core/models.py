@@ -225,7 +225,7 @@ class VExportBilan(db.Model):
     resa_nb_total = db.Column(db.Integer)
     resa_nb_total_attente = db.Column(db.Integer)
     annulation = db.Column(db.Boolean)
-    categorie_annulation = db.Column(db.Unicode)
+    # categorie_annulation = db.Column(db.Unicode)
     raison_annulation = db.Column(db.Unicode)
     bilan_nb_adultes = db.Column(db.Integer)
     bilan_nb_moins_6_ans = db.Column(db.Integer)

@@ -164,6 +164,7 @@ WITH event AS (
         COALESCE(sum(tr.nb_plus_12_ans) FILTER (WHERE tr.liste_attente IS TRUE), 0) AS nb_plus_12_ans_attente,
         COALESCE(sum(tr.nb_adultes + tr.nb_moins_6_ans + tr.nb_6_8_ans + tr.nb_9_12_ans + tr.nb_plus_12_ans) FILTER (WHERE tr.liste_attente IS TRUE), 0) AS nb_total_attente
     FROM animations.t_reservations AS tr
+    WHERE tr.cancelled = false AND tr.confirmed = true
     GROUP BY tr.id_event
 )
 SELECT
