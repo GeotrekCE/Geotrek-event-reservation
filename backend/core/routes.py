@@ -282,7 +282,9 @@ def _post_reservations_by_admin(post_data):
         raise EventIsFull
 
     if reservation.confirmed and reservation.liste_attente is None:
-        if event.sum_participants + reservation.nb_participants <= event.capacity:
+        if not event.capacity:
+            reservation.liste_attente = False
+        elif event.sum_participants + reservation.nb_participants <= event.capacity:
             reservation.liste_attente = False
         else:
             reservation.liste_attente = True

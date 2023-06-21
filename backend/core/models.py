@@ -105,6 +105,8 @@ class GTEvents(db.Model):
         return func.animations.get_secteur_name(cls.id)
 
     def is_reservation_possible_for(self, nb_people):
+        if not self.capacity:
+            return True
         if self.sum_participants + nb_people <= self.capacity:
             return True
         if self.sum_participants_liste_attente + nb_people <= LISTE_ATTENTE_CAPACITY:
