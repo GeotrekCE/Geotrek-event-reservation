@@ -444,7 +444,6 @@ import { isReservationOpened } from '@/utils/isReservationOpened'
 import { formatDateString } from '@/utils/formatDate'
 import { fieldsClasseAge } from '@/utils/fields'
 
-// const eventStore = useEventStore()
 const currentRoute = useRoute()
 
 /**

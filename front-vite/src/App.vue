@@ -91,15 +91,7 @@
   <main class="flex-grow">
     <router-view/>
   </main>
-  <!--
-    <api-snackbar
-      v-if="snackbarInfo.show"
-      :snackbar-message="snackbarInfo.message"
-      :snackbar-color="snackbarInfo.color"
-      @close="snackbarInfo.show = false"
-    />
-
-  -->
+  
   <p-confirm-popup />
 
 </template>
@@ -108,15 +100,12 @@
 import { RouterLink, RouterView } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { useAuthStore } from '@/stores/auth'
-// import { useAppStore } from '@/stores/app'
 import { ref } from 'vue'
 import PConfirmPopup from 'primevue/confirmpopup'
 
 const authStore = useAuthStore()
-// const appStore = useAppStore()
 
 const { isAuth, isAdmin, user } = storeToRefs(authStore)
-// const { snackbarInfo } = storeToRefs(appStore)
 
 const isMenuOpened = ref(false)
 
