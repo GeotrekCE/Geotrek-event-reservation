@@ -76,10 +76,10 @@ export interface Resa {
   id_event: number
   liste_attente: boolean
   confirmed: boolean
-  id_numerisateur?: number
-  numerisateur?: {
-    identifiant: string
-  }
+  // id_numerisateur?: number
+  // numerisateur?: {
+  //   identifiant: string
+  // }
   id_bilan?: number
 }
 
