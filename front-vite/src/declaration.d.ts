@@ -58,10 +58,10 @@ export interface ResaEventInfo {
  * Statistiques utilisées dans la page BilanStats
  */
 export interface Statistics {
-  nb_animations: number
-  nb_annulation: number 
-  taux_remplissage: number
-  taux_remplissage_passe: number
+  nb_animations?: number
+  nb_annulation?: number 
+  taux_remplissage?: number
+  taux_remplissage_passe?: number
 }
 
 /**

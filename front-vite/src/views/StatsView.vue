@@ -91,7 +91,7 @@ async function refreshGlobalStats() {
   try {
     stats.value = await getGlobalStats({ year: selectedYear.value })
   } catch (error) {
-    errorStats.value = error
+    errorStats.value = error as string
   }
   loading.value = false;
 }
