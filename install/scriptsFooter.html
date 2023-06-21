@@ -1,5 +1,15 @@
 <script>
-const reservationOpeningDate = new Date('2023-06-26');
+
+/*
+* La date d'ouverture des réservations. Avant cette date les liens de réservation ne sont pas insérés et remplacés par
+* la mention de la date d'ouverture. Par exemple : new Date('2023-06-26').
+* */
+const reservationOpeningDate = undefined;
+
+/*
+* L'adresse du portail de réservation pour construire le lien à insérer. Par exemple : "https://mon-pn.fr/reservations".
+* */
+const portailReservationURL = undefined;
 
 function getEventIdFromURL(url) {
     const result = url.match(/\/event\/(\d+)/);
@@ -43,7 +53,7 @@ async function insertReservationLink(url) {
         resa_div.appendChild(closedMessage);
     } else if (today >= reservationOpeningDate) {
         const reservation_link = Object.assign(document.createElement('a'), {
-            href: `http://png-resa-demo.geotrek.fr/resa/${eventId}`,
+            href: `${portailReservationURL}/resa/${eventId}`,
             innerText: "S'inscrire à l'événement",
             style: "background-color: #aec900; color: white;",
             className: "text-primary1 p-2 font-bold border-solid border border-primary1 rounded-lg bg-white",
