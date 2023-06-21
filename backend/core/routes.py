@@ -472,19 +472,27 @@ def send_login_email():
 
 @app_routes.route("/login", methods=["POST"])
 def login():
+    from flask import current_app
+
     try:
         login_token = request.json["login_token"]
     except KeyError:
         return jsonify({"error": "Expects a JSON body with a 'login_token' property"}), 400
 
-    # TODO: handle token expiration
-    token = db.first_or_404(db.select(TTokens).filter_by(token=login_token),
-                            description="The login token is invalid or expired")
+    login_token_lifespan = current_app.config["LOGIN_TOKEN_LIFETIME"]
+    limit = datetime.now() - login_token_lifespan
+
+    token = TTokens.query.filter_by(used=False).filter_by(token=login_token).filter(TTokens.created_at > limit).first()
+    if not token:
+        return jsonify({"error": "The login token is invalid or expired"}), 400
+
+    token.used = True
+    db.session.add(token)
+    db.session.commit()
 
     # Set a Session Cookie in the response.
     session['user'] = token.email
     session.permanent = True
-    from flask import current_app
 
     return jsonify({
         "is_admin": token.email in current_app.config["ADMIN_EMAILS"],

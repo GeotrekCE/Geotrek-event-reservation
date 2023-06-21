@@ -27,6 +27,9 @@ FRONTEND_PORTAL_PATHNAME = "/login"
 # Le path sur le frontend pour générer le lien de connexion envoyé par email.
 FRONTEND_LOGIN_PATHNAME = "/login/callback"
 
+# La durée de vie des tokens de connexion envoyés par email.
+LOGIN_TOKEN_LIFETIME = timedelta(hours=5)
+
 # dictConfig Python standard, passé au module `logging` à l'initialisation de l'app Flask.
 LOGGING = {
     'version': 1,

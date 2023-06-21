@@ -274,5 +274,5 @@ class TTokens(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.Unicode, nullable=False)
     token = db.Column(db.Unicode, nullable=False)
-    used = db.Column(db.Boolean)
-    created_at = db.Column(db.DateTime)
+    used = db.Column(db.Boolean, default=False)
+    created_at = db.Column(db.DateTime, default=datetime.datetime.now)
