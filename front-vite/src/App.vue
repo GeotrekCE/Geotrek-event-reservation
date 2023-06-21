@@ -18,7 +18,7 @@
       <div class="hidden lg:flex lg:gap-x-12" v-if="isAuth">
         <template v-if="isAdmin">
           <router-link to="/events" class="text-sm font-medium leading-6 text-gray-900">Animations</router-link>
-          <router-link to="/stats" class="text-sm font-medium leading-6 text-gray-900">Statistiques (à migrer)</router-link>  
+          <router-link to="/stats" class="text-sm font-medium leading-6 text-gray-900">Statistiques</router-link>  
         </template>
         <template v-else>
           <router-link to="/resalisting" class="text-sm font-medium leading-6 text-gray-900">Mes réservations</router-link>
@@ -54,15 +54,28 @@
           <div class="-my-6 divide-y divide-gray-500/10">
             <div class="space-y-2 py-6">
               <template v-if="isAdmin">
-                <router-link to="/events" class="text-sm font-medium leading-6 text-gray-900">Animations</router-link>
-                <router-link to="/stats" class="text-sm font-medium leading-6 text-gray-900">Statistiques (à migrer)</router-link>  
+                <router-link
+                  @click="isMenuOpened = false"
+                  to="/events"
+                  class="block -mx-3 block rounded-lg px-3 py-2.5 text-base font-medium leading-7 text-gray-900 hover:bg-gray-50"
+                >Animations</router-link>
+                <router-link
+                  @click="isMenuOpened = false"
+                  to="/stats"
+                  class="block -mx-3 block rounded-lg px-3 py-2.5 text-base font-medium leading-7 text-gray-900 hover:bg-gray-50"
+                >Statistiques</router-link>  
               </template>
               <template v-else>
-                <router-link to="/resalisting" class="text-sm font-medium leading-6 text-gray-900">Mes réservations</router-link>
+                <router-link
+                  @click="isMenuOpened = false"
+                  to="/resalisting"
+                  class="text-sm font-medium leading-6 text-gray-900"
+                >Mes réservations</router-link>
               </template>
             </div>
             <div class="py-6">
               <router-link
+                @click="isMenuOpened = false"
                 :to="isAuth ? '/logout' : '/login'"
                 class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-medium leading-7 text-gray-900 hover:bg-gray-50"
               >

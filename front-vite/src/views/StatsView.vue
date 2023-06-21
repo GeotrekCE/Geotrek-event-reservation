@@ -9,13 +9,24 @@
       </div>
     </header>
 
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <main class="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8">
       <section class="mx-auto">
         <h2 class="col-span-full text-2xl">Filtres</h2>
         <select v-model="selectedYear" class="h-10 px-4">
-          <option v-for="year in listeYear" :key="year" :value="year">{{ year }}</option>
+          <option
+            v-for="year in listeYear"
+            :key="year"
+            :value="year"
+          >{{ year }}</option>
         </select>
+
+        <div v-if="errorStats" class="text-red-500">
+          Une erreur est survenue :
+          <p>{{ errorStats }}</p>
+        </div>
+
       </section>
+
 
       <section
         class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-10 mx-auto"
@@ -37,74 +48,63 @@
         <div class="col-span-1 sm:col-span-2">
           Taux de remplissage des animations passées: {{ stats.taux_remplissage_passe }}
         </div>
-        <div class="col-span-full">
-          <h2>Télécharger bilan </h2>
-          <a :href="URL_APPLICATION + '/export/events'" target="_blank">
-            Exporter
+        <div class="col-span-full flex flex-col items-center">
+          <a
+            class="rounded-sm bg-sky-600 px-3 py-1.5 text-sm font-medium leading-6 text-white shadow-sm hover:bg-sky-500 my-4 mx-auto"
+            :href="URL_APPLICATION + '/export/events'"
+            target="_blank"
+          >
+            Télécharger le bilan global
           </a>
         </div>
       </section>
-      <section
-        class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 mx-auto"
-        v-if="selectedYear"
-      >
-        <h2 class="col-span-full text-2xl">Graphique</h2>
-        <bilan-graphs
-          class="col-span-1"
-          :config="charts.nbAnimations"
-          :filters="{}"
-        />
-        <bilan-graphs
-          class="col-span-1 p-4"
-          :config="charts.nbDayBeforeResa"
-          :filters="{ year: selectedYear }"
-        />
+
+      <section v-else>
+
+        Chargement en cours...
+
       </section>
     </main>
   </div>
 </template>
 
-<script lang="ts">
-import BilanGraphs from '@/components/BilanGraphs.vue'
-import * as chartsConfig from '@/config/charts'
+<script setup lang="ts">
 import { getGlobalStats } from '@/utils/appli_api'
 import { type Statistics } from '@/declaration'
 
-export default {
-  components: { BilanGraphs },
-  data() {
-    // generate year series
-    // start animation year = 2016
-    // TODO change in config
-    const beginYear = 2016
-    const selectedYear = new Date().getFullYear()
-    return {
-      URL_APPLICATION: CONFIGURATION.URL_APPLICATION,
-      charts: chartsConfig,
-      loading: true,
-      stats: {} as Statistics,
-      listeYear: [
-        ...Array(1 + (selectedYear - beginYear)).keys()
-      ].map((i) => i + beginYear),
-      selectedYear
-    }
-  },
-  methods: {
-    async refreshGlobalStats() {
-      this.loading = true
-      this.stats = await getGlobalStats({ year: this.selectedYear })
-      this.loading = false;
-    }
-  },
-  mounted() {
-    this.refreshGlobalStats();
-  },
-  watch: {
-    selectedYear(newselectedYear, oldselectedYear) {
-      if (newselectedYear !== oldselectedYear) {
-        this.refreshGlobalStats()
-      }
+import { ref, onBeforeMount, watch } from 'vue'
+
+const beginYear = 2016
+const selectedYear = ref(new Date().getFullYear())
+
+const URL_APPLICATION = CONFIGURATION.URL_APPLICATION
+const loading = ref(false)
+const errorStats = ref<string>('')
+const stats = ref<Statistics>({}) 
+const listeYear = [
+  ...Array(1 + (selectedYear.value - beginYear)).keys()
+].map((i) => i + beginYear)
+
+async function refreshGlobalStats() {
+  loading.value = true
+  errorStats.value = ''
+  try {
+    stats.value = await getGlobalStats({ year: selectedYear.value })
+  } catch (error) {
+    errorStats.value = error
+  }
+  loading.value = false;
+}
+onBeforeMount(() => {
+  refreshGlobalStats()
+})
+
+watch(
+  selectedYear,
+  (newselectedYear, oldselectedYear) => {
+    if (newselectedYear !== oldselectedYear) {
+      refreshGlobalStats()
     }
   }
-}
+)
 </script>
