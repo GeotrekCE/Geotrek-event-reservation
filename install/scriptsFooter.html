@@ -1,16 +1,27 @@
 <script>
 const reservationOpeningDate = new Date('2023-06-26');
 
-function insertReservationLink(url) {
+function getEventIdFromURL(url) {
+    const result = url.match(/\/event\/(\d+)/);
+    if (result === null || result.length !== 2)
+        return undefined;
+    return result[1];
+}
+
+async function insertReservationLink(url) {
     if (document.getElementById("reservation-link") !== null)
         // Le lien a déjà été inséré.
         return;
 
-    const result = url.match(/\/event\/(\d+)/);
-    if (result === null || result.length !== 2)
+    const eventId = getEventIdFromURL(url);
+    if (eventId === undefined)
         // On ne se trouve pas sur une page détails d'un événement.
         return;
-    const event_id = result[1];
+
+    const apiUrl = window.__NEXT_DATA__.runtimeConfig.global.apiUrl;
+    const resp = await fetch(`${apiUrl}/touristicevent/${eventId.toString()}/`);
+    const eventData = await resp.json();
+    const endDate = new Date(eventData.end_date);
 
     const reference_element  = document.getElementById("details_description_ref");
     if (reference_element === null)
@@ -22,9 +33,17 @@ function insertReservationLink(url) {
     });
 
     const today = new Date();
-    if (today >= reservationOpeningDate) {
+    if (today >= endDate) {
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        const closedMessage = Object.assign(document.createElement('p'), {
+            innerText: `Les inscriptions pour cet événement sont terminées.`,
+            className: "text-primary1 p-2 font-bold border border-primary1 rounded-lg bg-white",
+            id: "reservation-link"
+        });
+        resa_div.appendChild(closedMessage);
+    } else if (today >= reservationOpeningDate) {
         const reservation_link = Object.assign(document.createElement('a'), {
-            href: `http://png-resa-demo.geotrek.fr/resa/${event_id}`,
+            href: `http://png-resa-demo.geotrek.fr/resa/${eventId}`,
             innerText: "S'inscrire à l'événement",
             style: "background-color: #aec900; color: white;",
             className: "text-primary1 p-2 font-bold border-solid border border-primary1 rounded-lg bg-white",
