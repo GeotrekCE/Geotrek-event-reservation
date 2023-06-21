@@ -22,7 +22,7 @@ function insertReservationLink(url) {
     });
 
     const today = new Date();
-    if (today > reservationOpeningDate) {
+    if (today >= reservationOpeningDate) {
         const reservation_link = Object.assign(document.createElement('a'), {
             href: `http://png-resa-demo.geotrek.fr/resa/${event_id}`,
             innerText: "S'inscrire à l'événement",
