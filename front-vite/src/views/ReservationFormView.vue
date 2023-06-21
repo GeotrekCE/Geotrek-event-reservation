@@ -14,7 +14,7 @@
   <main class="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8 px-4 py-6" v-if="!reservationOpened.value">
     <section class="pb-12 mx-auto space-y-4">
       <p>
-        Nous sommes désolés, les réservations ne sont pas encore ouvertes.
+        Nous sommes désolés, les réservations ne sont pas possibles.
       </p>
       <p v-if="reservationOpened.text">
         {{ reservationOpened.text }}

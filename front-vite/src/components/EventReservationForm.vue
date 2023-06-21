@@ -88,9 +88,13 @@
                 as="select"
                 class="block w-full rounded-sm border-0 p-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 text-sm leading-6 h-10"
               >
-                <option value="guadeloupe">Guadeloupe</option>
-                <option value="hexagone">Hexagone</option>
-                <option value="autre">Autre</option>
+                <option
+                  v-for="o in origins"
+                  :key="o.value"
+                  :value="o.value"
+                >
+                  {{ o.label }}
+                </option>
               </vv-field>
               <vv-error-message
                 name="num_departement"
@@ -336,6 +340,7 @@ const props = defineProps({
     default: false
   }
 })
+const origins = CONFIGURATION.ORIGINS
 
 const formSchema = yup.object().shape({
   email: yup.string().email().required().label('Email'),

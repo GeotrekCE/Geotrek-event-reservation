@@ -13,5 +13,12 @@ const CONFIGURATION = {
   RESA_NB_DELTA: 3,
   DAY_BEFORE_RESA: -1,
   RESA_BEGINNING_DATE: new Date('2023-06-26'),
-  PARK_LABEL: 'Parc National de ...'
+  PARK_LABEL: 'Parc National de ...',
+  ORIGINS: [{
+    label: '65 Hautes-Pyrénées',
+    value: 65
+  }, {
+    label: '44 Loire Atlantique',
+    value: 44
+  }]
 };

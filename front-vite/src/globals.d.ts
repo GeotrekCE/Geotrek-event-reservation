@@ -27,6 +27,9 @@ declare let CONFIGURATION: {
   RESA_NB_DELTA: number
 
   // Label du parc utilisant l'outil
-  PARK_LABEL: 'Parc National de ...'
+  PARK_LABEL: string
+
+  // Ensemble des lieux d'origine à afficher à l'utilisateur
+  ORIGINS: { value: string | number, label: string }[]
 
 }

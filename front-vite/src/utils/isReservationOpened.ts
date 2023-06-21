@@ -36,7 +36,7 @@ export function isReservationOpened(event: ResaEvent): ReservationOpened {
   // Si l'événement est annulé
   if (event.cancelled) return {
     value: false,
-    text: 'Animation annulée'
+    text: 'L\'animation a été annulée.'
   }
 
   // Si l'événement est dans le passé
