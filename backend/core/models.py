@@ -97,6 +97,26 @@ class GTEvents(db.Model):
         return sum(r.sum_participants_liste_attente for r in self.reservations if r.confirmed and not r.cancelled)
 
     @hybrid_property
+    def sum_participants_adultes(self):
+        return sum(r.nb_adultes for r in self.reservations if r.confirmed and not r.cancelled and not r.liste_attente)
+
+    @hybrid_property
+    def sum_participants_moins_6_ans(self):
+        return sum(r.nb_moins_6_ans for r in self.reservations if r.confirmed and not r.cancelled and not r.liste_attente)
+
+    @hybrid_property
+    def sum_participants_6_8_ans(self):
+        return sum(r.nb_6_8_ans for r in self.reservations if r.confirmed and not r.cancelled and not r.liste_attente)
+
+    @hybrid_property
+    def sum_participants_9_12_ans(self):
+        return sum(r.nb_9_12_ans for r in self.reservations if r.confirmed and not r.cancelled and not r.liste_attente)
+
+    @hybrid_property
+    def sum_participants_plus_12_ans(self):
+        return sum(r.nb_plus_12_ans for r in self.reservations if r.confirmed and not r.cancelled and not r.liste_attente)
+
+    @hybrid_property
     def massif(self):
         return db.session.query(func.animations.get_secteur_name(self.id)).first()[0]
 

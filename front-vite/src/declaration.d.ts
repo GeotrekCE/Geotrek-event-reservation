@@ -1,8 +1,9 @@
 export interface ResaBilan {
-  annulation: boolean
-  raison_annulation: string
   id_event: number
-  email_numerisateur: string
+
+  annulation?: boolean
+  raison_annulation?: string
+  
   commentaire: string
   nb_adultes: number
   nb_moins_6_ans: number
@@ -11,6 +12,7 @@ export interface ResaBilan {
   nb_plus_12_ans: number
 
   // id_numerisateur: number
+  // email_numerisateur: string
 }
 
 /**
@@ -33,6 +35,15 @@ export interface ResaEvent {
   end_date: string
   published: boolean
   cancelled: boolean
+
+  sum_participants: number
+  sum_participants_liste_attente: number
+  sum_participants_adultes: number
+  sum_participants_moins_6_ans: number
+  sum_participants_6_8_ans: number
+  sum_participants_9_12_ans: number
+  sum_participants_plus_12_ans: number
+
 }
 
 /**

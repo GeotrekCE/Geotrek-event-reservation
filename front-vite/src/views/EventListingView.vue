@@ -37,7 +37,7 @@
                 <button
                   v-if="!formOpened"
                   type="submit"
-                  class="rounded-sm ml-2 px-3 py-2 text-sm font-medium text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600"
+                  class="rounded-sm ml-2 px-3 py-2 text-sm font-medium text-white shadow-sm"
                   :class="{
                     'bg-sky-600': !loading,
                     'hover:bg-sky-500': !loading,
@@ -111,7 +111,7 @@
                 <button
                   v-if="formOpened"
                   type="submit"
-                  class="rounded-sm px-3 py-2 text-sm font-medium text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600"
+                  class="rounded-sm px-3 py-2 text-sm font-medium text-white shadow-sm"
                   :class="{
                     'bg-sky-600': !loading,
                     'hover:bg-sky-500': !loading,
@@ -343,7 +343,7 @@
 
                   <div class="col-span-full flex items-center">
                     <button
-                      class="ml-auto rounded-sm px-3 py-2 text-sm font-medium text-white shadow-sm  focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600 bg-sky-600 hover:bg-sky-500"
+                      class="ml-auto rounded-sm px-3 py-2 text-sm font-medium text-white shadow-sm  bg-sky-600 hover:bg-sky-500"
                       @click="bilanEditing = true"
                     >
                       Modifier le bilan
@@ -357,6 +357,8 @@
                     :saving="bilanSaving"
                     :error="bilanError"
                     :original-data="selectedEvent.bilan"
+                    :summary="selectedEventSummary"
+                    
                     @submit="onSaveBilan"
                   />
 
@@ -491,6 +493,7 @@ const selectedEventCanceled = computed(() => selectedEvent.value?.cancelled === 
 const selectedEventInfoRDV = ref<ResaEventInfo>({
   info_rdv: ''
 })
+const selectedEventSummary = ref<any | null>(null)
 const gtevent = ref<any>(null)
 const resas = ref<any>({ results: [], total: 0 })
 const reservationOpened = computed(() => isReservationOpened(selectedEvent.value))
@@ -666,7 +669,9 @@ watch(
 watch(selectedEventId, loadSelectedEvent)
 
 async function loadSelectedEvent () {
+
   if (!selectedEventId.value) return
+
   selectedEvent.value = await getEvent(selectedEventId.value)
   /**
    * Si l'événement existe dans le listing,
@@ -677,6 +682,14 @@ async function loadSelectedEvent () {
   await loadReservations()
   gtevent.value = await getTouristicEventDetail(selectedEventId.value)
   selectedEventInfoRDV.value = await getEventInfo(selectedEventId.value)
+  selectedEventSummary.value = {
+    sum_participants_adultes: selectedEvent.value.sum_participants_adultes,
+    sum_participants_moins_6_ans: selectedEvent.value.sum_participants_moins_6_ans,
+    sum_participants_6_8_ans: selectedEvent.value.sum_participants_6_8_ans,
+    sum_participants_9_12_ans: selectedEvent.value.sum_participants_9_12_ans,
+    sum_participants_plus_12_ans: selectedEvent.value.sum_participants_plus_12_ans,
+  }
+
 }
 
 /**
