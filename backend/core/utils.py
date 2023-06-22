@@ -1,9 +1,12 @@
 import csv
 import io
+import logging
 
 from flask import Response, current_app
 from flask_mail import Message
 from werkzeug.datastructures import Headers
+
+logger = logging.getLogger(__name__)
 
 
 def to_csv_resp(filename, data, columns, separator=";"):
@@ -48,7 +51,8 @@ def get_mail_subject(text):
 
 def send_email(subject, recipients, html):
     msg = Message(subject=subject, recipients=recipients, html=html)
-    print("email sent", msg)
+    logger.info(f'Email envoyé "{subject}" à {recipients}')
+    logger.debug(f"<<< EMAIL ENVOYÉ >>>\n{msg}\n<<< FIN EMAIL >>>\n")
     from app import mail
     mail.send(msg)
 

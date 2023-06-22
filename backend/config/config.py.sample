@@ -59,6 +59,9 @@ LOGGING = {
         'core': {
             'level': 'INFO',
         },
+        'send_email_rappel': {
+            'level': 'INFO',
+        },
     },
     'root': {
         'handlers': ['console', 'log_file'],
