@@ -2,12 +2,15 @@ FROM ubuntu:20.04
 
 WORKDIR /opt/png-resa
 
-RUN apt-get update -qq && apt-get install -y \
+ENV TZ="Europe/Paris"
+
+RUN apt-get update -qq && DEBIAN_FRONTEND="noninteractive" apt-get install -y \
     gcc \
     python3.8-venv \
     python3-dev \
     iproute2 \
-    libpq-dev && \
+    libpq-dev \
+    tzdata && \
     apt-get clean all && rm -rf /var/lib/apt/lists/* && rm -rf /var/cache/apt/*
 
 RUN python3 -m venv /opt/venv

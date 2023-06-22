@@ -140,3 +140,9 @@ Afficher le rendu des emails envoyés : descendre le niveau de log pour le nom `
 ```
 
 Attention : l'initialisation du handler `log_file` échouera si le répertoire de destination n'existe pas.
+
+
+## Configurer la timezone
+
+Dans le `Dockerfile` renseigner la variable d'environnement `TZ`, par exemple "Europe/Paris" (par défaut). Il faut
+reconstruire l'image pour que le changement soit pris en compte.
