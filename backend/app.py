@@ -1,3 +1,5 @@
+import logging
+
 from babel.dates import format_date as babel_format_date, format_time as babel_format_time
 import email_validator
 from flask import Flask, jsonify
@@ -19,6 +21,8 @@ def create_app():
     app.config.from_pyfile("./config/config.py")
     if app.config["DEBUG"] or app.config["TESTING"]:
         email_validator.TEST_ENVIRONMENT = True
+
+    logging.config.dictConfig(app.config["LOGGING"])
 
     db.init_app(app)
 
