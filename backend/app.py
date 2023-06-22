@@ -1,4 +1,4 @@
-import logging
+from logging import config as logging_config
 
 from babel.dates import format_date as babel_format_date, format_time as babel_format_time
 import email_validator
@@ -22,7 +22,7 @@ def create_app():
     if app.config["DEBUG"] or app.config["TESTING"]:
         email_validator.TEST_ENVIRONMENT = True
 
-    logging.config.dictConfig(app.config["LOGGING"])
+    logging_config.dictConfig(app.config["LOGGING"])
 
     db.init_app(app)
 
