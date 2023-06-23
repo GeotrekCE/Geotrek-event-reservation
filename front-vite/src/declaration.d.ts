@@ -46,6 +46,13 @@ export interface ResaEvent {
 
 }
 
+export interface ResaField {
+  name: string,
+  label: string,
+  class: string,
+  type: 'number' | 'date' | 'paragraph' | 'string' | 'boolean'
+}
+
 /**
  * Information d'un événement
  * Données issues du endpoint events/{id}/info

@@ -122,17 +122,10 @@
           :key="field.name"
           :class="field.class"
         >
-          <label class="block text-sm font-medium leading-6 text-gray-900">{{ field.label }} : </label>
-          <span v-if="field.name !== 'commentaire'">{{ data[field.name] }}</span>
-          <template v-else>
-            <p
-              v-for="comment in data[field.name]?.split('\n')"
-              :key="comment"
-            >
-              {{comment }}
-            </p>
-          </template>
-
+          <reservation-field
+            :field="field"
+            :value="data[field.name]"
+          />
         </div>
         <div class="col-span-full mx-auto">
           <button
@@ -159,6 +152,7 @@ import { ref } from 'vue'
 import { expandedFields } from '@/utils/fields'
 import { formatDateTimeString } from '@/utils/formatDate'
 import { useConfirm } from "primevue/useconfirm";
+import ReservationField from '@/components/ReservationField.vue'
 
 const confirm = useConfirm()
 

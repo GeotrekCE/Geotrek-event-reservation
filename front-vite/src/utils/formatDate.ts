@@ -12,7 +12,8 @@ export function formatDateString(date?: string): string {
 export function formatDateTimeString(date?: string): string {
   if (!date) return '';
   const [year, month, day] = date.substring(0, 10).split('-');
-  return `${day}/${month}/${year}`;
+  const [hour, minutes] = date.substring(11,16).split(':')
+  return `${day}/${month}/${year} ${hour}:${minutes}`;
 }
 
 export function formatDateTime(date?: Date): string {

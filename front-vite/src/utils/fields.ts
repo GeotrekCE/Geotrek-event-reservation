@@ -1,3 +1,5 @@
+import type { ResaField } from '../declaration'
+
 export const fieldsClasseAge = {
   nb_adultes: 'Adultes',
   nb_moins_6_ans: 'Moins de 6 ans',
@@ -37,60 +39,74 @@ export const rulesFct = {
   },
 }
 
-export const expandedFields = [{
+export const expandedFields: ResaField[] = [{
   name: 'nb_adultes',
   label: fieldsClasseAge.nb_adultes,
   class: 'col-span-1 sm:col-span-2',
+  type: 'number'
 }, {
   name: 'nb_moins_6_ans',
   label: fieldsClasseAge.nb_moins_6_ans,
   class: 'col-span-1 sm:col-span-2',
+  type: 'number'
 }, {
   name: 'nb_6_8_ans',
   label: fieldsClasseAge.nb_6_8_ans,
   class: 'col-span-1 sm:col-span-2',
+  type: 'number'
 }, {
   name: 'nb_9_12_ans',
   label: fieldsClasseAge.nb_9_12_ans,
   class: 'col-span-1 sm:col-span-2',
+  type: 'number'
 }, {
   name: 'nb_plus_12_ans',
   label: fieldsClasseAge.nb_plus_12_ans,
   class: 'col-span-1 sm:col-span-2',
+  type: 'number'
 }, {
   name: 'confirmed',
   label: 'Confirmé',
   class: 'col-span-1 sm:col-span-2',
+  type: 'boolean'
 }, {
   name: 'num_departement',
   label: 'Lieu d\'origine',
   class: 'col-span-1 sm:col-span-2',
+  type: 'string'
 }, {
   name: 'cancelled',
   label: 'Annulée',
   class: 'col-span-1 sm:col-span-2',
+  type: 'boolean'
 }, {
   name: 'cancel_by',
   label: 'Annulée par',
   class: 'col-span-1 sm:col-span-2',
+  type: 'string'
 }, {
   name: 'cancel_date',
   label: 'Annulée le',
   class: 'col-span-1 sm:col-span-2',
+  type: 'date'
 }, {
   name: 'liste_attente',
   label: 'Sur liste d\'attente',
   class: 'col-span-1 sm:col-span-2',
+  type: 'boolean'
 }, {
   name: 'commentaire',
   label: 'Commentaire',
   class: 'col-span-full mb-8',
+  type: 'paragraph'
 }, {
   name: 'meta_create_date',
   label: 'Date de création',
   class: 'col-span-1 sm:col-span-5',
+  type: 'date'
 }, {
   name: 'meta_update_date',
   label: 'Date de mise à jour',
   class: 'col-span-1 sm:col-span-5',
+  type: 'date'
 }]
