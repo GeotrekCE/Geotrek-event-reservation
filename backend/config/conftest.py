@@ -1,6 +1,7 @@
 from datetime import timedelta
 import os
 
+TESTING = True
 # --- Content settings ---
 
 # Ce texte est placé au début de l'objet dans les emails, par exemple "[Rando Guadeloupe]".
