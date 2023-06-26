@@ -91,7 +91,7 @@ class TestAPI:
         response = self.client.get(url_for("app_routes.get_events"))
         assert response.status_code == 200
 
-    def test_get_one_event(self):
+    def test_get_one_event(self, events):
         data = GTEvents.query.limit(1).one()
         assert (
             self.client.get(
