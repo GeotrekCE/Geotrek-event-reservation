@@ -32,8 +32,8 @@ jobs:
         image: postgis/postgis:10-2.5
         env:
           POSTGRES_DB: geotrekdb
-          POSTGRES_PASSWORD: geotrekpwd
-          POSTGRES_USER: geotrekuser
+          POSTGRES_PASSWORD: geotrek
+          POSTGRES_USER: geotrek
         ports:
           - 5432:5432
         options: >-
@@ -45,17 +45,17 @@ jobs:
       - name: Add postgis_raster database extension
         if: ${{ matrix.postgis-version >= 3 }}
         run: |
-          psql -h localhost -U geotrekuser -d geotrekdb -tc 'CREATE EXTENSION "postgis_raster";'
+          psql -h localhost -U geotrek -d geotrekdb -tc 'CREATE EXTENSION "postgis_raster";'
         env:
-          PGPASSWORD: geotrekpwd
+          PGPASSWORD: geotrek
       - name: Add database extensions
         run: |
-          psql -h localhost -U geotrekuser -d geotrekdb -tc 'CREATE EXTENSION "hstore";'
-          psql -h localhost -U geotrekuser -d geotrekdb -tc 'CREATE EXTENSION "uuid-ossp";'
-          psql -h localhost -U geotrekuser -d geotrekdb -tc 'CREATE EXTENSION "pg_trgm";'
-          psql -h localhost -U geotrekuser -d geotrekdb -tc 'CREATE EXTENSION "unaccent";'
+          psql -h localhost -U geotrek -d geotrekdb -tc 'CREATE EXTENSION "hstore";'
+          psql -h localhost -U geotrek -d geotrekdb -tc 'CREATE EXTENSION "uuid-ossp";'
+          psql -h localhost -U geotrek -d geotrekdb -tc 'CREATE EXTENSION "pg_trgm";'
+          psql -h localhost -U geotrek -d geotrekdb -tc 'CREATE EXTENSION "unaccent";'
         env:
-          PGPASSWORD: geotrekpwd
+          PGPASSWORD: geotrek
       - uses: actions/checkout@v2
         with:
           submodules: true
@@ -66,14 +66,14 @@ jobs:
           sudo apt update
           sudo apt install debconf-utils
           cat << EOF | sudo debconf-set-selections
-            geotrek-admin geotrek-admin/POSTGRES_PASSWORD password geotrekpwd
+            geotrek-admin geotrek-admin/POSTGRES_PASSWORD password geotrek
             geotrek-admin geotrek-admin/SERVER_NAME string localhost
             geotrek-admin geotrek-admin/SRID string 2154
             geotrek-admin geotrek-admin/POSTGRES_HOST string localhost
             geotrek-admin geotrek-admin/TIMEOUT string 300
             geotrek-admin geotrek-admin/MANAGE_DB boolean false
             geotrek-admin geotrek-admin/LANGUAGES string fr en
-            geotrek-admin geotrek-admin/POSTGRES_USER string geotrekuser
+            geotrek-admin geotrek-admin/POSTGRES_USER string geotrek
             geotrek-admin geotrek-admin/POSTGRES_DB string geotrekdb
             geotrek-admin geotrek-admin/POSTGRES_PORT string 5432
             geotrek-admin geotrek-admin/DEFAULT_STRUCTURE string TEST
@@ -84,24 +84,24 @@ jobs:
           sudo apt-get --quiet --yes install geotrek-admin
       - name: Install database
         run: |
-          psql -h localhost -d geotrekdb -U geotrekuser --set ON_ERROR_STOP=on -f create_db_structure.sql
+          psql -h localhost -d geotrekdb -U geotrek --set ON_ERROR_STOP=on -f create_db_structure.sql
         working-directory: ./db
         env:
-          PGPASSWORD: geotrekpwd
+          PGPASSWORD: geotrek
           VERBOSITY: verbose
       - name: Install backend dependencies
         run: |
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt
+          python -m pip install pytest
+          python -m pip install pytest-flask
         working-directory: ./backend
       - name: Install backend
         run: |
-          cp -n  config/config.py.sample config/config.py
+          cp -n  config/conftest.py config/config.py
         working-directory: ./backend
       - name: Run pytests
         run: |
           pytest -v --cov --cov-report xml
-        env:
-          GEONATURE_CONFIG_FILE: config/conftest.py
         working-directory: ./backend
 
