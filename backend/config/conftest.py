@@ -104,9 +104,9 @@ MAIL_DEFAULT_SENDER = "test@test.fr"
 # MAIL_MAX_EMAILS: default None
 # MAIL_ASCII_ATTACHMENTS: default False
 
-MAIL_SERVER = os.environ["MAIL_SERVER"]
-MAIL_PORT = os.environ["MAIL_PORT"]
+MAIL_SERVER = os.environ.get('MAIL_SERVER')
+MAIL_PORT = os.environ.get('MAIL_PORT')
 MAIL_USE_TLS = False
 MAIL_USE_SSL = True
-MAIL_USERNAME = os.environ["MAIL_USERNAME"]
-MAIL_PASSWORD = os.environ["MAIL_PASSWORD"]
+MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
+MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
