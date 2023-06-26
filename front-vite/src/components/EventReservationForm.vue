@@ -119,7 +119,7 @@
                 type="number"
                 name="nb_adultes"
                 id="nb_adultes"
-                min="0" 
+                min="0"
                 class="block w-full rounded-sm border-0 p-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6"
               />
 
@@ -135,7 +135,7 @@
                 type="number"
                 name="nb_moins_6_ans"
                 id="nb_moins_6_ans"
-                min="0" 
+                min="0"
                 class="block w-full rounded-sm border-0 p-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6"
               />
 
@@ -151,7 +151,7 @@
                 type="number"
                 name="nb_6_8_ans"
                 id="nb_6_8_ans"
-                min="0" 
+                min="0"
                 class="block w-full rounded-sm border-0 p-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6"
               />
 
@@ -167,7 +167,7 @@
                 type="number"
                 name="nb_9_12_ans"
                 id="nb_9_12_ans"
-                min="0" 
+                min="0"
                 class="block w-full rounded-sm border-0 p-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6"
               />
 
@@ -183,7 +183,7 @@
                 type="number"
                 name="nb_plus_12_ans"
                 id="nb_plus_12_ans"
-                min="0" 
+                min="0"
                 class="block w-full rounded-sm border-0 p-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6"
               />
 
@@ -298,7 +298,7 @@
         Merci de les corriger avant de soumettre à nouveau le formulaire
       </span>
       <span v-if="saveError" class="text-red-500">
-       Une erreur est survenue : {{ saveError }} 
+       Une erreur est survenue : {{ saveError }}
       </span>
       <span v-if="saveError" class="text-red-500">
         N'hésitez pas à prendre contact avec le parc si l'erreur persiste.
@@ -318,7 +318,7 @@ const props = defineProps({
   saving: {
     type: Boolean,
     required: true
-  }, 
+  },
   saveError: {
     type: String,
     required: false,
@@ -347,7 +347,7 @@ const formSchema = yup.object().shape({
   tel: yup.string().required().label('Téléphone'),
   nom: yup.string().required().label('Nom'),
   prenom: yup.string().required().label('Prénom'),
-  num_departement: yup.string().required().oneOf(['guadeloupe', 'hexagone', 'autre']).label('Lieu d\'origine'),
+  num_departement: yup.string().required().oneOf(CONFIGURATION.ORIGINS.map(x => x.value)).label('Lieu d\'origine'),
   commentaire: yup.string().nullable().label('Commentaire'),
   nb_adultes: yup.number().min(0).default(0).label('Adulte(s)'),
   nb_moins_6_ans: yup.number().min(0).default(0).label('Moins de 6 ans'),

@@ -16,9 +16,9 @@ const CONFIGURATION = {
   PARK_LABEL: 'Parc National de ...',
   ORIGINS: [{
     label: '65 Hautes-Pyrénées',
-    value: 65
+    value: '65'
   }, {
     label: '44 Loire Atlantique',
-    value: 44
+    value: '44'
   }]
 };
