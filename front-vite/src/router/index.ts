@@ -6,6 +6,8 @@ import HomeView from '@/views/HomeView.vue'
 import LoginView from '@/views/LoginView.vue';
 import LoginCallbackView from '@/views/LoginCallbackView.vue';
 import LogoutView from '@/views/LogoutView.vue';
+import InfoAdminView from '@/views/InfoAdminView.vue';
+
 
 export const ROUTES_NAMES = {
   HOME: 'HOME',
@@ -18,6 +20,7 @@ export const ROUTES_NAMES = {
   RESA_FORM: 'RESA_FORM',
   RESA_LISTING: 'RESA_LISTING',
   RESA_CONFIRM: 'RESA_CONFIRM',
+  INFO_ADMIN: 'INFO_ADMIN'
 }
 export const ROUTES_PATHS = {
   HOME: '/',
@@ -29,7 +32,8 @@ export const ROUTES_PATHS = {
   STATS: '/stats',
   RESA_FORM: '/resa/:geotrekid',
   RESA_LISTING: '/resalisting',
-  RESA_CONFIRM: '/resaconfirm'
+  RESA_CONFIRM: '/resaconfirm',
+  INFO_ADMIN: '/info_admin'
 }
 
 const routes = [
@@ -47,25 +51,25 @@ const routes = [
     meta: {
       requiresAuth: false
     }
-  }, { 
+  }, {
     path: ROUTES_PATHS.LOGIN_CALLBACK,
     name: ROUTES_NAMES.LOGIN_CALLBACK,
     component: LoginCallbackView,
     meta: {
       requiresAuth: false
     }
-  }, { 
+  }, {
     path: ROUTES_PATHS.LOGOUT,
     name: ROUTES_NAMES.LOGOUT,
     component: LogoutView,
     meta: {
       requiresAuth: true
     }
-  }, { 
+  }, {
     path: ROUTES_PATHS.EVENT_LISTING,
     name: ROUTES_NAMES.EVENT_LISTING,
     component: () => import('@/views/EventListingView.vue'),
-    meta: { 
+    meta: {
       requiresAuth: true,
       requiresAdmin: true
     },
@@ -73,17 +77,17 @@ const routes = [
     path: ROUTES_PATHS.EVENT_DETAIL,
     name: ROUTES_NAMES.EVENT_DETAIL,
     component: () => import('@/views/EventListingView.vue'),
-    meta: { 
+    meta: {
       requiresAuth: true,
-      requiresAdmin: true 
+      requiresAdmin: true
     },
   }, {
     path: ROUTES_PATHS.STATS,
     name: ROUTES_NAMES.STATS,
     component: () => import('@/views/StatsView.vue'),
-    meta: { 
+    meta: {
       requiresAuth: true,
-      requiresAdmin: true 
+      requiresAdmin: true
     },
   }, {
     path: ROUTES_PATHS.RESA_FORM,
@@ -105,6 +109,14 @@ const routes = [
     component: () => import('@/views/ReservationConfirmationView.vue'),
     meta: {
       requiresAuth: false
+    }
+  }, {
+    path: ROUTES_PATHS.INFO_ADMIN,
+    name: ROUTES_NAMES.INFO_ADMIN,
+    component: InfoAdminView,
+    meta: {
+      requiresAuth: true,
+      requiresAdmin: true
     }
   }
 ];
@@ -145,16 +157,16 @@ router.beforeEach((to, from, next) => {
           replace: true,
         });
       } else if (
-        to.meta.requiresAdmin && 
+        to.meta.requiresAdmin &&
         !authStore.isAdmin
       ){
         // if the route need admin permission
         // but user is not ad admin
-        // go to home page     
+        // go to home page
         next({
           path: ROUTES_PATHS.HOME,
           replace: true,
-        }); 
+        });
       }
 
     }
