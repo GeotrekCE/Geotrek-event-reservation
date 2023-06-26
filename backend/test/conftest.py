@@ -6,20 +6,14 @@ from cookies import Cookie
 
 
 from app import create_app
-from config.conftest import LOGIN, PASSWORD, ID_APP
+from core.models import TTokens
+from config.conftest import EMAIL
 
 
 @pytest.fixture()
 def app():
     app = create_app()
-    app.config.update(
-        {
-            "TESTING": True,
-            "LOGIN": LOGIN,
-            "PASSWORD": PASSWORD,
-            "ID_APP": ID_APP,
-        }
-    )
+    app.config.update({"TESTING": True, "ADMIN_EMAILS": ["test.test@test.fr"]})
 
     # other setup can go here
 
@@ -43,20 +37,29 @@ headers = {"Content-Type": mimetype, "Accept": mimetype}
 
 
 def get_token(client):
-    data = {
-        "login": current_app.config.get("LOGIN"),
-        "password": current_app.config.get("PASSWORD"),
-        "id_app": current_app.config.get("ID_APP"),
-    }
+    data = {"email": EMAIL}
 
     response = client.post(
-        url_for("auth.login"), data=json.dumps(data), headers=headers
+        url_for("app_routes.send_login_email"), data=json.dumps(data), headers=headers
     )
-    try:
-        token = Cookie.from_string(response.headers["Set-Cookie"])
-        return token.value
-    except Exception:
-        raise Exception("Invalid login {}, {}".format(login, password))
+    assert response.status_code == 204
+
+    # Get token manually
+    token = (
+        TTokens.query.filter_by(used=False)
+        .filter_by(email=EMAIL)
+        .order_by(TTokens.created_at.desc())
+        .first()
+    )
+
+    response = client.post(
+        url_for("app_routes.login"),
+        data=json.dumps({"login_token": token.token}),
+        headers=headers,
+    )
+    assert response.status_code == 200
+    rdata = json.loads(response.data)
+    assert rdata["is_admin"] == True
 
 
 def post_json(client, url, json_dict):
