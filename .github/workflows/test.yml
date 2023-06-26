@@ -102,7 +102,7 @@ jobs:
         working-directory: ./backend
       - name: Run pytests
         run: |
-          pytest -v --cov --cov-report xml
+          pytest test/
         working-directory: ./backend
         env: 
           MAIL_SERVER: ${{secrets.MAIL_SERVER}}
