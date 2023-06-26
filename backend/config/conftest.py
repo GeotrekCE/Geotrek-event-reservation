@@ -88,7 +88,7 @@ SESSION_REFRESH_EACH_REQUEST = True
 # --- Flask Mail settings ---
 
 # MAIL_DEFAULT_SENDER: default None, paramètre obligatoire même en mode dev/test.
-MAIL_DEFAULT_SENDER = None
+ MAIL_DEFAULT_SENDER = os.environ["MAIL_USERNAME"]
 
 # MAIL_SUPPRESS_SEND: default app.testing, paramètre utile pour le développement sans serveur SMTP.
 #MAIL_SUPPRESS_SEND = True
@@ -109,4 +109,3 @@ MAIL_USE_TLS = False
 MAIL_USE_SSL = True
 MAIL_USERNAME = os.environ["MAIL_USERNAME"]
 MAIL_PASSWORD = os.environ["MAIL_PASSWORD"]
-MAIL_DEFAULT_SENDER = os.environ["MAIL_USERNAME"]
