@@ -18,6 +18,7 @@ events_data = [
         "published": True,
         "x": 765227.4922990737,
         "y": 6365673.938623513,
+        "published_fr": True
     }
 ]
 
@@ -34,10 +35,13 @@ def events():
                 INSERT INTO public.tourism_touristicevent
                 (
                   date_insert, date_update, deleted, structure_id,
-                  geom,published,"name",capacity, begin_date, end_date
+                  geom,published,"name",capacity, begin_date, end_date,
+                  published_fr
                 )
                 VALUES (CURRENT_TIMESTAMP,CURRENT_TIMESTAMP, false, 1,
-                 st_setsrid(st_point(:x, :y), 2154), :published, :name, :capacity,:begin_date , :end_date )
+                 st_setsrid(st_point(:x, :y), 2154), :published, :name, :capacity,:begin_date , :end_date ,
+                 published_fr
+                 )
                 """
                 ),
                 params=e,
