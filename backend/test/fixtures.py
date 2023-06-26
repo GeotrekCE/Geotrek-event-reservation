@@ -40,7 +40,7 @@ def events():
                 )
                 VALUES (CURRENT_TIMESTAMP,CURRENT_TIMESTAMP, false, 1,
                  st_setsrid(st_point(:x, :y), 2154), :published, :name, :capacity,:begin_date , :end_date ,
-                 published_fr
+                 :published_fr
                  )
                 """
                 ),
