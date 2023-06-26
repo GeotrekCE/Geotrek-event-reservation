@@ -4,13 +4,11 @@ from flask import url_for, current_app
  
 from app import create_app
 from core.models import TTokens
-from config.conftest import EMAIL
-
 
 @pytest.fixture()
 def app():
     app = create_app()
-    app.config.update({"TESTING": True, "ADMIN_EMAILS": ["test.test@test.fr"]})
+    app.config.update({"TESTING": True})
 
     # other setup can go here
 

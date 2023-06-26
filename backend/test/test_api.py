@@ -6,12 +6,12 @@ import logging
 
 from core.models import GTEvents, TReservations, TAnimationsBilans
 from core.models import TTokens
-from config.conftest import EMAIL
 
 from .fixtures import events
 
 LOGGER = logging.getLogger(__name__)
 
+EMAIL='test.test@test.fr'
 TEST_RESERVATION = {
     "nom": "BLAIR",
     "prenom": "Eric",

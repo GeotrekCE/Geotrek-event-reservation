@@ -4,7 +4,6 @@ from flask import url_for
 from sqlalchemy.sql import text
 from core.models import TTokens, GTEvents
 
-from config.conftest import EMAIL
 from core.env import db
 
 headers = {"Content-type": "application/json", "Accept": "application/json"}
