@@ -1,10 +1,8 @@
 
 
 CREATE SCHEMA IF NOT EXISTS animations;
-
-DROP VIEW animations.v_export_bilans_global;
-
-DROP TABLE  IF EXISTS animations.t_reservations ;
+ 
+ 
 
 CREATE TABLE animations.t_reservations (
     id_reservation serial4 NOT NULL,
@@ -32,8 +30,7 @@ CREATE TABLE animations.t_reservations (
     CONSTRAINT fk_id_event FOREIGN KEY(id_event)
       REFERENCES tourism_touristicevent(id)
 );
-
-DROP TABLE  IF EXISTS animations.t_animations_bilans ;
+ 
 
 CREATE TABLE animations.t_animations_bilans (
     id_bilan serial4 NOT NULL,
@@ -54,8 +51,7 @@ CREATE TABLE animations.t_animations_bilans (
     CONSTRAINT fk_id_event FOREIGN KEY(id_event)
       REFERENCES tourism_touristicevent(id)
 );
-
-DROP TABLE  IF EXISTS animations.t_event_info ;
+ 
 
 CREATE TABLE animations.t_event_info (
     id_event_info serial4 NOT NULL,
@@ -67,8 +63,7 @@ CREATE TABLE animations.t_event_info (
     CONSTRAINT fk_id_event FOREIGN KEY(id_event)
       REFERENCES tourism_touristicevent(id)
 );
-
-DROP TABLE  IF EXISTS animations.t_tokens;
+ 
 
 CREATE TABLE animations.t_tokens (
     id serial4 NOT NULL,
