@@ -100,5 +100,8 @@ jobs:
         working-directory: ./backend
       - name: Run pytests
         run: |
-          echo TODO
+          pytest -v --cov --cov-report xml
+        env:
+          GEONATURE_CONFIG_FILE: config/conftest.py
+        working-directory: ./backend
 
