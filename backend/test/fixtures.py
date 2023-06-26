@@ -18,7 +18,8 @@ events_data = [
         "published": True,
         "x": 765227.4922990737,
         "y": 6365673.938623513,
-        "published_fr": True
+        "published_fr": True,
+        "published_en" : True
     }
 ]
 
@@ -36,11 +37,11 @@ def events():
                 (
                   date_insert, date_update, deleted, structure_id,
                   geom,published,"name",capacity, begin_date, end_date,
-                  published_fr
+                  published_fr, published_en
                 )
                 VALUES (CURRENT_TIMESTAMP,CURRENT_TIMESTAMP, false, 1,
                  st_setsrid(st_point(:x, :y), 2154), :published, :name, :capacity,:begin_date , :end_date ,
-                 :published_fr
+                 :published_fr, :published_en
                  )
                 """
                 ),
