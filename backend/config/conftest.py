@@ -102,10 +102,11 @@ MAIL_DEFAULT_SENDER = None
 # MAIL_PASSWORD: default None
 # MAIL_MAX_EMAILS: default None
 # MAIL_ASCII_ATTACHMENTS: default False
-MAIL_SERVER = ${{secrets.MAIL_SERVER}}
-MAIL_PORT = ${{secrets.MAIL_PORT}}
+
+MAIL_SERVER = os.environ["secrets.MAIL_SERVER"]
+MAIL_PORT = os.environ["secrets.MAIL_PORT"]
 MAIL_USE_TLS = False
 MAIL_USE_SSL = True
-MAIL_USERNAME = ${{secrets.MAIL_USERNAME}}
-MAIL_PASSWORD = ${{secrets.MAIL_PASSWORD}}
-MAIL_DEFAULT_SENDER = ${{secrets.MAIL_USERNAME}}
+MAIL_USERNAME = os.environ["secrets.MAIL_USERNAME"]
+MAIL_PASSWORD = os.environ["secrets.MAIL_PASSWORD"]
+MAIL_DEFAULT_SENDER = os.environ["secrets.MAIL_USERNAME"]
