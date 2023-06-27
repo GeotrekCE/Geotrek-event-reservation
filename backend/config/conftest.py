@@ -33,30 +33,28 @@ LOGIN_TOKEN_LIFETIME = timedelta(hours=5)
 
 # dictConfig Python standard, passé au module `logging` à l'initialisation de l'app Flask.
 LOGGING = {
-    'version': 1,
-    'formatters': {
-        'simple': {
-            'format': '%(levelname)s %(asctime)s %(name)s %(message)s'
+    "version": 1,
+    "formatters": {
+        "simple": {"format": "%(levelname)s %(asctime)s %(name)s %(message)s"},
+    },
+    "handlers": {
+        "console": {
+            "level": "DEBUG",
+            "class": "logging.StreamHandler",
+            "formatter": "simple",
         },
     },
-    'handlers': {
-        'console': {
-            'level': 'DEBUG',
-            'class': 'logging.StreamHandler',
-            'formatter': 'simple',
-        }, 
-    },
-    'loggers': {
-        'core': {
-            'level': 'INFO',
+    "loggers": {
+        "core": {
+            "level": "INFO",
         },
-        'send_email_rappel': {
-            'level': 'INFO',
+        "send_email_rappel": {
+            "level": "INFO",
         },
     },
-    'root': {
-        'handlers': ['console'],
-    }
+    "root": {
+        "handlers": ["console"],
+    },
 }
 
 
@@ -84,7 +82,7 @@ SECRET_KEY = "192b9bdd22ab9ed4d12e236c78afcb9a393ec15f71bbf5dc987d54727823bcbf"
 PERMANENT_SESSION_LIFETIME = timedelta(days=31)
 
 # Définit si le cookie de session doit être prolongé à chaque requête, oui par défaut.
-SESSION_REFRESH_EACH_REQUEST = True 
+SESSION_REFRESH_EACH_REQUEST = True
 
 # --- Flask Mail settings ---
 
@@ -92,7 +90,7 @@ SESSION_REFRESH_EACH_REQUEST = True
 MAIL_DEFAULT_SENDER = "test@test.fr"
 
 # MAIL_SUPPRESS_SEND: default app.testing, paramètre utile pour le développement sans serveur SMTP.
-#MAIL_SUPPRESS_SEND = True
+# MAIL_SUPPRESS_SEND = True
 
 # MAIL_SERVER: default ‘localhost’
 # MAIL_PORT: default 25
@@ -104,9 +102,9 @@ MAIL_DEFAULT_SENDER = "test@test.fr"
 # MAIL_MAX_EMAILS: default None
 # MAIL_ASCII_ATTACHMENTS: default False
 
-MAIL_SERVER = os.environ.get('MAIL_SERVER')
-MAIL_PORT = os.environ.get('MAIL_PORT')
+MAIL_SERVER = os.environ.get("MAIL_SERVER")
+MAIL_PORT = os.environ.get("MAIL_PORT")
 MAIL_USE_TLS = False
 MAIL_USE_SSL = True
-MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
-MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
+MAIL_USERNAME = os.environ.get("MAIL_USERNAME")
+MAIL_PASSWORD = os.environ.get("MAIL_PASSWORD")

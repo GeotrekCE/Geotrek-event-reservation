@@ -1,6 +1,9 @@
 from logging import config as logging_config
 
-from babel.dates import format_date as babel_format_date, format_time as babel_format_time
+from babel.dates import (
+    format_date as babel_format_date,
+    format_time as babel_format_time,
+)
 import email_validator
 from flask import Flask, jsonify
 from flask_cors import CORS
@@ -45,7 +48,14 @@ def create_app():
 
     @app.errorhandler(EventIsFull)
     def handle_event_is_full_error(e):
-        return jsonify({"error": "Réservation ou placement sur liste d'attente impossible, l'événement est complet"}), 422
+        return (
+            jsonify(
+                {
+                    "error": "Réservation ou placement sur liste d'attente impossible, l'événement est complet"
+                }
+            ),
+            422,
+        )
 
     @app.template_filter()
     def format_date(value):

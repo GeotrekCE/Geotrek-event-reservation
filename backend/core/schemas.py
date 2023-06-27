@@ -44,9 +44,7 @@ class TReservationsSchema(SQLAlchemyAutoSchema):
             "cancel_date",
             "cancel_by",
         )
-        exclude = (
-            "token",
-        )
+        exclude = ("token",)
 
     event = fields.Nested("GTEventsSchema", only=("name", "begin_date"))
     sum_participants = fields.Integer(dump_only=True)
