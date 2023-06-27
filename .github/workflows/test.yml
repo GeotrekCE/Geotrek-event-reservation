@@ -95,18 +95,23 @@ jobs:
           python -m pip install -r requirements.txt
           python -m pip install pytest
           python -m pip install pytest-flask
+          python -m pip install pytest-cov
         working-directory: ./backend
       - name: Install backend
         run: |
-          cp -n  config/conftest.py config/config.py
+          cp -n config/conftest.py config/config.py
         working-directory: ./backend
       - name: Run pytests
         run: |
-          pytest test/
+          pytest -v --cov --cov-report xml
         working-directory: ./backend
-        env: 
+        env:
           MAIL_SERVER: ${{secrets.MAIL_SERVER}}
           MAIL_PORT: ${{secrets.MAIL_PORT}}
           MAIL_USERNAME: ${{secrets.MAIL_USERNAME}}
           MAIL_PASSWORD: ${{secrets.MAIL_PASSWORD}}
           MAIL_DEFAULT_SENDER: ${{secrets.MAIL_USERNAME}}
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          flags: pytest
