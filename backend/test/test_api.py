@@ -1,5 +1,5 @@
 from flask import url_for, current_app
-from .conftest import get_token, json_of_response, post_json
+
 import pytest
 import json
 import logging
@@ -7,11 +7,19 @@ import logging
 from core.models import GTEvents, TReservations, TAnimationsBilans
 from core.models import TTokens
 
-from .fixtures import events
+from .fixtures import (
+    events,
+    ADMIN_EMAIL,
+    get_token,
+    json_of_response,
+    post_json,
+    app,
+    headers,
+)
 
 LOGGER = logging.getLogger(__name__)
 
-EMAIL='test.test@test.fr'
+
 TEST_RESERVATION = {
     "nom": "BLAIR",
     "prenom": "Eric",
@@ -35,11 +43,9 @@ TEST_BILAN = {
     "nb_plus_12_ans": 3,
 }
 
-headers = {"Content-type": "application/json", "Accept": "application/json"}
-
 
 def login(client):
-    data = {"email": EMAIL}
+    data = {"email": ADMIN_EMAIL}
 
     client.post(
         url_for("app_routes.send_login_email"), data=json.dumps(data), headers=headers
@@ -47,7 +53,7 @@ def login(client):
     # Get token manually
     token = (
         TTokens.query.filter_by(used=False)
-        .filter_by(email=EMAIL)
+        .filter_by(email=ADMIN_EMAIL)
         .order_by(TTokens.created_at.desc())
         .first()
     )
@@ -61,7 +67,7 @@ def login(client):
 @pytest.mark.usefixtures("client_class")
 class TestAPI:
     def test_login(self):
-        data = {"email": EMAIL}
+        data = {"email": ADMIN_EMAIL}
 
         response = self.client.post(
             url_for("app_routes.send_login_email"),
@@ -73,7 +79,7 @@ class TestAPI:
         # Get token manually
         token = (
             TTokens.query.filter_by(used=False)
-            .filter_by(email=EMAIL)
+            .filter_by(email=ADMIN_EMAIL)
             .order_by(TTokens.created_at.desc())
             .first()
         )
