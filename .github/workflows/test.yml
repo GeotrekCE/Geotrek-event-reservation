@@ -103,7 +103,7 @@ jobs:
         working-directory: ./backend
       - name: Run pytests
         run: |
-          pytest -v --cov --cov-report xml
+          pytest test/
         working-directory: ./backend
         env:
           MAIL_SERVER: ${{secrets.MAIL_SERVER}}
@@ -111,7 +111,3 @@ jobs:
           MAIL_USERNAME: ${{secrets.MAIL_USERNAME}}
           MAIL_PASSWORD: ${{secrets.MAIL_PASSWORD}}
           MAIL_DEFAULT_SENDER: ${{secrets.MAIL_USERNAME}}
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
-        with:
-          flags: pytest
