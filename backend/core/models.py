@@ -90,31 +90,59 @@ class GTEvents(db.Model):
 
     @hybrid_property
     def sum_participants(self):
-        return sum(r.sum_participants for r in self.reservations if r.confirmed and not r.cancelled)
+        return sum(
+            r.sum_participants
+            for r in self.reservations
+            if r.confirmed and not r.cancelled
+        )
 
     @hybrid_property
     def sum_participants_liste_attente(self):
-        return sum(r.sum_participants_liste_attente for r in self.reservations if r.confirmed and not r.cancelled)
+        return sum(
+            r.sum_participants_liste_attente
+            for r in self.reservations
+            if r.confirmed and not r.cancelled
+        )
 
     @hybrid_property
     def sum_participants_adultes(self):
-        return sum(r.nb_adultes for r in self.reservations if r.confirmed and not r.cancelled and not r.liste_attente)
+        return sum(
+            r.nb_adultes
+            for r in self.reservations
+            if r.confirmed and not r.cancelled and not r.liste_attente
+        )
 
     @hybrid_property
     def sum_participants_moins_6_ans(self):
-        return sum(r.nb_moins_6_ans for r in self.reservations if r.confirmed and not r.cancelled and not r.liste_attente)
+        return sum(
+            r.nb_moins_6_ans
+            for r in self.reservations
+            if r.confirmed and not r.cancelled and not r.liste_attente
+        )
 
     @hybrid_property
     def sum_participants_6_8_ans(self):
-        return sum(r.nb_6_8_ans for r in self.reservations if r.confirmed and not r.cancelled and not r.liste_attente)
+        return sum(
+            r.nb_6_8_ans
+            for r in self.reservations
+            if r.confirmed and not r.cancelled and not r.liste_attente
+        )
 
     @hybrid_property
     def sum_participants_9_12_ans(self):
-        return sum(r.nb_9_12_ans for r in self.reservations if r.confirmed and not r.cancelled and not r.liste_attente)
+        return sum(
+            r.nb_9_12_ans
+            for r in self.reservations
+            if r.confirmed and not r.cancelled and not r.liste_attente
+        )
 
     @hybrid_property
     def sum_participants_plus_12_ans(self):
-        return sum(r.nb_plus_12_ans for r in self.reservations if r.confirmed and not r.cancelled and not r.liste_attente)
+        return sum(
+            r.nb_plus_12_ans
+            for r in self.reservations
+            if r.confirmed and not r.cancelled and not r.liste_attente
+        )
 
     @hybrid_property
     def massif(self):
@@ -159,10 +187,14 @@ class TReservations(db.Model):
     num_departement = db.Column(db.Unicode)
     liste_attente = db.Column(db.Boolean, nullable=True)
     meta_create_date = db.Column(db.DateTime, default=datetime.datetime.now)
-    meta_update_date = db.Column(db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
+    meta_update_date = db.Column(
+        db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now
+    )
     token = db.Column(db.Unicode)
     confirmed = db.Column(db.Boolean, default=False)
-    id_event = db.Column(db.Integer, db.ForeignKey("public.tourism_touristicevent.id"), nullable=False)
+    id_event = db.Column(
+        db.Integer, db.ForeignKey("public.tourism_touristicevent.id"), nullable=False
+    )
     cancelled = db.Column(db.Boolean, default=False)
     cancel_date = db.Column(db.DateTime, nullable=True)
     cancel_by = db.Column(db.Unicode, nullable=True)
@@ -170,11 +202,11 @@ class TReservations(db.Model):
     @property
     def nb_participants(self):
         return (
-                self.nb_adultes
-                + self.nb_moins_6_ans
-                + self.nb_6_8_ans
-                + self.nb_9_12_ans
-                + self.nb_plus_12_ans
+            self.nb_adultes
+            + self.nb_moins_6_ans
+            + self.nb_6_8_ans
+            + self.nb_9_12_ans
+            + self.nb_plus_12_ans
         )
 
     @hybrid_property
@@ -229,7 +261,9 @@ class TEventInfo(db.Model):
     id_event = db.Column(db.Integer, db.ForeignKey("public.tourism_touristicevent.id"))
     info_rdv = db.Column(db.Unicode, default="")
     meta_create_date = db.Column(db.DateTime, default=datetime.datetime.now)
-    meta_update_date = db.Column(db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
+    meta_update_date = db.Column(
+        db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now
+    )
 
 
 class VExportBilan(db.Model):

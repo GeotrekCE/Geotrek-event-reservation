@@ -16,30 +16,37 @@ from core.schemas import (
     VExportBilanSchema,
     TEventInfoSchema,
 )
-from core.utils import to_csv_resp, transform_obj_to_flat_list, send_email, get_mail_subject, stringify
+from core.utils import (
+    to_csv_resp,
+    transform_obj_to_flat_list,
+    send_email,
+    get_mail_subject,
+    stringify,
+)
 
 
 app_routes = Blueprint("app_routes", __name__)
 
 
 def login_required(f):
-
     @wraps(f)
     def wrapper(*args, **kwargs):
-        if 'user' in session:
+        if "user" in session:
             return f(*args, **kwargs)
         return "A logged-in user is required", 403
+
     return wrapper
 
 
 def login_admin_required(f):
-
     @wraps(f)
     def wrapper(*args, **kwargs):
         from flask import current_app
-        if 'user' in session and session['user'] in current_app.config["ADMIN_EMAILS"]:
+
+        if "user" in session and session["user"] in current_app.config["ADMIN_EMAILS"]:
             return f(*args, **kwargs)
         return "A logged-in admin is required", 403
+
     return wrapper
 
 
@@ -57,8 +64,8 @@ def send_confirmation_email(reservation):
                 "resa_confirmed_mail.html",
                 reservation=stringify(reservation),
                 event=stringify(reservation.event),
-                portal_link=get_portal_link(reservation)
-            )
+                portal_link=get_portal_link(reservation),
+            ),
         )
     else:
         send_email(
@@ -68,8 +75,8 @@ def send_confirmation_email(reservation):
                 "confirmation_mail_on_liste_attente.html",
                 reservation=stringify(reservation),
                 event=stringify(reservation.event),
-                portal_link=get_portal_link(reservation)
-            )
+                portal_link=get_portal_link(reservation),
+            ),
         )
 
 
@@ -79,6 +86,7 @@ def generate_token():
 
 def get_confirmation_link(reservation):
     from flask import current_app
+
     protocol = "http://" if current_app.config["DEBUG"] else "https://"
     hostname = current_app.config["PUBLIC_SERVER_NAME"]
     front_path = current_app.config["FRONTEND_CONFIRMED_PATHNAME"]
@@ -87,6 +95,7 @@ def get_confirmation_link(reservation):
 
 def get_portal_link(reservation):
     from flask import current_app
+
     protocol = "http://" if current_app.config["DEBUG"] else "https://"
     hostname = current_app.config["PUBLIC_SERVER_NAME"]
     front_path = current_app.config["FRONTEND_PORTAL_PATHNAME"]
@@ -95,6 +104,7 @@ def get_portal_link(reservation):
 
 def get_login_link(token):
     from flask import current_app
+
     protocol = "http://" if current_app.config["DEBUG"] else "https://"
     hostname = current_app.config["PUBLIC_SERVER_NAME"]
     front_path = current_app.config["FRONTEND_LOGIN_PATHNAME"]
@@ -106,10 +116,9 @@ class QueryParamValidationError(Exception):
 
 
 class QueryParamValidator:
-    
     def __init__(self, params: dict):
         self._params = params
-    
+
     def get_arg(self, name):
         value = request.args.get(name)
         expected_type = self._params[name]["type"]
@@ -117,8 +126,10 @@ class QueryParamValidator:
             try:
                 cast_value = expected_type(value)
             except ValueError:
-                raise QueryParamValidationError(f"Query param '{name} is expected as {expected_type.__name__}. "
-                                                f"Received '{value}'")
+                raise QueryParamValidationError(
+                    f"Query param '{name} is expected as {expected_type.__name__}. "
+                    f"Received '{value}'"
+                )
             return cast_value
         else:
             return self._params[name].get("default", None)
@@ -201,11 +212,13 @@ def get_reservations():
     - pagination : 'page' (entier) le numéro de la page et 'limit' (entier) le nombre d'éléments par page.
     - 'event_id' (entier) l'ID de l'événement auquel les réservations sont liées.
     """
-    validator = QueryParamValidator(params={
-        "page": {"default": 1, "type": int},
-        "limit": {"default": 10, "type": int},
-        "event_id": {"type": int},
-    })
+    validator = QueryParamValidator(
+        params={
+            "page": {"default": 1, "type": int},
+            "limit": {"default": 10, "type": int},
+            "event_id": {"type": int},
+        }
+    )
     page = validator.get_arg("page")
     limit = validator.get_arg("limit")
     event_id = validator.get_arg("event_id")
@@ -246,7 +259,9 @@ def _post_reservations_by_user(post_data):
 
     event = GTEvents.query.get(reservation.id_event)
     if not event:
-        raise BodyParamValidationError(f"Event with ID {reservation.id_event} not found")
+        raise BodyParamValidationError(
+            f"Event with ID {reservation.id_event} not found"
+        )
 
     if not event.is_reservation_possible_for(reservation.nb_participants):
         raise EventIsFull
@@ -264,8 +279,8 @@ def _post_reservations_by_user(post_data):
             confirmation_link=get_confirmation_link(reservation),
             portal_link=get_portal_link(reservation),
             event=stringify(reservation.event),
-            reservation=stringify(reservation)
-        )
+            reservation=stringify(reservation),
+        ),
     )
 
     return reservation
@@ -276,7 +291,9 @@ def _post_reservations_by_admin(post_data):
 
     event = GTEvents.query.get(reservation.id_event)
     if not event:
-        raise BodyParamValidationError(f"Event with ID {reservation.id_event} not found")
+        raise BodyParamValidationError(
+            f"Event with ID {reservation.id_event} not found"
+        )
 
     if not event.is_reservation_possible_for(reservation.nb_participants):
         raise EventIsFull
@@ -359,7 +376,7 @@ def confirm_reservation():
         resa.liste_attente = False
     else:
         resa.liste_attente = True
-    
+
     resa.confirmed = True
 
     db.session.add(resa)
@@ -373,7 +390,6 @@ def confirm_reservation():
 @app_routes.route("/reservations/<reservation_id>", methods=["PUT"])
 @login_admin_required
 def update_reservation(reservation_id):
-
     # Check : la réservation existe
     reservation = TReservations.query.get(reservation_id)
     if not reservation:
@@ -407,10 +423,22 @@ def cancel_reservation(reservation_id):
     # Check : la réservation appartient à l'utilisateur OU is_admin
     user_email = session["user"]
     if not is_admin and reservation.email != user_email:
-        return jsonify({"error": f"Reservation #{reservation_id} does not belong to {user_email}"}), 404
+        return (
+            jsonify(
+                {
+                    "error": f"Reservation #{reservation_id} does not belong to {user_email}"
+                }
+            ),
+            404,
+        )
 
     if reservation.cancelled:
-        return jsonify({"error": f"Reservation #{reservation_id} has already been cancelled"}), 400
+        return (
+            jsonify(
+                {"error": f"Reservation #{reservation_id} has already been cancelled"}
+            ),
+            400,
+        )
 
     reservation.cancelled = True
     reservation.cancel_date = datetime.now()
@@ -426,8 +454,8 @@ def cancel_reservation(reservation_id):
             html=render_template(
                 "resa_cancelled_mail.html",
                 reservation=stringify(reservation),
-                event=stringify(reservation.event)
-            )
+                event=stringify(reservation.event),
+            ),
         )
 
         # Envoi notification aux administrateurs
@@ -437,8 +465,8 @@ def cancel_reservation(reservation_id):
             html=render_template(
                 "admin_resa_cancelled_mail.html",
                 reservation=stringify(reservation),
-                event=stringify(reservation.event)
-            )
+                event=stringify(reservation.event),
+            ),
         )
 
     return "", 204
@@ -465,10 +493,7 @@ def send_login_email():
     send_email(
         get_mail_subject("Lien de connexion sur site de réservation du PNG"),
         recipients=[email],
-        html=render_template(
-            "login_mail.html",
-            login_link=get_login_link(token.token)
-        )
+        html=render_template("login_mail.html", login_link=get_login_link(token.token)),
     )
 
     return "lien de login envoyé", 204
@@ -481,12 +506,20 @@ def login():
     try:
         login_token = request.json["login_token"]
     except KeyError:
-        return jsonify({"error": "Expects a JSON body with a 'login_token' property"}), 400
+        return (
+            jsonify({"error": "Expects a JSON body with a 'login_token' property"}),
+            400,
+        )
 
     login_token_lifespan = current_app.config["LOGIN_TOKEN_LIFETIME"]
     limit = datetime.now() - login_token_lifespan
 
-    token = TTokens.query.filter_by(used=False).filter_by(token=login_token).filter(TTokens.created_at > limit).first()
+    token = (
+        TTokens.query.filter_by(used=False)
+        .filter_by(token=login_token)
+        .filter(TTokens.created_at > limit)
+        .first()
+    )
     if not token:
         return jsonify({"error": "The login token is invalid or expired"}), 400
 
@@ -495,30 +528,43 @@ def login():
     db.session.commit()
 
     # Set a Session Cookie in the response.
-    session['user'] = token.email
+    session["user"] = token.email
     session.permanent = True
 
-    return jsonify({
-        "is_admin": token.email in current_app.config["ADMIN_EMAILS"],
-        "email": token.email
-    }), 200
+    return (
+        jsonify(
+            {
+                "is_admin": token.email in current_app.config["ADMIN_EMAILS"],
+                "email": token.email,
+            }
+        ),
+        200,
+    )
 
 
 @app_routes.route("/ping", methods=["GET"])
 def ping():
     from flask import current_app
-    if 'user' in session:
-        return jsonify({
-            "is_admin": session['user'] in current_app.config["ADMIN_EMAILS"],
-            "email": session['user']
-        }), 200
+
+    if "user" in session:
+        return (
+            jsonify(
+                {
+                    "is_admin": session["user"] in current_app.config["ADMIN_EMAILS"],
+                    "email": session["user"],
+                }
+            ),
+            200,
+        )
     else:
         return "A logged-in user is required", 403
 
-@app_routes.route('/logout')
+
+@app_routes.route("/logout")
 def logout():
     session.clear()
     return "", 200
+
 
 @app_routes.route("/export_reservation/<id>", methods=["GET"])
 @login_admin_required
@@ -648,7 +694,11 @@ def send_event_cancellation_emails(event_id):
     if not event.bilan.annulation:
         return jsonify({"error": f"Event #{event_id} bilan is not cancelled"}), 400
 
-    reservations = [r for r in event.reservations if not r.cancelled and not r.liste_attente and r.confirmed]
+    reservations = [
+        r
+        for r in event.reservations
+        if not r.cancelled and not r.liste_attente and r.confirmed
+    ]
     for reservation in reservations:
         reservation.cancelled = True
         reservation.cancel_date = datetime.now()
@@ -660,8 +710,8 @@ def send_event_cancellation_emails(event_id):
             html=render_template(
                 "event_cancelled_mail.html",
                 event=stringify(event),
-                reservation=stringify(reservation)
-            )
+                reservation=stringify(reservation),
+            ),
         )
     db.session.commit()
     return "", 200
