@@ -62,6 +62,11 @@
                 >Animations</router-link>
                 <router-link
                   @click="isMenuOpened = false"
+                  to="/info_admin"
+                  class="block -mx-3 block rounded-lg px-3 py-2.5 text-base font-medium leading-7 text-gray-900 hover:bg-gray-50"
+                >Informations</router-link>
+                <router-link
+                  @click="isMenuOpened = false"
                   to="/stats"
                   class="block -mx-3 block rounded-lg px-3 py-2.5 text-base font-medium leading-7 text-gray-900 hover:bg-gray-50"
                 >Statistiques</router-link>
