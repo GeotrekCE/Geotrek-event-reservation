@@ -467,17 +467,19 @@ const config = ref(CONFIGURATION)
  */
 const filters = ref<ResaEventFilters>({
   search_name: '',
-  begin_date: '',
-  end_date: '',
-  type_id: [],
-  massif: []
-})
-const defaultFilters =ref<ResaEventFilters>({
-  begin_date: '',
+  begin_date: new Date(),
   end_date: '',
   type_id: [],
   massif: [],
-  search_name: ''
+  published: true
+})
+const defaultFilters =ref<ResaEventFilters>({
+  search_name: '',
+  begin_date: new Date(),
+  end_date: '',
+  type_id: [],
+  massif: [],
+  published: true
 })
 const districts = ref<string[]>([])
 const eventtypes = ref<string[]>([])
