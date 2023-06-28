@@ -467,7 +467,7 @@ const config = ref(CONFIGURATION)
  */
 const filters = ref<ResaEventFilters>({
   search_name: '',
-  begin_date: new Date(),
+  begin_date: new Date().toISOString().substring(0,10),
   end_date: '',
   type_id: [],
   massif: [],
@@ -475,7 +475,7 @@ const filters = ref<ResaEventFilters>({
 })
 const defaultFilters =ref<ResaEventFilters>({
   search_name: '',
-  begin_date: new Date(),
+  begin_date: new Date().toISOString().substring(0,10),
   end_date: '',
   type_id: [],
   massif: [],
