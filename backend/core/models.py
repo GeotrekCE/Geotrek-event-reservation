@@ -25,7 +25,9 @@ class GTEventsQuery(BaseQuery):
 
         if "end_date" in filters:
             # set the end_date at 23h59 because a hour can be set in timestamp
-            end_date = datetime.datetime.strptime(filters.pop("end_date"), "%Y-%m-%d")
+            end_date = datetime.datetime.strptime(
+                filters.pop("end_date")[:10], "%Y-%m-%d"
+            )
             end_date = end_date.replace(hour=23, minute=59, second=59)
             self = self.filter(GTEvents.end_date <= end_date)
 

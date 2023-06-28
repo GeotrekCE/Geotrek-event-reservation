@@ -96,6 +96,18 @@ class TestAPI:
     def test_get_events(self):
         response = self.client.get(url_for("app_routes.get_events"))
         assert response.status_code == 200
+        response = self.client.get(
+            url_for(
+                "app_routes.get_events",
+                published=True,
+                begin_date="2023-06-27T22:00:00.000Z",
+                end_date="2023-07-27T22:00:00.000Z",
+                cancelled=True,
+                sortBy="begin_date",
+                sortDesc=False,
+            )
+        )
+        assert response.status_code == 200
 
     def test_get_one_event(self, events):
         data = GTEvents.query.limit(1).one()
