@@ -156,12 +156,14 @@
               <div class="flex flex-col gap-y-4 min-w-1/2 items-end">
                 <reservation-progress
                   class="w-full"
+                  v-if="data.bookable == true"
                   :reservation-nb="data.sum_participants"
                   :participant-nb="data.capacity"
                   :attente-nb="data.sum_participants_liste_attente"
                   :display-text="false"
                 />
-                {{ formatDateString(data.begin_date) || '?' }} 
+                <span v-else>Sans réservation</span>
+                {{ formatDateString(data.begin_date) || '?' }}
                 <span v-if="data.end_date">
                   - {{ formatDateString(data.end_date) }}
                 </span>
@@ -215,7 +217,7 @@
             <div v-html='selectedEvent.description_teaser'></div>
 
             <p-tab-view>
-              <p-tab-panel header="Réservations">
+              <p-tab-panel header="Réservations" v-if="selectedEvent.bookable == true">
 
                 <reservation-progress
                   class="my-4"
@@ -268,6 +270,9 @@
                   :display-admin-fields="true"
                 />
 
+              </p-tab-panel>
+              <p-tab-panel header="Réservations" v-else>
+                <p-message severity="info" :closable="false">Animation sans réservation</p-message>
               </p-tab-panel>
               <p-tab-panel header="Résumé / RDV">
 
@@ -358,7 +363,7 @@
                     :error="bilanError"
                     :original-data="selectedEvent.bilan"
                     :summary="selectedEventSummary"
-                    
+
                     @submit="onSaveBilan"
                   />
 
@@ -396,7 +401,7 @@
 
         <div class="text-center">
           <p class="mt-6 text-base leading-7 text-gray-600">Merci de sélectioner une animation dans la liste de gauche.</p>
-        </div>        
+        </div>
 
       </section>
     </main>
@@ -521,7 +526,7 @@ async function loadEvents () {
       if (currentValue instanceof Date) {
         params[key] = currentValue.toISOString()
       }
-    } 
+    }
   })
   try {
     const data = await getEvents(params)
@@ -546,8 +551,8 @@ async function loadReservations (page: number = 0) {
   resas.value = { results: [], total: 0 }
   resas.value = await getReservations({
     page: page + 1,
-    event_id: selectedEvent.value.id 
-  }) 
+    event_id: selectedEvent.value.id
+  })
 }
 function onPageReservations($event: any) {
   loadReservations($event.page)
@@ -712,7 +717,7 @@ onBeforeMount(async () => {
 </script>
 
 <style>
-.p-tabview .p-tabview-panel, 
+.p-tabview .p-tabview-panel,
 .p-tabview .p-tabview-panels{
   margin: 0;
   padding: 0;

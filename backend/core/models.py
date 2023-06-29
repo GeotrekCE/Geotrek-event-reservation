@@ -68,6 +68,7 @@ class GTEvents(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.Unicode, nullable=False)
     description_teaser = db.Column(db.Unicode)
+    bookable = db.Column(db.Boolean)
     capacity = db.Column(db.Integer)
     practical_info_fr = db.Column(db.Unicode)
     practical_info_en = db.Column(db.Unicode)
@@ -155,6 +156,8 @@ class GTEvents(db.Model):
         return func.animations.get_secteur_name(cls.id)
 
     def is_reservation_possible_for(self, nb_people):
+        if not self.bookable:
+            return False
         if not self.capacity:
             return True
         if self.sum_participants + nb_people <= self.capacity:
