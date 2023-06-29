@@ -347,7 +347,7 @@ const formSchema = yup.object().shape({
   tel: yup.string().required().label('Téléphone'),
   nom: yup.string().required().label('Nom'),
   prenom: yup.string().required().label('Prénom'),
-  num_departement: yup.string().required().oneOf(CONFIGURATION.ORIGINS.map(x => x.value)).label('Lieu d\'origine'),
+  num_departement: yup.string().required().oneOf(CONFIGURATION.ORIGINS.map(x => String(x.value))).label('Lieu d\'origine'),
   commentaire: yup.string().nullable().label('Commentaire'),
   nb_adultes: yup.number().min(0).default(0).label('Adulte(s)'),
   nb_moins_6_ans: yup.number().min(0).default(0).label('Moins de 6 ans'),
