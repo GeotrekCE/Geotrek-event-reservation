@@ -33,7 +33,7 @@ TEST_RESERVATION = {
     "nb_9_12_ans": 2,
     "nb_plus_12_ans": 2,
     "num_departement": "48",
-    "confirmed" : True
+    "confirmed": True,
 }
 TEST_BILAN = {
     "commentaire": "test bilan",
@@ -122,7 +122,9 @@ class TestAPI:
     def test_post_reservation_isfull(self, events):
         login(self.client)
         # POST
-        event = GTEvents.query.filter_by(name="Pytest").order_by(GTEvents.id.desc()).first()
+        event = (
+            GTEvents.query.filter_by(name="Pytest").order_by(GTEvents.id.desc()).first()
+        )
 
         data_resa = TEST_RESERVATION
         data_resa["id_event"] = event.id
@@ -132,8 +134,8 @@ class TestAPI:
         assert resp == 200
         # Placement en liste d'attente
         resp = post_json(
-                self.client, url_for("app_routes.post_reservations"), data_resa
-            )
+            self.client, url_for("app_routes.post_reservations"), data_resa
+        )
         assert resp == 200
         assert json_of_response(resp)["liste_attente"] == True
 
@@ -146,7 +148,9 @@ class TestAPI:
     def test_post_export_and_cancel_one_reservation(self, events):
         login(self.client)
         # POST
-        event = GTEvents.query.filter_by(name="Pytest").order_by(GTEvents.id.desc()).first()
+        event = (
+            GTEvents.query.filter_by(name="Pytest").order_by(GTEvents.id.desc()).first()
+        )
 
         data_resa = TEST_RESERVATION
         data_resa["id_event"] = event.id
