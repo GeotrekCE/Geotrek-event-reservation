@@ -6,6 +6,7 @@ import logging
 
 from core.models import GTEvents, TReservations
 from core.models import TTokens
+from core.routes import EventIsFull
 
 from .fixtures import (
     events,
@@ -31,8 +32,8 @@ TEST_RESERVATION = {
     "nb_6_8_ans": 1,
     "nb_9_12_ans": 2,
     "nb_plus_12_ans": 2,
-    "liste_attente": True,
     "num_departement": "48",
+    "confirmed" : True
 }
 TEST_BILAN = {
     "commentaire": "test bilan",
@@ -118,10 +119,34 @@ class TestAPI:
             == 200
         )
 
+    def test_post_reservation_isfull(self, events):
+        login(self.client)
+        # POST
+        event = GTEvents.query.filter_by(name="Pytest").order_by(GTEvents.id.desc()).first()
+
+        data_resa = TEST_RESERVATION
+        data_resa["id_event"] = event.id
+        resp = post_json(
+            self.client, url_for("app_routes.post_reservations"), data_resa
+        )
+        assert resp == 200
+        # Placement en liste d'attente
+        resp = post_json(
+                self.client, url_for("app_routes.post_reservations"), data_resa
+            )
+        assert resp == 200
+        assert json_of_response(resp)["liste_attente"] == True
+
+        # Refus de l'inscription
+        resp = post_json(
+            self.client, url_for("app_routes.post_reservations"), data_resa
+        )
+        assert resp.status_code == 422
+
     def test_post_export_and_cancel_one_reservation(self, events):
         login(self.client)
         # POST
-        event = GTEvents.query.filter_by(name="Pytest").first()
+        event = GTEvents.query.filter_by(name="Pytest").order_by(GTEvents.id.desc()).first()
 
         data_resa = TEST_RESERVATION
         data_resa["id_event"] = event.id
