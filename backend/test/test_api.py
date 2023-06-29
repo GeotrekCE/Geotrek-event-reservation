@@ -4,7 +4,7 @@ import pytest
 import json
 import logging
 
-from core.models import GTEvents, TReservations, TAnimationsBilans
+from core.models import GTEvents, TReservations
 from core.models import TTokens
 
 from .fixtures import (
@@ -154,3 +154,24 @@ class TestAPI:
     #     data_bilan["id_event"] = event.id
     #     resp = post_json(self.client, url_for("app_routes.post_bilans"), data_bilan)
     #     assert resp == 200
+
+    def test_bilan_global(self):
+        login(self.client)
+        donnees_exemple = {
+            "nb_animations": 1,
+            "nb_annulation": 0,
+            "sum_nb_inscriptions": 2,
+            "sum_nb_participants_possible": 2089,
+            "taux_remplissage": 0.0007017543859649122,
+            "taux_remplissage_passe": 0.0007017543859649122,
+        }
+        response = self.client.get(url_for("app_routes.get_stats_global"))
+        assert response.status_code == 200
+
+        data = json_of_response(response)
+
+        assert set(data.keys()) == set(donnees_exemple.keys())
+        # Todo test return value
+
+        response = self.client.get(url_for("app_routes.get_stats_global", year="2023"))
+        assert response.status_code == 200
