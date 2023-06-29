@@ -40,19 +40,21 @@ def query_stats_animations_per_month(params):
 
 
 def query_stats_bilan(params):
-    query = GTEvents.query
+    query = GTEvents.query.filter(GTEvents.deleted != True)
     if "year" in params:
         query = query.filter(
             func.date_part("year", GTEvents.begin_date) == params["year"]
         )
     nb_events = query.count()
     events = query.all()
-    sum_nb_participant = sum([d.sum_participants for d in events])
-    sum_clean_nb_participants = sum([d.capacity for d in events])
+
+    # events with capacity
+    events_capacity = [e for e in events if e.capacity and e.capacity > 0]
+    sum_nb_participant = sum([d.sum_participants for d in events_capacity])
+    sum_clean_nb_participants = sum([d.capacity for d in events_capacity])
     # Taux de remplissage de toutes les animations
     taux_remplissage = (
-        sum([d.sum_participants / d.capacity for d in events if d.capacity > 0])
-        / nb_events
+        sum([d.sum_participants / d.capacity for d in events_capacity]) / nb_events
     )
 
     # Taux de remplissage des animations passées
@@ -60,10 +62,10 @@ def query_stats_bilan(params):
         sum(
             [
                 d.sum_participants / d.capacity
-                for d in events
+                for d in events_capacity
                 if (
-                    (d.end_date or datetime.now().date()) < datetime.now().date()
-                    and d.capacity > 0
+                    (d.end_date or datetime.now().date())
+                    < datetime.now().date()
                     # and not getattr(d, "bilan", {}).annulation
                 )
             ]
@@ -71,11 +73,7 @@ def query_stats_bilan(params):
         / nb_events
     )
 
-    query = (
-        db.session.query(func.count(TAnimationsBilans.id_bilan))
-        .filter(TAnimationsBilans.annulation == True)
-        .join(GTEvents, GTEvents.id == TAnimationsBilans.id_event)
-    )
+    query = db.session.query(func.count(GTEvents.id)).filter(GTEvents.cancelled == True)
     if "year" in params:
         query = query.filter(
             func.date_part("year", GTEvents.begin_date) == params["year"]
