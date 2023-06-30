@@ -210,6 +210,10 @@
               <h2 class="text-red font-medium text-xl">Animation annulée</h2>
               <div>
                 <strong> Raison: </strong>
+                <span>{{ selectedEvent.cancellation_reason?.label }}</span>
+              </div>
+              <div>
+                <strong> Commentaire: </strong>
                 <span>{{ selectedEvent.bilan?.raison_annulation }}</span>
               </div>
             </div>
@@ -379,15 +383,17 @@
 
                 <p-message severity="warn" :closable="false">
                   <div class="space-y-4 ml-4">
-                    <p>L'annulation d'une animation doit d'abord être faite dans GeoTrek.</p>
-                    <p>À partir de l'outil de réservation, l'annulation va déclencher l'envoi d'un mail à tous les inscrits
+                    <p v-if="selectedEvent.cancelled == false">L'annulation d'une animation doit d'abord être faite dans GeoTrek.</p>
+
+                    <p>Une fois l'animation annulée dans GeoTrek, le formulaire ci dessous va déclencher l'envoi d'un mail à tous les inscrits
                     pour leur préciser l'annulation de l'animation.</p>
                   </div>
                 </p-message>
 
                 <event-cancel-form
+                  v-if="selectedEvent.cancelled == true"
                   :raison-annulation="selectedEvent.bilan?.raison_annulation"
-                  :annulation="selectedEventCanceled"
+                  :annulation="selectedEventBilanCanceled"
                   :error="bilanError"
                   @submit="onSaveBilan"
                 />
@@ -496,6 +502,7 @@ const formOpened = ref(false)
 const selectedEvent = ref<any>(null)
 const selectedEventId = ref(parseInt(currentRoute.params.id as string))
 const selectedEventCanceled = computed(() => selectedEvent.value?.cancelled === true)
+const selectedEventBilanCanceled = computed(() => selectedEvent.value?.bilan?.annulation === true)
 const selectedEventInfoRDV = ref<ResaEventInfo>({
   info_rdv: ''
 })
