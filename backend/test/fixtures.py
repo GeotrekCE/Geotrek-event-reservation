@@ -15,7 +15,7 @@ headers = {"Content-type": "application/json", "Accept": "application/json"}
 events_data = [
     {
         # id:
-        "name": "Pytest",
+        "name": "Pytest bookable",
         "capacity": 10,
         "begin_date": "01/07/2023",
         "end_date": "01/10/2023",
@@ -24,7 +24,21 @@ events_data = [
         "y": 6365673.938623513,
         "published_fr": True,
         "published_en": True,
-    }
+        "bookable": True,
+    },
+    {
+        # id:
+        "name": "Pytest not bookable",
+        "capacity": None,
+        "begin_date": "01/07/2023",
+        "end_date": "01/10/2023",
+        "published": True,
+        "x": 765227.4922990737,
+        "y": 6365673.938623513,
+        "published_fr": True,
+        "published_en": True,
+        "bookable": False,
+    },
 ]
 
 
@@ -102,11 +116,13 @@ def events():
                 (
                   date_insert, date_update, deleted, structure_id,
                   geom,published,"name",capacity, begin_date, end_date,
-                  published_fr, published_en
+                  published_fr, published_en,
+                  bookable
                 )
                 VALUES (CURRENT_TIMESTAMP,CURRENT_TIMESTAMP, false, 1,
                  st_setsrid(st_point(:x, :y), 2154), :published, :name, :capacity,:begin_date , :end_date ,
-                 :published_fr, :published_en
+                 :published_fr, :published_en,
+                 :bookable
                  )
                 """
                 ),

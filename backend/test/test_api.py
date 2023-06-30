@@ -123,7 +123,9 @@ class TestAPI:
         login(self.client)
         # POST
         event = (
-            GTEvents.query.filter_by(name="Pytest").order_by(GTEvents.id.desc()).first()
+            GTEvents.query.filter_by(name="Pytest bookable")
+            .order_by(GTEvents.id.desc())
+            .first()
         )
 
         data_resa = TEST_RESERVATION
@@ -145,11 +147,29 @@ class TestAPI:
         )
         assert resp.status_code == 422
 
+    def test_post_reservation_notbookable(self, events):
+        login(self.client)
+        event = (
+            GTEvents.query.filter_by(name="Pytest not bookable")
+            .order_by(GTEvents.id.desc())
+            .first()
+        )
+
+        data_resa = TEST_RESERVATION
+        data_resa["id_event"] = event.id
+        resp = post_json(
+            self.client, url_for("app_routes.post_reservations"), data_resa
+        )
+
+        assert resp.status_code == 422
+
     def test_post_export_and_cancel_one_reservation(self, events):
         login(self.client)
         # POST
         event = (
-            GTEvents.query.filter_by(name="Pytest").order_by(GTEvents.id.desc()).first()
+            GTEvents.query.filter_by(name="Pytest bookable")
+            .order_by(GTEvents.id.desc())
+            .first()
         )
 
         data_resa = TEST_RESERVATION
