@@ -81,6 +81,9 @@ class GTEvents(db.Model):
     published = db.Column(db.Boolean)
     deleted = db.Column(db.Boolean)
     cancelled = db.Column(db.Boolean)
+    cancellation_reason_id = db.Column(
+        db.Integer, db.ForeignKey("public.tourism_cancellationreason.id")
+    )
     meeting_point = db.Column(db.Unicode)
     start_time = db.Column(db.Time)
 
@@ -88,6 +91,9 @@ class GTEvents(db.Model):
         "TReservations", lazy="joined", backref=db.backref("event", lazy="joined")
     )
     bilan = db.relationship("TAnimationsBilans", lazy="joined", uselist=False)
+    cancellation_reason = db.relationship(
+        "GTCancellationReason", lazy="select", uselist=False
+    )
     info = db.relationship("TEventInfo", lazy="joined", uselist=False)
     type = db.relationship("GTEventType", lazy="joined")
 
@@ -165,6 +171,13 @@ class GTEvents(db.Model):
         if self.sum_participants_liste_attente + nb_people <= LISTE_ATTENTE_CAPACITY:
             return True
         return False
+
+
+class GTCancellationReason(db.Model):
+    __tablename__ = "tourism_cancellationreason"
+    __table_args__ = {"schema": "public"}
+    id = db.Column(db.Integer, primary_key=True)
+    label = db.Column(db.Unicode, nullable=False)
 
 
 class GTEventType(db.Model):
