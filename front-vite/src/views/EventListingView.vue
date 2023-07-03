@@ -220,6 +220,17 @@
 
             <div v-html='selectedEvent.description_teaser'></div>
 
+            <div class="my-4">
+              <div v-if="selectedEvent.target_audience">
+                <strong> Public : </strong>
+                <span v-html='selectedEvent.target_audience'></span>
+              </div>
+              <div v-if="selectedEvent.bookable">
+                <div><strong> Nombre de places: </strong> <span v-html='selectedEvent.capacity'></span></div>
+                <div><strong> Places restantes: </strong><span>{{ selectedEvent.capacity - selectedEvent.sum_participants }}</span></div>
+              </div>
+            </div>
+
             <p-tab-view>
               <p-tab-panel header="Réservations" v-if="selectedEvent.bookable == true">
 
