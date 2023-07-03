@@ -192,6 +192,12 @@
               />
             </div>
           </div>
+
+          <div class="sm:col-span-12">
+            <vv-error-message
+                  name="nb_total"
+                />
+          </div>
         </div>
       </div>
 
@@ -356,8 +362,13 @@ const formSchema = yup.object().shape({
   nb_plus_12_ans: yup.number().min(0).default(0).label('Plus de 12 ans'),
   liste_attente: yup.bool().label('En liste d\'attente'),
   confirmed: yup.bool().label('Confirmée par le créateur'),
-});
-
+  nb_total: yup
+    .number()
+    .test("nb_total_notnull", "Au moins un participant doit être inscrit", function (code) {
+      const { nb_adultes, nb_moins_6_ans, nb_6_8_ans, nb_9_12_ans, nb_plus_12_ans } = this.parent;
+      return nb_adultes + nb_moins_6_ans + nb_6_8_ans + nb_9_12_ans + nb_plus_12_ans >= 1;
+    })
+})
 
 
 const formValues = {
@@ -375,6 +386,7 @@ const formValues = {
   liste_attente: props.originalValues.liste_attente,
   confirmed: props.originalValues.confirmed,
 }
+
 </script>
 
 <style scoped>
