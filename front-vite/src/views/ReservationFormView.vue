@@ -116,7 +116,7 @@
         Mais ce n'est pas fini !
       </h2>
       <p>
-        Vous devez <strong>confirmer</strong> cette demande 
+        Vous devez <strong>confirmer</strong> cette demande
         en cliquant sur le lien présent dans l'email.
       </p>
     </template>
@@ -165,6 +165,9 @@ onBeforeMount(async () => {
   loadingEvent.value = true
   try {
     event.value = await getEvent(geotrekId)
+    if (!event.value.bookable) {
+      eventError.value = `L'animation n° ${geotrekId} (${event.value.name}) n'est pas ouverte à la réservation.`
+    }
     if (event.value.cancelled) {
       eventError.value = `L'animation n° ${geotrekId} (${event.value.name}) a été annulée. Il est impossible d'effectuer une réservation.`
     }
