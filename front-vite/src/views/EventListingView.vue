@@ -704,7 +704,12 @@ async function loadSelectedEvent () {
   const eventIndex = events.value.findIndex(r => r.id === selectedEventId.value)
   if (eventIndex > -1) events.value[eventIndex] = selectedEvent.value
   await loadReservations()
-  gtevent.value = await getTouristicEventDetail(selectedEventId.value)
+  try {
+    gtevent.value = await getTouristicEventDetail(selectedEventId.value)
+  }
+  catch (error) {
+    console.log("error") // error on gta api (usually unpubished)
+  }
   selectedEventInfoRDV.value = await getEventInfo(selectedEventId.value)
   selectedEventSummary.value = {
     sum_participants_adultes: selectedEvent.value.sum_participants_adultes,
