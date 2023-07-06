@@ -1,4 +1,5 @@
 <template>
+  <span v-if="value">
   <label class="block text-sm font-medium leading-6 text-gray-900">{{ field.label }} : </label>
   <span v-if="field.type === 'boolean'">
     {{ value === true ? 'oui' : ( value === false ? 'non' : 'pas de valeur' ) }}
@@ -17,6 +18,7 @@
   <span v-else>
     {{ value }}
   </span>
+</span>
 </template>
 
 <script setup lang="ts">
