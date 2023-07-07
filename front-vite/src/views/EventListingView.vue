@@ -403,6 +403,7 @@
 
                 <event-cancel-form
                   v-if="selectedEvent.cancelled == true"
+                  :key="selectedEvent.bilan?.raison_annulation"
                   :raison-annulation="selectedEvent.bilan?.raison_annulation"
                   :annulation="selectedEventBilanCanceled"
                   :error="bilanError"
