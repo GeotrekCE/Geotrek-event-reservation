@@ -1,8 +1,8 @@
 
 
 CREATE SCHEMA IF NOT EXISTS animations;
- 
- 
+
+
 
 CREATE TABLE animations.t_reservations (
     id_reservation serial4 NOT NULL,
@@ -30,7 +30,7 @@ CREATE TABLE animations.t_reservations (
     CONSTRAINT fk_id_event FOREIGN KEY(id_event)
       REFERENCES tourism_touristicevent(id)
 );
- 
+
 
 CREATE TABLE animations.t_animations_bilans (
     id_bilan serial4 NOT NULL,
@@ -51,7 +51,7 @@ CREATE TABLE animations.t_animations_bilans (
     CONSTRAINT fk_id_event FOREIGN KEY(id_event)
       REFERENCES tourism_touristicevent(id)
 );
- 
+
 
 CREATE TABLE animations.t_event_info (
     id_event_info serial4 NOT NULL,
@@ -63,7 +63,7 @@ CREATE TABLE animations.t_event_info (
     CONSTRAINT fk_id_event FOREIGN KEY(id_event)
       REFERENCES tourism_touristicevent(id)
 );
- 
+
 
 CREATE TABLE animations.t_tokens (
     id serial4 NOT NULL,
@@ -130,8 +130,11 @@ WITH event AS (
     a.begin_date,
     a.end_date,
     a.capacity,
-    a.target_audience
+    a.target_audience,
+    a.cancelled,
+    tc.LABEL AS categorie_annulation
   FROM tourism_touristicevent a
+  LEFT JOIN tourism_cancellationreason AS tc ON a.cancellation_reason_id = tc.id
   LEFT JOIN tourism_touristiceventtype b ON a.type_id = b.id
   LEFT JOIN ( SELECT array_to_string(array_agg(b_1.name), ', '::text, '*'::text) AS zoning_city,
         a_1.id
@@ -164,11 +167,20 @@ WITH event AS (
     GROUP BY tr.id_event
 )
 SELECT
-    EVENT.*,
+    e.id,
+    e.published,
+    e.zoning_city,
+    e.zoning_district,
+    e.name_fr,
+    e.type,
+    e.begin_date,
+    e.end_date,
+    e.capacity,
+    e.target_audience,
     r.nb_total as resa_nb_total,
     r.nb_total_attente as resa_nb_total_attente,
-    COALESCE(b.annulation, FALSE) AS annulation,
-    -- b.categorie_annulation,  -- mdu: n'existe pas dans la table t_animations_bilan
+    COALESCE(e.cancelled, FALSE) AS annulation,
+    e.categorie_annulation AS categorie_annulation,
     b.raison_annulation,
     b.nb_adultes as bilan_nb_adultes,
     b.nb_moins_6_ans as bilan_nb_moins_6_ans,
@@ -186,11 +198,10 @@ SELECT
     r.nb_6_8_ans_attente as resa_nb_6_8_ans_attente,
     r.nb_9_12_ans_attente as resa_nb_9_12_ans_attente,
     r.nb_plus_12_ans_attente as resa_nb_plus_12_ans_attente
-FROM EVENT
+FROM EVENT e
 LEFT OUTER JOIN resa r
-ON r.id_event = EVENT.id
+ON r.id_event = e.id
 LEFT JOIN animations.t_animations_bilans AS b
-ON b.id_event = EVENT.id
+ON b.id_event = e.id
 ORDER BY begin_date DESC;
-
 
