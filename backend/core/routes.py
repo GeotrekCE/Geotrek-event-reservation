@@ -6,7 +6,7 @@ from email_validator import validate_email, EmailNotValidError, EmailSyntaxError
 from flask import jsonify, request, Blueprint, render_template, session, current_app
 
 from core.models import db, GTEvents, TReservations, VExportBilan, TTokens, TEventInfo
-from core.repository import query_stats_bilan, query_stats_animations_per_month
+from core.repository import query_stats_bilan
 from core.schemas import (
     GTEventsSchema,
     TReservationsSchema,
@@ -619,14 +619,6 @@ def get_stats_global():
     params = request.args
     data = query_stats_bilan(params)
 
-    return jsonify(data)
-
-
-@app_routes.route("/stats/charts/nb_day_before_resa", methods=["GET"])
-@login_admin_required
-def get_stats_nb_day_before_resa():
-    params = request.args
-    data = query_stats_animations_per_month(params)
     return jsonify(data)
 
 

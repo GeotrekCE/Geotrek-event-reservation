@@ -5,40 +5,6 @@ from sqlalchemy import func
 from core.models import db, GTEvents, TAnimationsBilans
 
 
-def query_stats_animations_per_month(params):
-    query = (
-        db.session.query(
-            func.date_part("YEAR", GTEvents.begin_date),
-            func.date_part("MONTH", GTEvents.begin_date),
-            func.count(GTEvents.id),
-        )
-        .filter(GTEvents.deleted != True)
-        .group_by(
-            func.date_part("YEAR", GTEvents.begin_date),
-            func.date_part("MONTH", GTEvents.begin_date),
-        )
-        .order_by(
-            func.date_part("YEAR", GTEvents.begin_date),
-            func.date_part("MONTH", GTEvents.begin_date),
-        )
-    )
-    data = query.all()
-
-    annees = []
-    results = {}
-    for d in data:
-        annee = int(d[0])
-        if not annee in annees:
-            annees.append(annee)
-        results[annee] = results[annee] if d[0] in results else []
-        results[d[0]].append((d[1], d[2]))
-
-    formated_results = []
-    for annee in annees:
-        formated_results.append({"name": annee, "data": results[annee]})
-    return formated_results
-
-
 def query_stats_bilan(params):
     query = GTEvents.query.filter(GTEvents.deleted != True)
     if "year" in params:
