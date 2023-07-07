@@ -83,11 +83,16 @@ trouver l'IP de la passerelle dans le conteneur.
 Créer un réseau docker et indiquer le nom du service de la BD Geotrek dans le `docker.env`
 
 
+#### Configurer la timezone
+
+Dans le `Dockerfile` renseigner la variable d'environnement `TZ`, par exemple "Europe/Paris" (par défaut). Il faut
+reconstruire l'image pour que le changement soit pris en compte.
+
 #### Lancer le conteneur docker
 
 Il est conseillé de fournir ce fichier en montant un volume dans le conteneur, par exemple :
 
-`docker run -v /path/to/config:/<PATH_TO_Geotrek-event-reservation>/backend/config` -p 127.0.0.1:8000:8000 png-resa`
+`docker run -v /path/to/config:/<PATH_TO_Geotrek-event-reservation>/backend/config -p 127.0.0.1:8000:8000 png-resa`
 
 C'est cette approche qui est utilisée dans le `docker-compose.yml` fourni en exemple.
 
@@ -114,6 +119,32 @@ modifier le fichier `installation/reservation_animations.service` : en remplaça
 sudo cp installation/reservation_animations.service /etc/systemd/system/reservation_animations.service
 sudo systemctl daemon-reload
 sudo systemctl enable reservation_animations
+```
+
+
+### Configurer l'envoi de l'email de rappel
+
+Un script est disponible qui envoie un mail de rappel à chacun des participants des événements ayant lieu le lendemain :
+`backend/send_email_rappel.py`.
+
+L'email est envoyé uniquement aux participants qui ne sont pas sur liste d'attente.
+
+Le script peut être déclenché avec un job cron. Par exemple dans `/etc/crontab` (à ajuster selon son système) :
+
+```shell
+# Pour exécuter script.sh tous les jours à 17:10.
+10 17  * *  * nomdutilisateur script.sh
+```
+
+Pour lancer le script avec docker :
+
+`docker compose run --rm png-web python send_email_rappel.py`
+
+Pour lancer le script en-dehors de docker : pas d'autre pré-requis que d'activer le virtualenv.
+
+```shell
+source venv/bin/activate
+python send_email_rappel.py
 ```
 
 ## Déployer le frontend
