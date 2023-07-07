@@ -22,7 +22,7 @@ def query_stats_bilan(params):
     taux_remplissage = (
         sum([d.sum_participants / d.capacity for d in events_capacity]) / nb_events
     )
-
+    taux_remplissage = round(taux_remplissage, 3) if taux_remplissage else 0
     # Taux de remplissage des animations passées
     taux_remplissage_passe = (
         sum(
@@ -38,7 +38,9 @@ def query_stats_bilan(params):
         )
         / nb_events
     )
-
+    taux_remplissage_passe = (
+        round(taux_remplissage_passe, 3) if taux_remplissage_passe else 0
+    )
     query = db.session.query(func.count(GTEvents.id)).filter(GTEvents.cancelled == True)
     if "year" in params:
         query = query.filter(
