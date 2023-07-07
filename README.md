@@ -10,7 +10,9 @@ La gestion de l'authentification est sans mot de passe et fonctionne avec des li
 ## Configuration
 
  * `backend/config/config.py`
+ * `front-vite/.env`
  * `front-vite/public/config/config.js`
+ * `front-vite/public/css/custom.css`
  * `front-vite/public/page_accueil.md`
  * `front-vite/public/page_info_admin.md`
  * `front-vite/public/page_reservation.md`
