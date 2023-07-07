@@ -1,4 +1,4 @@
-# Reservation des animations dans Geotrek
+# Réservation des animations dans Geotrek
 
 Application permettant la gestion des réservations des animations publiées sur Geotrek.
 Elle permet aux visiteurs d'un portail Geotrek Rando de réserver des places pour les
@@ -9,7 +9,7 @@ Une interface d'administration est disponible pour gérer les réservations.
 La gestion de l'authentification est sans mot de passe et fonctionne avec des liens envoyés par email.
 
 ## Interface grand public
-**fonctionnalités principales**
+**Fonctionnalités principales**
  * S'inscrire à une animation
  * Confirmer son inscription
  * Annuler son inscription
@@ -20,7 +20,7 @@ La gestion de l'authentification est sans mot de passe et fonctionne avec des li
 ![Fonctionnement pour le grand public](docs/images/schema_grand_public.png)
 
 ## Interface administrateur
-**fonctionnalités principales**
+**Fonctionnalités principales**
  * Voir la liste des animations
  * Gérer les inscriptions (visualisation/ajout/modification/annulation/export)
  * Envoyer un email d'annulation en cas d'annulation de l'animation
@@ -28,7 +28,7 @@ La gestion de l'authentification est sans mot de passe et fonctionne avec des li
 
 
 **Schéma simplifié du fonctionnement pour les administrateurs**
-Schéma simplifié du fonctionnement pour les administrateur
+
 ![Fonctionnement pour l'interface d'administrateur](docs/images/schema_admin.png)
 
 
@@ -37,9 +37,9 @@ L'application n'est pas indépendante, elle repose sur la gestion des événemen
 
 Elle est composée de deux éléments :
  * Fichier permettant d'ajouter le lien de réservation dans Geotrek-rando (non obligatoire)
- * Application à proprement parlée
+ * Application à proprement parler
 
-**Schéma générale de l'architecture**
+**Schéma général de l'architecture**
 ![Archi Geotrek](docs/images/architecture_generale.png)
 
 
