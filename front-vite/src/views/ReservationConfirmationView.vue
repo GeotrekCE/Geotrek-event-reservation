@@ -39,16 +39,14 @@
     </div>
     <div v-else class="space-y-6">
       <p>
-        Nous sommes désolé, votre confirmation n'a pas pu aboutir.
+        Nous sommes désolés, votre confirmation n'a pas pu aboutir.
       </p>
       <p>
         Une erreur est survenue lors de la confirmation de votre réservation.
       </p>
       <p>
         Vous pouvez essayer de recharger cette page pour tenter une nouvelle confirmation,
-        ou vous pouvez prendre contact avec le parc pour confirmer manuellement votre réservation.
-
-        (mettre les coordonnées du parc)
+        ou vous pouvez prendre contact avec nous pour confirmer manuellement votre réservation.
       </p>
       <p>
         Pour information, erreur rencontrée :

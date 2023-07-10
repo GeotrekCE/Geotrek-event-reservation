@@ -156,12 +156,14 @@
               <div class="flex flex-col gap-y-4 min-w-1/2 items-end">
                 <reservation-progress
                   class="w-full"
+                  v-if="data.bookable == true"
                   :reservation-nb="data.sum_participants"
                   :participant-nb="data.capacity"
                   :attente-nb="data.sum_participants_liste_attente"
                   :display-text="false"
                 />
-                {{ formatDateString(data.begin_date) || '?' }} 
+                <span v-else>Sans réservation</span>
+                {{ formatDateString(data.begin_date) || '?' }}
                 <span v-if="data.end_date">
                   - {{ formatDateString(data.end_date) }}
                 </span>
@@ -208,14 +210,29 @@
               <h2 class="text-red font-medium text-xl">Animation annulée</h2>
               <div>
                 <strong> Raison: </strong>
+                <span>{{ selectedEvent.cancellation_reason?.label }}</span>
+              </div>
+              <div>
+                <strong> Commentaire: </strong>
                 <span>{{ selectedEvent.bilan?.raison_annulation }}</span>
               </div>
             </div>
 
             <div v-html='selectedEvent.description_teaser'></div>
 
+            <div class="my-4">
+              <div v-if="selectedEvent.target_audience">
+                <strong> Public : </strong>
+                <span v-html='selectedEvent.target_audience'></span>
+              </div>
+              <div v-if="selectedEvent.bookable">
+                <div><strong> Nombre de places: </strong> <span v-html='selectedEvent.capacity'></span></div>
+                <div><strong> Places restantes: </strong><span>{{ selectedEvent.capacity - selectedEvent.sum_participants }}</span></div>
+              </div>
+            </div>
+
             <p-tab-view>
-              <p-tab-panel header="Réservations">
+              <p-tab-panel header="Réservations" v-if="selectedEvent.bookable == true">
 
                 <reservation-progress
                   class="my-4"
@@ -268,6 +285,9 @@
                   :display-admin-fields="true"
                 />
 
+              </p-tab-panel>
+              <p-tab-panel header="Réservations" v-else>
+                <p-message severity="info" :closable="false">Animation sans réservation</p-message>
               </p-tab-panel>
               <p-tab-panel header="Résumé / RDV">
 
@@ -358,7 +378,7 @@
                     :error="bilanError"
                     :original-data="selectedEvent.bilan"
                     :summary="selectedEventSummary"
-                    
+
                     @submit="onSaveBilan"
                   />
 
@@ -374,15 +394,18 @@
 
                 <p-message severity="warn" :closable="false">
                   <div class="space-y-4 ml-4">
-                    <p>L'annulation d'une animation doit d'abord être faite dans GeoTrek.</p>
-                    <p>À partir de l'outil de réservation, l'annulation va déclencher l'envoi d'un mail à tous les inscrits
+                    <p v-if="selectedEvent.cancelled == false">L'annulation d'une animation doit d'abord être faite dans GeoTrek.</p>
+
+                    <p>Une fois l'animation annulée dans GeoTrek, le formulaire ci dessous va déclencher l'envoi d'un mail à tous les inscrits
                     pour leur préciser l'annulation de l'animation.</p>
                   </div>
                 </p-message>
 
                 <event-cancel-form
+                  v-if="selectedEvent.cancelled == true"
+                  :key="selectedEvent.bilan?.raison_annulation"
                   :raison-annulation="selectedEvent.bilan?.raison_annulation"
-                  :annulation="selectedEventCanceled"
+                  :annulation="selectedEventBilanCanceled"
                   :error="bilanError"
                   @submit="onSaveBilan"
                 />
@@ -396,7 +419,7 @@
 
         <div class="text-center">
           <p class="mt-6 text-base leading-7 text-gray-600">Merci de sélectioner une animation dans la liste de gauche.</p>
-        </div>        
+        </div>
 
       </section>
     </main>
@@ -467,17 +490,19 @@ const config = ref(CONFIGURATION)
  */
 const filters = ref<ResaEventFilters>({
   search_name: '',
-  begin_date: '',
-  end_date: '',
-  type_id: [],
-  massif: []
-})
-const defaultFilters =ref<ResaEventFilters>({
-  begin_date: '',
+  begin_date: new Date().toISOString().substring(0,10),
   end_date: '',
   type_id: [],
   massif: [],
-  search_name: ''
+  published: true
+})
+const defaultFilters =ref<ResaEventFilters>({
+  search_name: '',
+  begin_date: new Date().toISOString().substring(0,10),
+  end_date: '',
+  type_id: [],
+  massif: [],
+  published: true
 })
 const districts = ref<string[]>([])
 const eventtypes = ref<string[]>([])
@@ -489,6 +514,7 @@ const formOpened = ref(false)
 const selectedEvent = ref<any>(null)
 const selectedEventId = ref(parseInt(currentRoute.params.id as string))
 const selectedEventCanceled = computed(() => selectedEvent.value?.cancelled === true)
+const selectedEventBilanCanceled = computed(() => selectedEvent.value?.bilan?.annulation === true)
 const selectedEventInfoRDV = ref<ResaEventInfo>({
   info_rdv: ''
 })
@@ -519,7 +545,7 @@ async function loadEvents () {
       if (currentValue instanceof Date) {
         params[key] = currentValue.toISOString()
       }
-    } 
+    }
   })
   try {
     const data = await getEvents(params)
@@ -544,8 +570,8 @@ async function loadReservations (page: number = 0) {
   resas.value = { results: [], total: 0 }
   resas.value = await getReservations({
     page: page + 1,
-    event_id: selectedEvent.value.id 
-  }) 
+    event_id: selectedEvent.value.id
+  })
 }
 function onPageReservations($event: any) {
   loadReservations($event.page)
@@ -679,7 +705,12 @@ async function loadSelectedEvent () {
   const eventIndex = events.value.findIndex(r => r.id === selectedEventId.value)
   if (eventIndex > -1) events.value[eventIndex] = selectedEvent.value
   await loadReservations()
-  gtevent.value = await getTouristicEventDetail(selectedEventId.value)
+  try {
+    gtevent.value = await getTouristicEventDetail(selectedEventId.value)
+  }
+  catch (error) {
+    console.log("error") // error on gta api (usually unpubished)
+  }
   selectedEventInfoRDV.value = await getEventInfo(selectedEventId.value)
   selectedEventSummary.value = {
     sum_participants_adultes: selectedEvent.value.sum_participants_adultes,
@@ -710,7 +741,7 @@ onBeforeMount(async () => {
 </script>
 
 <style>
-.p-tabview .p-tabview-panel, 
+.p-tabview .p-tabview-panel,
 .p-tabview .p-tabview-panels{
   margin: 0;
   padding: 0;

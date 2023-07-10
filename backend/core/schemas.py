@@ -9,6 +9,7 @@ from core.models import (
     TAnimationsBilans,
     VExportBilan,
     TEventInfo,
+    GTCancellationReason,
 )
 
 
@@ -44,9 +45,7 @@ class TReservationsSchema(SQLAlchemyAutoSchema):
             "cancel_date",
             "cancel_by",
         )
-        exclude = (
-            "token",
-        )
+        exclude = ("token",)
 
     event = fields.Nested("GTEventsSchema", only=("name", "begin_date"))
     sum_participants = fields.Integer(dump_only=True)
@@ -124,6 +123,12 @@ class GTEventTypeSchema(SQLAlchemyAutoSchema):
         load_instance = True
 
 
+class GTCancellationReasonSchema(SQLAlchemyAutoSchema):
+    class Meta:
+        model = GTCancellationReason
+        load_instance = True
+
+
 class TAnimationsBilansSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = TAnimationsBilans
@@ -160,6 +165,7 @@ class GTEventsSchema(SQLAlchemyAutoSchema):
 
     type = fields.Nested(lambda: GTEventTypeSchema)
     bilan = fields.Nested(lambda: TAnimationsBilansSchema)
+    cancellation_reason = fields.Nested(lambda: GTCancellationReasonSchema)
     sum_participants = fields.Integer(dump_only=True)
     sum_participants_liste_attente = fields.Integer(dump_only=True)
     sum_participants_adultes = fields.Integer(dump_only=True)

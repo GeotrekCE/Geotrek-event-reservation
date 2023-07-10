@@ -3,7 +3,7 @@ export interface ResaBilan {
 
   annulation?: boolean
   raison_annulation?: string
-  
+
   commentaire: string
   nb_adultes: number
   nb_moins_6_ans: number
@@ -17,7 +17,7 @@ export interface ResaBilan {
 
 /**
  * Réservation d'un événement
- * 
+ *
  * Correspond au retoure de l'API,
  * peut disposer d'un bilan avec quelques sous propriété
  * ainsi qu'un type d'événement.
@@ -35,6 +35,7 @@ export interface ResaEvent {
   end_date: string
   published: boolean
   cancelled: boolean
+  bookable: boolean
 
   sum_participants: number
   sum_participants_liste_attente: number
@@ -66,15 +67,15 @@ export interface ResaEventInfo {
  */
 export interface Statistics {
   nb_animations?: number
-  nb_annulation?: number 
+  nb_annulation?: number
   taux_remplissage?: number
   taux_remplissage_passe?: number
 }
 
 /**
  * Réservation définie dans le backend Flask
- * 
- * La notion de numérisateur tend à disparaître, 
+ *
+ * La notion de numérisateur tend à disparaître,
  * le parc de la Guadeloupe n'en ayant pas besoin
  * vu que les participants pourront s'inscrire directement.
  */
@@ -102,9 +103,9 @@ export interface Resa {
 }
 
 export interface ResaEventFilters {
-  begin_date: string 
-  end_date: string 
-  search_name?: string 
+  begin_date: string
+  end_date: string
+  search_name?: string
   cancelled?: boolean
   published?: boolean
   type_id: string[]

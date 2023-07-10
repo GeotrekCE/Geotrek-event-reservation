@@ -43,7 +43,10 @@ async function insertReservationLink(url) {
     });
 
     const today = new Date();
-    if (today >= endDate) {
+    if (eventData.bookable == false) {
+        // Evenement sans réservation
+        return
+    } else if (today >= endDate) {
         const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
         const closedMessage = Object.assign(document.createElement('p'), {
             innerText: `Les inscriptions pour cet événement sont terminées.`,

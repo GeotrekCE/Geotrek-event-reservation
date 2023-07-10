@@ -35,14 +35,14 @@
         :disabled="Object.keys(errors).length > 0 || saving"
         @click="onSubmit($event, values)"
       >
-        <i class="pi pi-exclamation-triangle mr-2" /> 
+        <i class="pi pi-exclamation-triangle mr-2" />
         <span v-if="annulation">
           {{ saving ? 'Dé annulation en cours...' : 'Dé annuler l\'animation' }}
         </span>
         <span v-else>
           {{ saving ? 'Annulation en cours...' : 'Annuler l\'animation' }}
         </span>
-        
+
       </button>
       <div v-if="error" class="text-red-500">
         Une erreur est survenue :
@@ -72,7 +72,7 @@ const formSchema = yup.object().shape({
 async function onSubmit (event: any, values: any) {
   confirm.require({
     target: event.target,
-    message: props.annulation 
+    message: props.annulation
       ? 'Êtes vous sûr de vouloir dé-annuler cette animation ?'
       : 'Êtes vous sûr de vouloir annuler cette animation ?',
     icon: 'pi pi-exclamation-triangle',

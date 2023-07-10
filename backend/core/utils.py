@@ -54,18 +54,21 @@ def send_email(subject, recipients, html):
     logger.info(f'Email envoyé "{subject}" à {recipients}')
     logger.debug(f"<<< EMAIL ENVOYÉ >>>\n{msg}\n<<< FIN EMAIL >>>\n")
     from app import mail
+
     mail.send(msg)
 
 
 def _get_property_names(model_object):
     from sqlalchemy.ext.hybrid import hybrid_property
+
     return [
-        p for p in dir(model_object)
+        p
+        for p in dir(model_object)
         if not p.startswith("_")
-           and (
-                   type(model_object.__class__.__dict__.get(p)) == property
-                   or type(model_object.__class__.__dict__.get(p)) == hybrid_property
-           )
+        and (
+            type(model_object.__class__.__dict__.get(p)) == property
+            or type(model_object.__class__.__dict__.get(p)) == hybrid_property
+        )
     ]
 
 
@@ -75,11 +78,11 @@ def _get_orm_attribute_names(model_object):
 
 def stringify(model_object):
     """Prend une instance de modèle et retourne un dict avec les attributs de l'ORM, les properties et les
-        hybrid properties en clé. Les valeurs sont stringifiées :
+    hybrid properties en clé. Les valeurs sont stringifiées :
 
-        - None -> "--"
-        - True -> "Oui"
-        - False -> "None"
+    - None -> "--"
+    - True -> "Oui"
+    - False -> "None"
     """
     rv = {}
 
