@@ -9,6 +9,7 @@ from sqlalchemy.orm import aliased
 
 from .env import db
 
+
 class GTEventsQuery(BaseQuery):
     def filter_properties(self, filters):
         if filters.get("search_name", None):
@@ -164,7 +165,10 @@ class GTEvents(db.Model):
             return True
         if self.sum_participants + nb_people <= self.capacity:
             return True
-        if self.sum_participants_liste_attente + nb_people <= current_app.config["LISTE_ATTENTE_CAPACITY"]:
+        if (
+            self.sum_participants_liste_attente + nb_people
+            <= current_app.config["LISTE_ATTENTE_CAPACITY"]
+        ):
             return True
         return False
 
