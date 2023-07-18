@@ -14,6 +14,7 @@ import 'primevue/resources/primevue.min.css'
 import 'primeicons/primeicons.css'
 
 import './index.css'
+import '../public/css/custom.css'
 
 import { useAuthStore } from './stores/auth'
 

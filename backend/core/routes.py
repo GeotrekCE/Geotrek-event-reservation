@@ -493,7 +493,7 @@ def send_login_email():
     db.session.commit()
 
     send_email(
-        get_mail_subject("Lien de connexion sur site de réservation du PNG"),
+        get_mail_subject("Lien de connexion au site de réservation des animations"),
         recipients=[email],
         html=render_template("login_mail.html", login_link=get_login_link(token.token)),
     )
