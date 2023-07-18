@@ -480,7 +480,7 @@ const options = ref({
   sortBy: ['begin_date'],
   sortDesc: [false],
   page: 0,
-  itemsPerPage: 10
+  itemsPerPage: 50
 })
 const errorMessage = ref<string | null | any>(null)
 const config = ref(CONFIGURATION)
