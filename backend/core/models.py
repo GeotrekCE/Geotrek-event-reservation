@@ -1,17 +1,13 @@
 import datetime
 import json
 
+from flask import current_app
 from flask_sqlalchemy import BaseQuery
 from sqlalchemy import func, or_
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import aliased
 
 from .env import db
-
-
-# Le nombre maximale de personnes que l'on peut mettre en liste d'attente sur un événement.
-LISTE_ATTENTE_CAPACITY = 10
-
 
 class GTEventsQuery(BaseQuery):
     def filter_properties(self, filters):
@@ -168,7 +164,7 @@ class GTEvents(db.Model):
             return True
         if self.sum_participants + nb_people <= self.capacity:
             return True
-        if self.sum_participants_liste_attente + nb_people <= LISTE_ATTENTE_CAPACITY:
+        if self.sum_participants_liste_attente + nb_people <= current_app.config["LISTE_ATTENTE_CAPACITY"]:
             return True
         return False
 
