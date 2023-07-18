@@ -206,7 +206,7 @@ nous avons mis en place plusieurs fichiers Markdown à compléter en fonction de
 
 * `public/page_accueil.md` : affiché sur la page d'accueil du site
 * `public/page_reservation.md` : affiché sur la page de listing des réservations de l'utilisateur
-* `public/page_info_adin.md` : page d'information réservée aux administrateurs
+* `public/page_info_admin.md` : page d'information réservée aux administrateurs
 
 
 **Environnement (`.env`)**
