@@ -10,6 +10,9 @@ ORGANISM_FOR_EMAIL_SUBJECT = ""
 
 # --- Application settings ---
 
+
+# Le nombre maximale de personnes que l'on peut mettre en liste d'attente sur un événement.
+LISTE_ATTENTE_CAPACITY = 10
 # L'adresse où écoute le frontend du portail de réservation, par exemple : 'www.png-resa.fr' ou 'localhost:5000'.
 PUBLIC_SERVER_NAME = "http://localhost:5173"
 
