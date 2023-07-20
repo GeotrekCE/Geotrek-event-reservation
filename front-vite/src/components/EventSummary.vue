@@ -102,6 +102,11 @@
     </div>
 
     <div class="col-span-full">
+      <label class="block text-sm font-medium leading-6 text-gray-900">Heure de RDV</label>
+      <div class="mt-2 flex-1 overflow-scroll min-h-[4rem] max-h-[10rem] p-2 text-gray-600 sm:text-sm sm:leading-6" v-html="event.start_time" />
+    </div>
+
+    <div class="col-span-full">
       <label class="block text-sm font-medium leading-6 text-gray-900">Lieu de RDV</label>
       <div class="mt-2 flex-1 overflow-scroll min-h-[4rem] rounded-sm shadow-sm ring-1 ring-inset ring-gray-300 cursor-not-allowed max-h-[10rem] p-2 text-gray-600 sm:text-sm sm:leading-6" v-html="event.meeting_point" />
     </div>
