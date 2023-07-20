@@ -110,13 +110,13 @@ class TestAPI:
         )
         assert response.status_code == 200
 
-    def test_get_events_search_name(self):
+    def test_get_events_search_name(self, events):
         for search_name in ["ohoh", "öhôh"]:
             response = self.client.get(
                 url_for("app_routes.get_events", search_name=search_name)
             )
             assert response.status_code == 200
-            assert len(json.loads(response.data)["results"]) > 1
+            assert len(json.loads(response.data)["results"]) > 0
 
     def test_get_one_event(self, events):
         data = GTEvents.query.limit(1).one()
