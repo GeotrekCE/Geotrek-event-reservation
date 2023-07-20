@@ -15,12 +15,14 @@
         class="md:block w-full md:w-1/4 bg-gray-100 shadow-xl"
         :class="{ hidden: selectedEvent }"
       >
-
         <p-data-view
           :value="events"
           paginator
-          :rows="5"
+          :rows="itemsPerPage"
           data-key="id"
+          :totalRecords="totalEvents"
+          :first="currentPage"
+          :lazy="true"
           @page="onPageDataView"
         >
           <template #header>
@@ -472,15 +474,17 @@ const currentRoute = useRoute()
 /**
  * Données des événements / animations
  */
+const itemsPerPage = 5
 const totalEvents = ref(0)
 const numberOfPages = ref(0)
+const currentPage = ref(0)
 const events = ref<{id: number}[]>([])
 const loading = ref(true)
 const options = ref({
   sortBy: ['begin_date'],
   sortDesc: [false],
   page: 0,
-  itemsPerPage: 10
+  itemsPerPage: itemsPerPage
 })
 const errorMessage = ref<string | null | any>(null)
 const config = ref(CONFIGURATION)
@@ -550,6 +554,7 @@ async function loadEvents () {
   try {
     const data = await getEvents(params)
     events.value = data.results;
+    currentPage.value = (data.page * itemsPerPage) - 1;
     totalEvents.value = data.total;
     numberOfPages.value = data.total / data.limit;
     loading.value = false;
