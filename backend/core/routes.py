@@ -573,9 +573,7 @@ def logout():
 @app_routes.route("/export_reservation/<id>", methods=["GET"])
 @login_admin_required
 def export_reservation(id):
-    resa = TReservations.query.filter_by(id_event=id).all()
-
-    results = TReservationsSchema(many=True).dump(resa)
+    resa = TReservations.query.filter_by(id_event=id).filter_by(cancelled=False).all()
     export_fields = [
         "id_reservation",
         "id_event",
@@ -592,15 +590,43 @@ def export_reservation(id):
         "nb_9_12_ans",
         "nb_plus_12_ans",
         "num_departement",
-        # "numerisateur.identifiant",
-        # "id_numerisateur",
-        # "commentaire_numerisateur",
         "commentaire",
-        "meta_create_date",
-        "meta_update_date",
     ]
-    data = transform_obj_to_flat_list(export_fields, results)
-    return to_csv_resp(f"reservation_{id}", data, export_fields, ";")
+
+    export_colums = [
+        "id_reservation",
+        "id_event",
+        "Nom",
+        "Prénom",
+        "Email",
+        "Téléphone",
+        "Sur liste attente",
+        "Nombre participants",
+        "Nombre participants sur liste d’attente",
+        "Nb adultes",
+        "Nb enfants moins de 6 ans",
+        "Nb enfants 6-8 ans",
+        "Nb enfants 9-12 ans",
+        "Nb enfants plus de 12 ans",
+        "Département",
+        "Commentaire",
+    ]
+    results = TReservationsSchema(many=True, only=export_fields).dump(resa)
+
+    data = []
+    for res in results:
+        row = []
+        for field in export_fields:
+            value = res[field]
+            if res[field] is False:
+                value = "non"
+            elif res[field] is True:
+                value = "oui"
+            row.append(value)
+        data.append(dict(zip(export_colums, row)))
+
+    # data = transform_obj_to_flat_list(export_fields, results)
+    return to_csv_resp(f"reservation_{id}", data, export_colums, ";")
 
 
 @app_routes.route("/bilans", methods=["POST"])

@@ -1,5 +1,7 @@
 from flask import url_for, current_app
 
+import csv
+import io
 import pytest
 import json
 import logging
@@ -175,7 +177,7 @@ class TestAPI:
         # Check is confirm
         assert resa.confirmed == True
 
-        # EXPORT liste participant
+        # EXPORT liste participants
         resp = self.client.get(
             url_for("app_routes.export_reservation", id=resa.id_event)
         )
@@ -185,7 +187,32 @@ class TestAPI:
             in resp.headers["Content-Disposition"]
         )
 
-        # DELETE
+        content = resp.data.decode("utf-8")
+        cvs_reader = csv.reader(io.StringIO(content), delimiter=";")
+        body = list(cvs_reader)
+        headers = body.pop(0)
+
+        assert len(body) == 1
+        assert headers == [
+            "id_reservation",
+            "id_event",
+            "Nom",
+            "Prénom",
+            "Email",
+            "Téléphone",
+            "Sur liste attente",
+            "Nombre participants",
+            "Nombre participants sur liste d’attente",
+            "Nb adultes",
+            "Nb enfants moins de 6 ans",
+            "Nb enfants 6-8 ans",
+            "Nb enfants 9-12 ans",
+            "Nb enfants plus de 12 ans",
+            "Département",
+            "Commentaire",
+        ]
+
+        # Cancel
         resa = TReservations.query.limit(1).one()
 
         response = self.client.delete(
