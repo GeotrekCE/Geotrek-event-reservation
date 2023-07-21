@@ -106,6 +106,7 @@ class TReservationsUpdateSchema(SQLAlchemySchema):
     num_departement = auto_field()
     liste_attente = auto_field()
     confirmed = auto_field()
+    digitizer = auto_field()
 
     @post_load
     def validate_and_normalize_email(self, data, **kwargs):

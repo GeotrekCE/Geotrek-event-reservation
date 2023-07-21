@@ -109,4 +109,9 @@ export const expandedFields: ResaField[] = [{
   label: 'Date de mise à jour',
   class: 'col-span-1 sm:col-span-5',
   type: 'date'
+}, {
+  name: 'digitizer',
+  label: 'Numérisateur',
+  class: 'col-span-1 sm:col-span-5',
+  type: 'string'
 }]
