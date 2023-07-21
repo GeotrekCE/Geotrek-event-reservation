@@ -25,6 +25,9 @@ def create_app():
     if app.config["DEBUG"] or app.config["TESTING"]:
         email_validator.TEST_ENVIRONMENT = True
 
+    if "NOTIFICATION_EMAILS" not in app.config:
+        app.config["NOTIFICATION_EMAILS"] = app.config["ADMIN_EMAILS"]
+
     logging_config.dictConfig(app.config["LOGGING"])
 
     db.init_app(app)
