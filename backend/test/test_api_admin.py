@@ -8,6 +8,7 @@ from core.models import GTEvents, TReservations
 from core.models import TTokens
 from core.routes import EventIsFull
 
+from .utils import login
 from .fixtures import (
     events,
     ADMIN_EMAIL,
@@ -43,26 +44,6 @@ TEST_BILAN = {
     "nb_moins_6_ans": 6,
     "nb_plus_12_ans": 3,
 }
-
-
-def login(client):
-    data = {"email": ADMIN_EMAIL}
-
-    client.post(
-        url_for("app_routes.send_login_email"), data=json.dumps(data), headers=headers
-    )
-    # Get token manually
-    token = (
-        TTokens.query.filter_by(used=False)
-        .filter_by(email=ADMIN_EMAIL)
-        .order_by(TTokens.created_at.desc())
-        .first()
-    )
-    client.post(
-        url_for("app_routes.login"),
-        data=json.dumps({"login_token": token.token}),
-        headers=headers,
-    )
 
 
 @pytest.mark.usefixtures("client_class")

@@ -463,7 +463,7 @@ def cancel_reservation(reservation_id):
         # Envoi notification aux administrateurs
         send_email(
             subject=get_mail_subject("Une réservation a été annulée"),
-            recipients=current_app.config["ADMIN_EMAILS"],
+            recipients=current_app.config["NOTIFICATION_EMAILS"],
             html=render_template(
                 "admin_resa_cancelled_mail.html",
                 reservation=stringify(reservation),

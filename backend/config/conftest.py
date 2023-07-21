@@ -18,9 +18,14 @@ PUBLIC_SERVER_NAME = "http://localhost:5173"
 
 # La liste des emails des administrateurs du portail, par exemple :
 # ADMIN_EMAILS = ['admin@png-resa.fr', 'teddy@png-it.fr']
-# Ces emails sont utilisés pour donner les permissions admin à l'authentification et pour recevoir les notifications
-# d'annulation de réservations par les utilisateurs.
+# Ces emails sont utilisés pour donner les permissions admin à l'authentification
 ADMIN_EMAILS = ["test.test@test.fr"]
+
+
+# Ces emails sont utilisés pour recevoir les notifications
+# d'annulation de réservations par les utilisateurs.
+NOTIFICATION_EMAILS = ["test.test@test.fr"]
+
 
 # Le path sur le frontend pour générer le lien de confirmation de réservation qui est envoyé par email.
 FRONTEND_CONFIRMED_PATHNAME = "/resaconfirm"
