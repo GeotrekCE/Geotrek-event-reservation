@@ -39,6 +39,19 @@ events_data = [
         "published_en": True,
         "bookable": False,
     },
+    {
+        # id:
+        "name": "Pytest avec accents àeù öhôh",
+        "capacity": None,
+        "begin_date": "01/07/2023",
+        "end_date": "01/10/2023",
+        "published": True,
+        "x": 765227.4922990737,
+        "y": 6365673.938623513,
+        "published_fr": True,
+        "published_en": True,
+        "bookable": False,
+    },
 ]
 
 

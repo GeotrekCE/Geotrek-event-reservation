@@ -14,7 +14,9 @@ class GTEventsQuery(BaseQuery):
     def filter_properties(self, filters):
         if filters.get("search_name", None):
             search_name = filters.get("search_name", None)
-            self = self.filter(GTEvents.name.ilike(f"%{search_name}%"))
+            self = self.filter(
+                func.unaccent(GTEvents.name).ilike(func.unaccent(f"%{search_name}%"))
+            )
             filters.pop("search_name")
 
         if "begin_date" in filters:
