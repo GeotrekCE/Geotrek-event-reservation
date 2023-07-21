@@ -218,6 +218,7 @@ class TReservations(db.Model):
     cancelled = db.Column(db.Boolean, default=False)
     cancel_date = db.Column(db.DateTime, nullable=True)
     cancel_by = db.Column(db.Unicode, nullable=True)
+    digitizer = db.Column(db.Unicode, nullable=True)
 
     @property
     def nb_participants(self):

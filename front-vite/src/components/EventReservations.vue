@@ -47,7 +47,7 @@
     <p-column header="Nombre d'inscrits">
       <template #body="{ data }">
         {{ data.liste_attente ? data.sum_participants_liste_attente : data.sum_participants }}
-      </template>      
+      </template>
     </p-column>
 
     <p-column field="confirmed" header="Statut">

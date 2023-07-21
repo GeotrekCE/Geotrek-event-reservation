@@ -26,6 +26,7 @@ CREATE TABLE animations.t_reservations (
     cancelled boolean default(false),
     cancel_date timestamp without time zone null,
     cancel_by varchar(250) null,
+    digitizer varchar(250) NULL,
     CONSTRAINT t_reservations_pkey PRIMARY KEY (id_reservation),
     CONSTRAINT fk_id_event FOREIGN KEY(id_event)
       REFERENCES tourism_touristicevent(id)

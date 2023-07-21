@@ -348,6 +348,7 @@ def post_reservations():
     is_admin = is_user_admin()
     post_data = request.get_json()
 
+    post_data["digitizer"] = session["user"]
     if is_admin:
         reservation = _post_reservations_by_admin(post_data)
     else:
@@ -398,6 +399,7 @@ def update_reservation(reservation_id):
         return jsonify({"error": f"Reservation #{reservation_id} not found"}), 404
 
     post_data = request.get_json()
+    post_data["digitizer"] = session["user"]
     validated_data = TReservationsUpdateSchema().load(post_data)
     for k, v in validated_data.items():
         setattr(reservation, k, v)
