@@ -1,8 +1,11 @@
 from flask import url_for, current_app
 
+import csv
 import pytest
 import json
 import logging
+
+from io import StringIO
 
 from core.models import GTEvents, TReservations
 from core.models import TTokens
@@ -225,3 +228,48 @@ class TestAPI:
 
         response = self.client.get(url_for("app_routes.get_stats_global", year="2023"))
         assert response.status_code == 200
+
+    def test_export_global(self):
+        login(self.client)
+        response = self.client.get(url_for("app_routes.get_export_events"))
+        assert response.status_code == 200
+
+        #  test response
+        exported_columns = [
+            "id",
+            "zoning_city",
+            "zoning_district",
+            "name_fr",
+            "type",
+            "begin_date",
+            "end_date",
+            "capacity",
+            "target_audience",
+            "resa_nb_total",
+            "resa_nb_total_attente",
+            "annulation",
+            "categorie_annulation",
+            "raison_annulation",
+            "bilan_nb_adultes",
+            "bilan_nb_moins_6_ans",
+            "bilan_nb_6_8_ans",
+            "bilan_nb_9_12_ans",
+            "bilan_nb_plus_12_ans",
+            "bilan_commentaire",
+            "resa_nb_adultes",
+            "resa_nb_moins_6_ans",
+            "resa_nb_6_8_ans",
+            "resa_nb_nb_9_12_ans",
+            "resa_nb_plus_12_ans",
+            "resa_nb_adultes_attente",
+            "resa_nb_moins_6_ans_attente",
+            "resa_nb_6_8_ans_attente",
+            "resa_nb_9_12_ans_attente",
+            "resa_nb_plus_12_ans_attente",
+            "published",
+        ]
+
+        csv_data = response.data.decode("utf8")
+        with StringIO(csv_data) as f:
+            cvs_reader = csv.DictReader(f, delimiter=";")
+            assert cvs_reader.fieldnames == exported_columns
