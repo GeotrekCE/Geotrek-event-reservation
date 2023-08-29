@@ -1,10 +1,11 @@
 from flask import url_for, current_app
 
 import csv
-import io
 import pytest
 import json
 import logging
+
+from io import StringIO
 
 from core.models import GTEvents, TReservations
 from core.models import TTokens
@@ -188,10 +189,9 @@ class TestAPI:
         )
 
         content = resp.data.decode("utf-8")
-        cvs_reader = csv.reader(io.StringIO(content), delimiter=";")
+        cvs_reader = csv.reader(StringIO(content), delimiter=";")
         body = list(cvs_reader)
         headers = body.pop(0)
-
         assert len(body) == 1
         assert headers == [
             "id_reservation",
