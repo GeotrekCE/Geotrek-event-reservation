@@ -58,6 +58,7 @@ psycopg2==2.9.6
     # via -r requirements.in
 pytz==2023.3
     # via babel
+sentry-sdk==1.29.2
 six==1.16.0
     # via flask-cors
 sqlalchemy==2.0.15
