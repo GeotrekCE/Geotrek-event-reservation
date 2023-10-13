@@ -547,7 +547,9 @@ async function loadEvents () {
     if (currentValue) {
       params[key] = currentValue
       if (currentValue instanceof Date) {
-        params[key] = currentValue.toISOString()
+        // Conversion en date local pour éviter les décalages de jour lors de la conversion en utc
+        // format  en-CA : yyyy-mm-dd
+        params[key] = currentValue.toLocaleDateString("en-CA")
       }
     }
   })
