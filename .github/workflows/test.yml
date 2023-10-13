@@ -5,12 +5,10 @@ on:
     branches:
       - main
       - develop
-      - develop_v2
   pull_request:
     branches:
       - main
       - develop
-      - develop_v2
 
 env:
   DEBIAN_FRONTEND: noninteractive
