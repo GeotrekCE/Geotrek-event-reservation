@@ -57,6 +57,7 @@ async function insertReservationLink(url) {
     } else if (today >= reservationOpeningDate) {
         const reservation_link = Object.assign(document.createElement('a'), {
             href: `${portailReservationURL}/resa/${eventId}`,
+            target: "_blank",
             innerText: "S'inscrire à l'événement",
             style: "background-color: #aec900; color: white;",
             className: "text-primary1 p-2 font-bold border-solid border border-primary1 rounded-lg bg-white",
