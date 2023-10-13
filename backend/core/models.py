@@ -1,24 +1,22 @@
 import datetime
 import json
-import re
+
+from flask import current_app
+from flask_sqlalchemy import BaseQuery
 from sqlalchemy import func, or_
+from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import aliased
 
-from sqlalchemy.ext.hybrid import hybrid_property
-
 from .env import db
-
-
-from flask_sqlalchemy import BaseQuery
-
-from pypnusershub.db.models import User
 
 
 class GTEventsQuery(BaseQuery):
     def filter_properties(self, filters):
         if filters.get("search_name", None):
             search_name = filters.get("search_name", None)
-            self = self.filter(GTEvents.name.ilike(f"%{search_name}%"))
+            self = self.filter(
+                func.unaccent(GTEvents.name).ilike(func.unaccent(f"%{search_name}%"))
+            )
             filters.pop("search_name")
 
         if "begin_date" in filters:
@@ -26,7 +24,9 @@ class GTEventsQuery(BaseQuery):
 
         if "end_date" in filters:
             # set the end_date at 23h59 because a hour can be set in timestamp
-            end_date = datetime.datetime.strptime(filters.pop("end_date"), "%Y-%m-%d")
+            end_date = datetime.datetime.strptime(
+                filters.pop("end_date")[:10], "%Y-%m-%d"
+            )
             end_date = end_date.replace(hour=23, minute=59, second=59)
             self = self.filter(GTEvents.end_date <= end_date)
 
@@ -67,6 +67,7 @@ class GTEvents(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.Unicode, nullable=False)
     description_teaser = db.Column(db.Unicode)
+    bookable = db.Column(db.Boolean)
     capacity = db.Column(db.Integer)
     practical_info_fr = db.Column(db.Unicode)
     practical_info_en = db.Column(db.Unicode)
@@ -78,22 +79,78 @@ class GTEvents(db.Model):
     )
     published = db.Column(db.Boolean)
     deleted = db.Column(db.Boolean)
+    cancelled = db.Column(db.Boolean)
+    cancellation_reason_id = db.Column(
+        db.Integer, db.ForeignKey("public.tourism_cancellationreason.id")
+    )
+    meeting_point = db.Column(db.Unicode)
+    start_time = db.Column(db.Time)
 
     reservations = db.relationship(
         "TReservations", lazy="joined", backref=db.backref("event", lazy="joined")
     )
-
     bilan = db.relationship("TAnimationsBilans", lazy="joined", uselist=False)
-
+    cancellation_reason = db.relationship(
+        "GTCancellationReason", lazy="select", uselist=False
+    )
+    info = db.relationship("TEventInfo", lazy="joined", uselist=False)
     type = db.relationship("GTEventType", lazy="joined")
 
     @hybrid_property
     def sum_participants(self):
-        return sum(r.sum_participants for r in self.reservations)
+        return sum(
+            r.sum_participants
+            for r in self.reservations
+            if r.confirmed and not r.cancelled
+        )
 
     @hybrid_property
     def sum_participants_liste_attente(self):
-        return sum(r.sum_participants_liste_attente for r in self.reservations)
+        return sum(
+            r.sum_participants_liste_attente
+            for r in self.reservations
+            if r.confirmed and not r.cancelled
+        )
+
+    @hybrid_property
+    def sum_participants_adultes(self):
+        return sum(
+            r.nb_adultes
+            for r in self.reservations
+            if r.confirmed and not r.cancelled and not r.liste_attente
+        )
+
+    @hybrid_property
+    def sum_participants_moins_6_ans(self):
+        return sum(
+            r.nb_moins_6_ans
+            for r in self.reservations
+            if r.confirmed and not r.cancelled and not r.liste_attente
+        )
+
+    @hybrid_property
+    def sum_participants_6_8_ans(self):
+        return sum(
+            r.nb_6_8_ans
+            for r in self.reservations
+            if r.confirmed and not r.cancelled and not r.liste_attente
+        )
+
+    @hybrid_property
+    def sum_participants_9_12_ans(self):
+        return sum(
+            r.nb_9_12_ans
+            for r in self.reservations
+            if r.confirmed and not r.cancelled and not r.liste_attente
+        )
+
+    @hybrid_property
+    def sum_participants_plus_12_ans(self):
+        return sum(
+            r.nb_plus_12_ans
+            for r in self.reservations
+            if r.confirmed and not r.cancelled and not r.liste_attente
+        )
 
     @hybrid_property
     def massif(self):
@@ -102,6 +159,27 @@ class GTEvents(db.Model):
     @massif.expression
     def massif(cls):
         return func.animations.get_secteur_name(cls.id)
+
+    def is_reservation_possible_for(self, nb_people):
+        if not self.bookable:
+            return False
+        if not self.capacity:
+            return True
+        if self.sum_participants + nb_people <= self.capacity:
+            return True
+        if (
+            self.sum_participants_liste_attente + nb_people
+            <= current_app.config["LISTE_ATTENTE_CAPACITY"]
+        ):
+            return True
+        return False
+
+
+class GTCancellationReason(db.Model):
+    __tablename__ = "tourism_cancellationreason"
+    __table_args__ = {"schema": "public"}
+    id = db.Column(db.Integer, primary_key=True)
+    label = db.Column(db.Unicode, nullable=False)
 
 
 class GTEventType(db.Model):
@@ -117,8 +195,9 @@ class TReservations(db.Model):
     __table_args__ = {"schema": "animations"}
     id_reservation = db.Column(db.Integer, primary_key=True)
     nom = db.Column(db.Unicode, nullable=False)
-    prenom = db.Column(db.Unicode)
-    tel = db.Column(db.Unicode)
+    prenom = db.Column(db.Unicode, nullable=False)
+    tel = db.Column(db.Unicode, nullable=False)
+    email = db.Column(db.Unicode, nullable=False)
     commentaire = db.Column(db.Unicode)
     nb_adultes = db.Column(db.Integer, default=0)
     nb_moins_6_ans = db.Column(db.Integer, default=0)
@@ -126,20 +205,34 @@ class TReservations(db.Model):
     nb_9_12_ans = db.Column(db.Integer, default=0)
     nb_plus_12_ans = db.Column(db.Integer, default=0)
     num_departement = db.Column(db.Unicode)
-    id_numerisateur = db.Column(
-        db.Integer, db.ForeignKey("utilisateurs.t_roles.id_role")
+    liste_attente = db.Column(db.Boolean, nullable=True)
+    meta_create_date = db.Column(db.DateTime, default=datetime.datetime.now)
+    meta_update_date = db.Column(
+        db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now
     )
-    commentaire_numerisateur = db.Column(db.Unicode)
-    liste_attente = db.Column(db.Boolean)
-    meta_create_date = db.Column(db.DateTime)
-    meta_update_date = db.Column(db.DateTime)
-    id_event = db.Column(db.Integer, db.ForeignKey("public.tourism_touristicevent.id"))
+    token = db.Column(db.Unicode)
+    confirmed = db.Column(db.Boolean, default=False)
+    id_event = db.Column(
+        db.Integer, db.ForeignKey("public.tourism_touristicevent.id"), nullable=False
+    )
+    cancelled = db.Column(db.Boolean, default=False)
+    cancel_date = db.Column(db.DateTime, nullable=True)
+    cancel_by = db.Column(db.Unicode, nullable=True)
+    digitizer = db.Column(db.Unicode, nullable=True)
 
-    numerisateur = db.relationship("User", lazy="joined", uselist=False)
+    @property
+    def nb_participants(self):
+        return (
+            self.nb_adultes
+            + self.nb_moins_6_ans
+            + self.nb_6_8_ans
+            + self.nb_9_12_ans
+            + self.nb_plus_12_ans
+        )
 
     @hybrid_property
     def sum_participants(self):
-        if not self.liste_attente:
+        if self.liste_attente is False:
             return (
                 self.nb_adultes
                 + self.nb_moins_6_ans
@@ -151,7 +244,7 @@ class TReservations(db.Model):
 
     @hybrid_property
     def sum_participants_liste_attente(self):
-        if self.liste_attente:
+        if self.liste_attente is True:
             return (
                 self.nb_adultes
                 + self.nb_moins_6_ans
@@ -161,7 +254,7 @@ class TReservations(db.Model):
             )
         return 0
 
-    User
+    # User
 
 
 class TAnimationsBilans(db.Model):
@@ -180,6 +273,18 @@ class TAnimationsBilans(db.Model):
     meta_create_date = db.Column(db.DateTime)
     meta_update_date = db.Column(db.DateTime)
     id_event = db.Column(db.Integer, db.ForeignKey("public.tourism_touristicevent.id"))
+
+
+class TEventInfo(db.Model):
+    __tablename__ = "t_event_info"
+    __table_args__ = {"schema": "animations"}
+    id_event_info = db.Column(db.Integer, primary_key=True)
+    id_event = db.Column(db.Integer, db.ForeignKey("public.tourism_touristicevent.id"))
+    info_rdv = db.Column(db.Unicode, default="")
+    meta_create_date = db.Column(db.DateTime, default=datetime.datetime.now)
+    meta_update_date = db.Column(
+        db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now
+    )
 
 
 class VExportBilan(db.Model):
@@ -216,3 +321,13 @@ class VExportBilan(db.Model):
     resa_nb_9_12_ans_attente = db.Column(db.Integer)
     resa_nb_plus_12_ans_attente = db.Column(db.Integer)
     published = db.Column(db.Boolean)
+
+
+class TTokens(db.Model):
+    __tablename__ = "t_tokens"
+    __table_args__ = {"schema": "animations"}
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.Unicode, nullable=False)
+    token = db.Column(db.Unicode, nullable=False)
+    used = db.Column(db.Boolean, default=False)
+    created_at = db.Column(db.DateTime, default=datetime.datetime.now)

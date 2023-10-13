@@ -2,12 +2,13 @@
 
 CREATE SCHEMA IF NOT EXISTS animations;
 
-DROP TABLE  IF EXISTS animations.t_reservations ;
+
 
 CREATE TABLE animations.t_reservations (
     id_reservation serial4 NOT NULL,
     nom varchar(250) NULL,
     prenom varchar(250) NULL,
+    email varchar(250) NULL,
     tel varchar(100) NULL,
     commentaire varchar(1000) NULL,
     nb_adultes int4 NOT NULL DEFAULT 0,
@@ -16,22 +17,26 @@ CREATE TABLE animations.t_reservations (
     nb_9_12_ans int4 NOT NULL DEFAULT 0,
     nb_plus_12_ans int4 NOT NULL DEFAULT 0,
     num_departement varchar(250) NULL,
-    id_event int4 ,
-    id_numerisateur int4 NULL,
-    commentaire_numerisateur varchar(250) NULL,
+    id_event int4,
     liste_attente boolean default(null),
     meta_create_date timestamp without time zone DEFAULT now(),
     meta_update_date timestamp without time zone,
+    token varchar(50),
+    confirmed boolean default(false),
+    cancelled boolean default(false),
+    cancel_date timestamp without time zone null,
+    cancel_by varchar(250) null,
+    digitizer varchar(250) NULL,
     CONSTRAINT t_reservations_pkey PRIMARY KEY (id_reservation),
     CONSTRAINT fk_id_event FOREIGN KEY(id_event)
       REFERENCES tourism_touristicevent(id)
 );
 
-DROP TABLE  IF EXISTS animations.t_animations_bilans ;
 
 CREATE TABLE animations.t_animations_bilans (
     id_bilan serial4 NOT NULL,
     annulation BOOLEAN NOT NULL DEFAULT(FALSE),
+    categorie_annulation  varchar(1000) NULL,
     raison_annulation varchar(1000) NULL,
     nb_adultes int4 NOT NULL DEFAULT 0,
     nb_moins_6_ans int4 NOT NULL DEFAULT 0,
@@ -46,6 +51,28 @@ CREATE TABLE animations.t_animations_bilans (
     CONSTRAINT t_animations_bilans_pkey PRIMARY KEY (id_bilan),
     CONSTRAINT fk_id_event FOREIGN KEY(id_event)
       REFERENCES tourism_touristicevent(id)
+);
+
+
+CREATE TABLE animations.t_event_info (
+    id_event_info serial4 NOT NULL,
+    id_event int4 NOT NULL  UNIQUE,
+    info_rdv TEXT DEFAULT '',
+    meta_create_date timestamp without time zone DEFAULT now(),
+    meta_update_date timestamp without time zone,
+    CONSTRAINT t_event_info_pkey PRIMARY KEY (id_event_info),
+    CONSTRAINT fk_id_event FOREIGN KEY(id_event)
+      REFERENCES tourism_touristicevent(id)
+);
+
+
+CREATE TABLE animations.t_tokens (
+    id serial4 NOT NULL,
+    email varchar(250) NOT NULL,
+    token varchar(50) NOT NULL,
+    used boolean default(false),
+    created_at timestamp without time zone DEFAULT now(),
+    CONSTRAINT t_tokens_pkey PRIMARY KEY (id)
 );
 
 CREATE OR REPLACE FUNCTION animations.get_secteur_name(id_event integer)
@@ -104,8 +131,11 @@ WITH event AS (
     a.begin_date,
     a.end_date,
     a.capacity,
-    a.target_audience
+    a.target_audience,
+    a.cancelled,
+    tc.LABEL AS categorie_annulation
   FROM tourism_touristicevent a
+  LEFT JOIN tourism_cancellationreason AS tc ON a.cancellation_reason_id = tc.id
   LEFT JOIN tourism_touristiceventtype b ON a.type_id = b.id
   LEFT JOIN ( SELECT array_to_string(array_agg(b_1.name), ', '::text, '*'::text) AS zoning_city,
         a_1.id
@@ -134,14 +164,24 @@ WITH event AS (
         COALESCE(sum(tr.nb_plus_12_ans) FILTER (WHERE tr.liste_attente IS TRUE), 0) AS nb_plus_12_ans_attente,
         COALESCE(sum(tr.nb_adultes + tr.nb_moins_6_ans + tr.nb_6_8_ans + tr.nb_9_12_ans + tr.nb_plus_12_ans) FILTER (WHERE tr.liste_attente IS TRUE), 0) AS nb_total_attente
     FROM animations.t_reservations AS tr
+    WHERE tr.cancelled = false AND tr.confirmed = true
     GROUP BY tr.id_event
 )
 SELECT
-    EVENT.*,
+    e.id,
+    e.published,
+    e.zoning_city,
+    e.zoning_district,
+    e.name_fr,
+    e.type,
+    e.begin_date,
+    e.end_date,
+    e.capacity,
+    e.target_audience,
     r.nb_total as resa_nb_total,
     r.nb_total_attente as resa_nb_total_attente,
-    COALESCE(b.annulation, FALSE) AS annulation,
-    b.categorie_annulation,
+    COALESCE(e.cancelled, FALSE) AS annulation,
+    e.categorie_annulation AS categorie_annulation,
     b.raison_annulation,
     b.nb_adultes as bilan_nb_adultes,
     b.nb_moins_6_ans as bilan_nb_moins_6_ans,
@@ -159,11 +199,10 @@ SELECT
     r.nb_6_8_ans_attente as resa_nb_6_8_ans_attente,
     r.nb_9_12_ans_attente as resa_nb_9_12_ans_attente,
     r.nb_plus_12_ans_attente as resa_nb_plus_12_ans_attente
-FROM EVENT
+FROM EVENT e
 LEFT OUTER JOIN resa r
-ON r.id_event = EVENT.id
+ON r.id_event = e.id
 LEFT JOIN animations.t_animations_bilans AS b
-ON b.id_event = EVENT.id
+ON b.id_event = e.id
 ORDER BY begin_date DESC;
-
 

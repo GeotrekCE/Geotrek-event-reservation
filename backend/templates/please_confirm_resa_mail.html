@@ -1,0 +1,12 @@
+<h1>Veuillez confirmer votre demande de réservation</h1>
+
+<p>Vous avez fait une demande de réservation pour l'événement {{ event.name }} ayant lieu le
+    {{ event.begin_date|format_date }}. Veuillez cliquer sur le lien ci-dessous pour confirmer votre demande :</p>
+
+<p><a href="{{ confirmation_link }}">-> lien de confirmation <-</a></p>
+
+<p><a href="{{ portal_link }}">Vous pouvez à tout moment consulter la liste de vos réservations en suivant
+    ce lien.</a></p>
+
+<p>S'il s'agit d'une erreur et que vous n'avez pas fait de demande de réservation,
+    vous n'avez rien à faire. La demande de réservation sera annulée automatiquement.</p>
