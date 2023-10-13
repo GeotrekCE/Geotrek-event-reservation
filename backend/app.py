@@ -22,6 +22,18 @@ def create_app():
     app = Flask(__name__)
 
     app.config.from_pyfile("./config/config.py")
+
+    # Sentry
+    if app.config.get("SENTRY_DSN"):
+        import sentry_sdk
+        from sentry_sdk.integrations.flask import FlaskIntegration
+
+        sentry_sdk.init(
+            dsn=app.config["SENTRY_DSN"],
+            integrations=[FlaskIntegration()],
+            traces_sample_rate=1.0,
+        )
+
     if app.config["DEBUG"] or app.config["TESTING"]:
         email_validator.TEST_ENVIRONMENT = True
 

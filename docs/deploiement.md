@@ -218,3 +218,8 @@ Configuration générale de l'application
 **Style (`public/css/custom.css`)**
 
 Vous pouvez customiser l'application en ajoutant du css dans le fichier `public/css/custom.css`
+
+
+## Monitoring - Sentry
+
+Il est possible d'utiliser Sentry pour suivre l'application. Pour cela il suffit de renseigner la variable `SENTRY_DSN` du fichier de configuration.

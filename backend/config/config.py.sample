@@ -108,6 +108,8 @@ COOKIE_EXPIRATION = 43200
 COOKIE_AUTORENEW = True
 TRAP_ALL_EXCEPTIONS = False
 
+# --- Sentry ---
+SENTRY_DSN = "https://<UUID>@sentry.mondomaine.org/<ID_PROJECT>"
 
 # --- Flask Mail settings ---
 
