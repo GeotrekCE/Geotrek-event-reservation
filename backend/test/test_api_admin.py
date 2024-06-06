@@ -7,9 +7,11 @@ import logging
 
 from io import StringIO
 
+from sqlalchemy import select
 from core.models import GTEvents, TReservations
 from core.models import TTokens
 from core.routes import EventIsFull
+from core.env import db
 
 from .utils import login
 from .fixtures import (
@@ -62,12 +64,11 @@ class TestAPI:
         assert response.status_code == 204
 
         # Get token manually
-        token = (
-            TTokens.query.filter_by(used=False)
-            .filter_by(email=ADMIN_EMAIL)
+        token = db.session.scalars(
+            select(TTokens)
+            .where(TTokens.used == False, TTokens.email == ADMIN_EMAIL)
             .order_by(TTokens.created_at.desc())
-            .first()
-        )
+        ).first()
 
         response = self.client.post(
             url_for("app_routes.login"),
@@ -103,7 +104,9 @@ class TestAPI:
             assert len(json.loads(response.data)["results"]) > 0
 
     def test_get_one_event(self, events):
-        data = GTEvents.query.limit(1).one()
+        data = (
+            db.session.execute(select(GTEvents).limit(1)).unique().scalar_one_or_none()
+        )
         assert (
             self.client.get(
                 url_for("app_routes.get_one_event", event_id=data.id)
@@ -111,14 +114,21 @@ class TestAPI:
             == 200
         )
 
+    def test_get_reservations(self):
+        login(self.client)
+        response = self.client.get(url_for("app_routes.get_reservations"))
+
+        assert response.status_code == 200
+
     def test_post_reservation_isfull(self, events):
         login(self.client)
         # POST
-        event = (
-            GTEvents.query.filter_by(name="Pytest bookable")
+        event = db.session.scalars(
+            select(GTEvents)
+            .where(GTEvents.name == "Pytest bookable")
             .order_by(GTEvents.id.desc())
-            .first()
-        )
+            .limit(1)
+        ).first()
 
         data_resa = TEST_RESERVATION
         data_resa["id_event"] = event.id
@@ -141,10 +151,13 @@ class TestAPI:
 
     def test_post_reservation_notbookable(self, events):
         login(self.client)
+
         event = (
-            GTEvents.query.filter_by(name="Pytest not bookable")
-            .order_by(GTEvents.id.desc())
-            .first()
+            db.session.execute(
+                select(GTEvents).where(GTEvents.name == "Pytest not bookable").limit(1)
+            )
+            .unique()
+            .scalar_one_or_none()
         )
 
         data_resa = TEST_RESERVATION
@@ -159,9 +172,14 @@ class TestAPI:
         login(self.client)
         # POST
         event = (
-            GTEvents.query.filter_by(name="Pytest bookable")
-            .order_by(GTEvents.id.desc())
-            .first()
+            db.session.execute(
+                select(GTEvents)
+                .where(GTEvents.name == "Pytest bookable")
+                .order_by(GTEvents.id.desc())
+                .limit(1)
+            )
+            .unique()
+            .scalar_one_or_none()
         )
 
         data_resa = TEST_RESERVATION
@@ -173,7 +191,7 @@ class TestAPI:
         resa_resp = json_of_response(resp)
         id_reservation = resa_resp["id_reservation"]
 
-        resa = TReservations.query.get(id_reservation)
+        resa = db.session.get(TReservations, id_reservation)
 
         # Check is confirm
         assert resa.confirmed == True
@@ -213,14 +231,14 @@ class TestAPI:
         ]
 
         # Cancel
-        resa = TReservations.query.limit(1).one()
+        # resa = TReservations.query.limit(1).one()
 
         response = self.client.delete(
             url_for("app_routes.cancel_reservation", reservation_id=id_reservation)
         )
         assert response.status_code == 204
 
-        resa = TReservations.query.get(id_reservation)
+        resa = db.session.get(TReservations, id_reservation)
         assert resa.cancelled == True
         assert resa.cancel_by == "admin"
 
@@ -297,3 +315,11 @@ class TestAPI:
         with StringIO(csv_data) as f:
             cvs_reader = csv.DictReader(f, delimiter=";")
             assert cvs_reader.fieldnames == exported_columns
+
+    def test_get_event_info(self):
+        login(self.client)
+        data = db.session.scalars(select(GTEvents)).first()
+        response = self.client.get(
+            url_for("app_routes.get_event_info", event_id=data.id)
+        )
+        assert response.status_code == 200

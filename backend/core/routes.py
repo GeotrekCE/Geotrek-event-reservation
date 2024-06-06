@@ -5,7 +5,17 @@ import secrets
 from email_validator import validate_email, EmailNotValidError, EmailSyntaxError
 from flask import jsonify, request, Blueprint, render_template, session, current_app
 
-from core.models import db, GTEvents, TReservations, VExportBilan, TTokens, TEventInfo
+from sqlalchemy import select
+
+from core.models import (
+    db,
+    GTEvents,
+    TReservations,
+    VExportBilan,
+    TTokens,
+    TEventInfo,
+    GTEventsQuery,
+)
 from core.repository import query_stats_bilan
 from core.schemas import (
     GTEventsSchema,
@@ -166,15 +176,16 @@ def get_events():
     except KeyError:
         sort_order = "desc"
 
-    events = GTEvents.query.filter_properties(query_params)
+    query = select(GTEvents)
+    query = GTEventsQuery().filter_properties(query, query_params)
     if hasattr(GTEvents, sort_col):
         model_sort_col = getattr(GTEvents, sort_col)
     else:
         model_sort_col = GTEvents.begin_date
 
-    events = events.order_by(getattr(model_sort_col, sort_order)(), GTEvents.id.asc())
+    query = query.order_by(getattr(model_sort_col, sort_order)(), GTEvents.id.asc())
 
-    events = events.paginate(page=page, per_page=limit)
+    events = db.paginate(query, page=page, per_page=limit, error_out=False)
 
     results = GTEventsSchema(many=True, only=fields).dump(events.items)
 
@@ -193,7 +204,7 @@ def get_events():
 @app_routes.route("/events/<int:event_id>")
 def get_one_event(event_id):
     """Retourne un événement de Geotrek par son identifiant."""
-    event = GTEvents.query.get(event_id)
+    event = db.session.get(GTEvents, event_id)
     if not event:
         return jsonify({"error": f"Event #{event_id} not found"}), 404
     return GTEventsSchema().dumps(event)
@@ -226,12 +237,12 @@ def get_reservations():
     email = session["user"]
     is_admin = is_user_admin()
 
-    query = db.session.query(TReservations)
+    query = select(TReservations)
     if event_id:
         query = query.filter_by(id_event=event_id)
     if not is_admin:
         query = query.filter_by(email=email)
-    query = query.paginate(page=page, per_page=limit)
+    query = db.paginate(query, page=page, per_page=limit)
     results = TReservationsSchema(many=True).dump(query.items)
 
     return jsonify(
@@ -257,7 +268,8 @@ class BodyParamValidationError(Exception):
 def _post_reservations_by_user(post_data):
     reservation = TReservationsSchema().load(post_data, session=db.session)
 
-    event = GTEvents.query.get(reservation.id_event)
+    event = db.session.get(GTEvents, reservation.id_event)
+
     if not event:
         raise BodyParamValidationError(
             f"Event with ID {reservation.id_event} not found"
@@ -289,7 +301,8 @@ def _post_reservations_by_user(post_data):
 def _post_reservations_by_admin(post_data):
     reservation = TReservationsCreateByAdminSchema().load(post_data, session=db.session)
 
-    event = GTEvents.query.get(reservation.id_event)
+    event = db.session.get(GTEvents, reservation.id_event)
+
     if not event:
         raise BodyParamValidationError(
             f"Event with ID {reservation.id_event} not found"
@@ -363,7 +376,13 @@ def confirm_reservation():
     reservation exists it is confirmed and a confirmation mail is sent."""
     token = request.get_json()["resa_token"]
 
-    resa = TReservations.query.filter_by(token=token).first()
+    resa = (
+        db.session.execute(
+            select(TReservations).where(TReservations.token == token).limit(1)
+        )
+        .unique()
+        .scalar_one_or_none()
+    )
     if not resa:
         return jsonify({"error": "The token is invalid"}), 404
 
@@ -394,7 +413,7 @@ def confirm_reservation():
 @login_admin_required
 def update_reservation(reservation_id):
     # Check : la réservation existe
-    reservation = TReservations.query.get(reservation_id)
+    reservation = db.session.get(TReservations, reservation_id)
     if not reservation:
         return jsonify({"error": f"Reservation #{reservation_id} not found"}), 404
 
@@ -420,7 +439,7 @@ def cancel_reservation(reservation_id):
     is_admin = is_user_admin()
 
     # Check : la réservation existe
-    reservation = TReservations.query.get(reservation_id)
+    reservation = db.session.get(TReservations, reservation_id)
     if not reservation:
         return jsonify({"error": f"Reservation #{reservation_id} not found"}), 404
 
@@ -517,13 +536,15 @@ def login():
 
     login_token_lifespan = current_app.config["LOGIN_TOKEN_LIFETIME"]
     limit = datetime.now() - login_token_lifespan
-
-    token = (
-        TTokens.query.filter_by(used=False)
-        .filter_by(token=login_token)
-        .filter(TTokens.created_at > limit)
-        .first()
-    )
+    token = db.session.execute(
+        select(TTokens)
+        .where(
+            TTokens.used == False,
+            TTokens.token == login_token,
+            TTokens.created_at > limit,
+        )
+        .limit(1)
+    ).scalar_one_or_none()
     if not token:
         return jsonify({"error": "The login token is invalid or expired"}), 400
 
@@ -573,7 +594,15 @@ def logout():
 @app_routes.route("/export_reservation/<id>", methods=["GET"])
 @login_admin_required
 def export_reservation(id):
-    resa = TReservations.query.filter_by(id_event=id).filter_by(cancelled=False).all()
+    resa = (
+        db.session.scalars(
+            select(TReservations).where(
+                TReservations.id_event == id, TReservations.cancelled == False
+            )
+        )
+        .unique()
+        .all()
+    )
     export_fields = [
         "id_reservation",
         "id_event",
@@ -653,7 +682,7 @@ def get_stats_global():
 @app_routes.route("/export/events")
 @login_admin_required
 def get_export_events():
-    events = VExportBilan.query.all()
+    events = db.session.scalars(select(VExportBilan)).all()
     results = VExportBilanSchema(many=True).dump(events)
     fields = VExportBilan.__table__.columns.keys()
     return to_csv_resp("export_bilan", results, fields, ";")
@@ -666,10 +695,12 @@ def get_event_info(event_id):
 
     S'il n'y a pas d'infos enregistrées un TEventInfo vide est créé et enregistré.
     """
-    event_info = TEventInfo.query.filter_by(id_event=event_id).first()
+    event_info = db.session.execute(
+        select(TEventInfo).where(TEventInfo.id_event == event_id).limit(1)
+    ).scalar_one_or_none()
 
     if not event_info:
-        event = GTEvents.query.get(event_id)
+        event = db.session.get(GTEvents, event_id)
         if not event:
             return jsonify({"error": f"Event #{event_id} not found"}), 404
         event_info = TEventInfo(id_event=event_id)
@@ -683,12 +714,15 @@ def get_event_info(event_id):
 @app_routes.route("/events/<int:event_id>/info", methods=["PUT"])
 @login_admin_required
 def set_event_info(event_id):
+    # TODO ADD TEST
     """Met à jour les infos liées à l'événement indiqué."""
     post_data = request.get_json()
-    event_info = TEventInfo.query.filter_by(id_event=event_id).first()
+    event_info = db.session.scalars(
+        select(TEventInfo).where(TEventInfo.id_event == event_id).limit(1)
+    ).scalar_one_or_none()
 
     if not event_info:
-        event = GTEvents.query.get(event_id)
+        event = db.session.get(GTEvents, event_id)
         if not event:
             return jsonify({"error": f"Event #{event_id} not found"}), 400
         event_info = TEventInfo(id_event=event_id)
@@ -706,7 +740,8 @@ def set_event_info(event_id):
 @app_routes.route("/events/<int:event_id>/cancel-reservations", methods=["POST"])
 @login_admin_required
 def send_event_cancellation_emails(event_id):
-    event = GTEvents.query.get(event_id)
+    # TODO ADD TEST
+    event = db.session.get(GTEvents, event_id)
     if not event:
         return jsonify({"error": f"Event #{event_id} not found"}), 404
 

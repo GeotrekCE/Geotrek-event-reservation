@@ -1,18 +1,19 @@
 from datetime import datetime
 
-from sqlalchemy import func
+from sqlalchemy import func, select
 
 from core.models import db, GTEvents, TAnimationsBilans
 
 
 def query_stats_bilan(params):
-    query = GTEvents.query.filter(GTEvents.deleted != True)
+    query = select(GTEvents).where(GTEvents.deleted != True)
     if "year" in params:
-        query = query.filter(
+        query = query.where(
             func.date_part("year", GTEvents.begin_date) == params["year"]
         )
-    nb_events = query.count()
-    events = query.all()
+
+    events = db.session.scalars(query).unique().all()
+    nb_events = len(events)
 
     # events with capacity
     events_capacity = [e for e in events if e.capacity and e.capacity > 0]
@@ -41,12 +42,13 @@ def query_stats_bilan(params):
     taux_remplissage_passe = (
         round(taux_remplissage_passe, 3) if taux_remplissage_passe else 0
     )
-    query = db.session.query(func.count(GTEvents.id)).filter(GTEvents.cancelled == True)
+
+    query = select(func.count(GTEvents.id)).where(GTEvents.cancelled == True)
     if "year" in params:
-        query = query.filter(
+        query = query.where(
             func.date_part("year", GTEvents.begin_date) == params["year"]
         )
-    nb_annulation = query.scalar()
+    nb_annulation = db.session.scalar(query)
 
     return {
         "nb_animations": nb_events,

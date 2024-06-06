@@ -1,8 +1,10 @@
 from flask import url_for
 
 import json
+from sqlalchemy import select
 
 from core.models import TTokens
+from core.env import db
 
 from .fixtures import (
     ADMIN_EMAIL,
@@ -20,12 +22,11 @@ def login(client, user_mail=None):
         url_for("app_routes.send_login_email"), data=json.dumps(data), headers=headers
     )
     # Get token manually
-    token = (
-        TTokens.query.filter_by(used=False)
-        .filter_by(email=user_mail)
+    token = db.session.scalars(
+        select(TTokens)
+        .where(TTokens.used == False, TTokens.email == user_mail)
         .order_by(TTokens.created_at.desc())
-        .first()
-    )
+    ).first()
     client.post(
         url_for("app_routes.login"),
         data=json.dumps({"login_token": token.token}),
