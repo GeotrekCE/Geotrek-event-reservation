@@ -187,7 +187,8 @@ const CONFIGURATION = {
   URL_GTR: 'http://localhost:8000',
   DAY_BEFORE_RESA: -1,
   RESA_NB_DELTA: 3,
-  RESA_BEGINNING_DATE: new Date('2023-06-26')
+  RESA_BEGINNING_DATE: new Date('2023-06-26'),
+  USER_CAN_CANCEL: false,
 }
 ```
 
@@ -197,6 +198,7 @@ const CONFIGURATION = {
 * `DAY_BEFORE_RESA` nombre de jour avant le début de l'animation où l'inscription est bloquée. Si -1, non pris en compte
 * `RESA_NB_DELTA` est une tolérance pour accepter une réservation qui dépasserait la capacité d'accueil de l'animation
 * `RESA_BEGINNING_DATE` est la date à partir de laquelle l'outil permet de créer une réservation
+* `USER_CAN_CANCEL` indique si l'utilisateur peut ou non annuler lui même une réservation
 
 
 **Customiser les fichiers d'informations textuelle (`public/*.md`)**

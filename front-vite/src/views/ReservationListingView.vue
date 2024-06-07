@@ -90,7 +90,7 @@
             <button
               class="rounded-sm px-3 py-2 text-sm font-medium text-white shadow-sm bg-sky-600 hover:bg-sky-500"
               @click="onCancelResa($event, data.id_reservation)"
-              v-if="!data.cancelled"
+              v-if="!data.cancelled && user_can_cancel"
             >Annuler</button>
           </template>
         </p-column>
@@ -158,6 +158,8 @@ const markdownToHTML = ref('')
 
 const expandedRows = ref([])
 
+const user_can_cancel = CONFIGURATION.USER_CAN_CANCEL;
+ 
 onBeforeMount(async () => {
   loadData()
   const response = await fetch('page_reservation.md')
