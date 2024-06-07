@@ -130,7 +130,9 @@
             </form>
 
           </template>
-          <template #list="{ data }">
+          <template #list="slotProps"> 
+
+            <div v-for="(data, index) in slotProps.items" :key="index" class="col-12">
             <router-link
               class="flex justify-between gap-x-6 p-5 hover:bg-gray-200 hover:shadow-inner border-b border-gray-200"
               :to="{ name: ROUTES_NAMES.EVENT_DETAIL, params: { id: data.id }}"
@@ -171,6 +173,7 @@
                 </span>
               </div>
             </router-link>
+            </div>
           </template>
         </p-data-view>
 
@@ -733,7 +736,7 @@ async function loadSelectedEvent () {
  * Chargement initial : événements + glossaires
  */
 onBeforeMount(async () => {
-  await loadEvents()
+  await loadEvents() 
   await loadSelectedEvent()
   filters.value = defaultFilters.value;
   const districtsResponse = await getDistricts()
