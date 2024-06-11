@@ -5,7 +5,8 @@ declare let CONFIGURATION: {
   URL_GTA: string,
   // URL GeoTrek public
   URL_GTR: string,
-
+  // utilisateur peut ou non annuler lui même une réservation
+  USER_CAN_CANCEL: boolean,
   // Donnée utilisée pour savoir si une réservation d'animation est ouverte
   // 
   // Deux possibilités : 
