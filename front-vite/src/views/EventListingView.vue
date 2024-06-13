@@ -186,7 +186,7 @@
           <i class="pi pi-chevron-left" />Retourner au résultats
         </div>
 
-        <p-card class="rounded-sm md:mt-8 mx-auto max-w-6xl">
+        <p-card class="rounded-sm md:mt-8 md:mr-2 mx-auto">
           <template #title>
             <div class="md:flex items-center justify-between space-y-4">
               {{ selectedEvent.name }}
