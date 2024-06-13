@@ -1,5 +1,6 @@
 **/config.*
 **/*.md
+!docs/*.md
 **/custom.css
 
 # Byte-compiled / optimized / DLL files
