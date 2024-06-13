@@ -28,14 +28,15 @@
           <template #header>
             <form @submit.prevent="search">
               <div class="w-full flex justify-between mb-4">
-                <span class="p-input-icon-right w-full">
-                  <i class="pi pi-search" />
+                <span class=" w-full">
+                  
                   <p-input-text
                     v-model="filters.search_name"
-                    class="rounded-sm w-full p-inputtext-sm"
+                    class="rounded-sm w-full p-inputtext-sm p-2 ring-1 ring-inset ring-gray-300"
                     placeholder="Nom animation"
                   />
-                </span>
+                </span> 
+
                 <button
                   v-if="!formOpened"
                   type="submit"
@@ -55,10 +56,10 @@
                   />
                 </button>
               </div>
-              <div v-if="formOpened" class="space-y-4">
+              <div v-if="formOpened" class="space-y-4 w-full">
                 <p-calendar
                   v-model="filters.begin_date"
-                  class="rounded-sm p-inputtext-sm w-64 mr-2"
+                  class="rounded-sm p-inputtext-sm w-64 mr-2 w-full ring-1 ring-inset ring-gray-300"
                   placeholder="Date de début"
                   dateFormat="dd/mm/yy"
                   showIcon
@@ -66,18 +67,18 @@
                 />
                 <p-calendar
                   v-model="filters.end_date"
-                  class="rounded-sm p-inputtext-sm w-64"
+                  class="rounded-sm p-inputtext-sm w-64  mr-2 w-full  ring-1 ring-inset ring-gray-300"
                   placeholder="Date de fin"
                   dateFormat="dd/mm/yy"
                   showIcon
-                  showButtonBar
+                  showButtonBar                  
                 />
                 <p-multi-select
                   v-model="filters.massif"
                   display="chip"
                   :options="districts"
                   placeholder="Massifs"
-                  class="rounded-sm p-inputtext-sm w-64 mr-2"
+                  class="rounded-sm p-inputtext-sm w-64 mr-2 w-full ring-1 ring-inset ring-gray-300"
                 />
                 <p-multi-select
                   v-model="filters.type_id"
@@ -87,7 +88,7 @@
                   option-label="name"
                   option-value="id"
                   placeholder="Type"
-                  class="rounded-sm p-inputtext-sm w-64"
+                  class="rounded-sm p-inputtext-sm w-64  mr-2 w-full ring-1 ring-inset ring-gray-300"
                 />
 
                 <div class="flex items-center">
@@ -444,8 +445,8 @@ import EventReservationForm from '@/components/EventReservationForm.vue'
 
 import PDataView from 'primevue/dataview'
 import PCalendar from 'primevue/calendar'
-import PInputText from 'primevue/inputtext'
-import PMultiSelect from 'primevue/multiselect'
+import PInputText from 'primevue/inputtext' 
+import PMultiSelect from 'primevue/multiselect';
 import PCard from 'primevue/card'
 import PTabView from 'primevue/tabview'
 import PTabPanel from 'primevue/tabpanel'
@@ -764,4 +765,9 @@ onBeforeMount(async () => {
 .p-tabview .p-tabview-nav li .p-tabview-nav-link:not(.p-disabled):focus {
   box-shadow: unset;
 }
+
+.p-inputtext, .p-checkbox-box {
+  border: 1px solid var(--gray-300); 
+}
+
 </style>

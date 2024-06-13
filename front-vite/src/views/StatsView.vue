@@ -29,25 +29,24 @@
 
 
       <section
-        class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-10 mx-auto"
+        class="mt-10"
         v-if="!loading"
       >
-        <h2 class="col-span-full text-2xl">Bilan Global </h2>
-        <div class="col-span-1 sm:col-span-2">
-          Nombre animations total : {{ stats.nb_animations }}
-        </div>
-        <div class="col-span-1 sm:col-span-2">
-          Nombre animations annulées : {{ stats.nb_annulation }}
-        </div>
-        <div class="col-span-1 sm:col-span-2">
-          Nombre animations annulées : {{ stats.nb_annulation }}
-        </div>
-        <div class="col-span-1 sm:col-span-2">
-          Taux de remplissage : {{ stats.taux_remplissage }}
-        </div>
-        <div class="col-span-1 sm:col-span-2">
-          Taux de remplissage des animations passées: {{ stats.taux_remplissage_passe }}
-        </div>
+        <h2 class="col-span-full text-2xl">Bilan Global </h2> 
+        <ul class="list-disc ml-10">
+          <li>
+            Nombre animations total : {{ stats.nb_animations }}
+          </li>
+          <li>
+            Nombre animations annulées : {{ stats.nb_annulation }}
+          </li> 
+          <li>
+            Taux de remplissage : {{ stats.taux_remplissage }}
+          </li>
+          <li>
+            Taux de remplissage des animations passées: {{ stats.taux_remplissage_passe }}
+          </li>
+        </ul>
         <div class="col-span-full flex flex-col items-center">
           <a
             class="rounded-sm bg-sky-600 px-3 py-1.5 text-sm font-medium leading-6 text-white shadow-sm hover:bg-sky-500 my-4 mx-auto"

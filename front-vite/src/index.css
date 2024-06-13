@@ -2,17 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+
 :root {
   --border-radius: 2px;
   --primary-color: var(--blue-500);
   --primary-color-darker: var(--blue-800);
   --primary-color-lighter: var(--blue-100);
 }
-
-body {
-  font-family: var(--font-family);
-} 
-
 html, body, #app {
   height: 100%;
 }
@@ -22,42 +18,6 @@ html, body, #app {
   flex-direction: column;
 }
 
-.p-inputtext {
-  border-radius: var(--border-radius);
-}
-
-.p-button.p-button-text {
-  color: var(--primary-color);
-}
-.p-button {
-  background: var(--primary-color);
-  border: 1px solid var(--primary-color);
-}
-.p-button:enabled:hover {
-  background: var(--primary-color-darker);
-  border-color: var(--primary-color-darker);
-}
-.p-button:focus {
-  box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px var(--primary-color), 0 1px 2px 0 black
-}
-.p-button.p-button-text:enabled:hover {
-  background: var(--primary-color-lighter);
-  color: var(--primary-color);
-}
- 
-.p-datepicker .p-datepicker-header {
-  padding: unset;
-}
-.p-datepicker table th,
-.p-datepicker table td {
-  padding: 0.25rem;
-}
-.p-datepicker table th > span,
-.p-datepicker table td > span {
-  width: 1.5rem;
-  height: 1.5rem;
-}
-
-.p-datepicker.p-component {
-  width: 15rem;
+body {
+  font-family: var(--font-family);
 }
