@@ -2,7 +2,6 @@ import datetime
 import json
 
 from flask import current_app
-from flask_sqlalchemy import BaseQuery
 from sqlalchemy import func, or_
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import aliased
@@ -10,17 +9,17 @@ from sqlalchemy.orm import aliased
 from .env import db
 
 
-class GTEventsQuery(BaseQuery):
-    def filter_properties(self, filters):
+class GTEventsQuery:
+    def filter_properties(self, query, filters):
         if filters.get("search_name", None):
             search_name = filters.get("search_name", None)
-            self = self.filter(
+            query = query.where(
                 func.unaccent(GTEvents.name).ilike(func.unaccent(f"%{search_name}%"))
             )
             filters.pop("search_name")
 
         if "begin_date" in filters:
-            self = self.filter(GTEvents.begin_date >= filters.pop("begin_date"))
+            query = query.where(GTEvents.begin_date >= filters.pop("begin_date"))
 
         if "end_date" in filters:
             # set the end_date at 23h59 because a hour can be set in timestamp
@@ -28,18 +27,18 @@ class GTEventsQuery(BaseQuery):
                 filters.pop("end_date")[:10], "%Y-%m-%d"
             )
             end_date = end_date.replace(hour=23, minute=59, second=59)
-            self = self.filter(GTEvents.end_date <= end_date)
+            query = query.where(GTEvents.end_date <= end_date)
 
         if "bilan.annulation" in filters:
             canceled = json.loads(filters.pop("bilan.annulation"))
             tbilan = aliased(getattr(GTEvents, "bilan"))
-            self = self.outerjoin(tbilan)
+            query = query.outerjoin(tbilan)
             if canceled:
-                self = self.filter(
+                query = query.where(
                     tbilan.annulation == True,
                 )
             else:
-                self = self.filter(
+                query = query.where(
                     or_(tbilan.annulation == None, tbilan.annulation == False)
                 )
 
@@ -48,21 +47,20 @@ class GTEventsQuery(BaseQuery):
             if hasattr(GTEvents, param) and filters.get(param):
                 # Split multi choice
                 if len(filters.get(param).split(",")) > 1:
-                    self = self.filter(
+                    query = query.where(
                         getattr(GTEvents, param).in_(filters.get(param).split(","))
                     )
                 else:
-                    self = self.filter(getattr(GTEvents, param) == filters.get(param))
+                    query = query.where(getattr(GTEvents, param) == filters.get(param))
 
         # Filter not deleted
-        self = self.filter(GTEvents.deleted != True)
-        return self
+        query = query.where(GTEvents.deleted != True)
+        return query
 
 
 class GTEvents(db.Model):
     __tablename__ = "tourism_touristicevent"
     __table_args__ = {"schema": "public"}
-    query_class = GTEventsQuery
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.Unicode, nullable=False)

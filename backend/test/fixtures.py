@@ -3,6 +3,7 @@ import json
 
 from datetime import date
 from flask import url_for
+from sqlalchemy import select
 from sqlalchemy.sql import text
 from app import create_app
 
@@ -89,12 +90,11 @@ def get_token(client):
     assert response.status_code == 204
 
     # Get token manually
-    token = (
-        TTokens.query.filter_by(used=False)
-        .filter_by(email=ADMIN_EMAIL)
+    token = db.session.scalars(
+        select(TTokens)
+        .where(TTokens.used == False, TTokens.email == ADMIN_EMAIL)
         .order_by(TTokens.created_at.desc())
-        .first()
-    )
+    ).first()
 
     response = client.post(
         url_for("app_routes.login"),

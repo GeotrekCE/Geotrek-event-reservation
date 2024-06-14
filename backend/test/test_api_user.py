@@ -4,9 +4,12 @@ import pytest
 import json
 import logging
 
+from sqlalchemy import select
+
 from core.models import GTEvents, TReservations
 from core.models import TTokens
 from core.routes import EventIsFull
+from core.env import db
 
 from .utils import login
 from .fixtures import (
@@ -42,11 +45,11 @@ class TestAPI:
     def test_post_reservation(self, events):
         login(self.client, "user@test.fr")
         # Create reservation
-        event = (
-            GTEvents.query.filter_by(name="Pytest bookable")
+        event = db.session.scalars(
+            select(GTEvents)
+            .where(GTEvents.name == "Pytest bookable")
             .order_by(GTEvents.id.desc())
-            .first()
-        )
+        ).first()
 
         data_resa = TEST_RESERVATION
         data_resa["id_event"] = event.id
@@ -58,7 +61,7 @@ class TestAPI:
         # Confirm resa
         data = json.loads(resp.data)
         id_resa = data["id_reservation"]
-        resa = TReservations.query.get(id_resa)
+        resa = db.session.get(TReservations, id_resa)
         resp = post_json(
             self.client,
             url_for("app_routes.confirm_reservation"),
@@ -85,3 +88,9 @@ class TestAPI:
             url_for("app_routes.cancel_reservation", reservation_id=id_resa)
         )
         assert resp == 400
+
+    def test_get_reservations(self):
+        login(self.client, "user@test.fr")
+        response = self.client.get(url_for("app_routes.get_reservations"))
+
+        assert response.status_code == 200
