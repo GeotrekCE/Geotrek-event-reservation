@@ -67,6 +67,7 @@ TEST_RESERVATION_PLEIN_PERSONNES = {
     "num_departement": "48",
 }
 
+
 @pytest.mark.usefixtures("client_class")
 class TestAPI:
     def test_post_reservation(self, events):

@@ -15,6 +15,7 @@ from core.exceptions import (
     ParticipantNbExceded,
 )
 
+
 class GTEventsQuery:
     def filter_properties(self, query, filters):
         if filters.get("search_name", None):
