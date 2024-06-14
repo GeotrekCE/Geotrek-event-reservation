@@ -2,12 +2,13 @@ import datetime
 import json
 
 from flask import current_app
-from sqlalchemy import func, or_
+from sqlalchemy import func, or_, select, extract
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import aliased
 
 from .env import db
 
+from core.exceptions import EventIsFull, UserEventNbExceded, NotBookable
 
 class GTEventsQuery:
     def filter_properties(self, query, filters):
@@ -158,9 +159,28 @@ class GTEvents(db.Model):
     def massif(cls):
         return func.animations.get_secteur_name(cls.id)
 
-    def is_reservation_possible_for(self, nb_people):
+    def is_reservation_possible_for(self, nb_people, email):
+
         if not self.bookable:
-            return False
+            raise NotBookable
+
+        # Test nombre de reservation par utilisateur
+        # Selection animations par utilisateur
+        from datetime import datetime
+
+        query = select(func.count(TReservations.id_reservation)).where(
+            TReservations.cancelled == False,
+            TReservations.email == email,
+            TReservations.confirmed == True,
+            extract("year", TReservations.meta_create_date) == datetime.today().year,
+        )
+        nb_reservation = db.session.scalar(query)
+
+        # On retranche un de façon a s'assurer que le nb d'animation
+        # ne sera pas suppérieur une fois l'animation ajoutée
+        if nb_reservation > current_app.config["NB_ANIM_MAX_PER_USER"] - 1:
+            raise UserEventNbExceded
+
         if not self.capacity:
             return True
         if self.sum_participants + nb_people <= self.capacity:
@@ -170,7 +190,7 @@ class GTEvents(db.Model):
             <= current_app.config["LISTE_ATTENTE_CAPACITY"]
         ):
             return True
-        return False
+        raise EventIsFull
 
 
 class GTCancellationReason(db.Model):

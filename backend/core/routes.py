@@ -5,7 +5,7 @@ import secrets
 from email_validator import validate_email, EmailNotValidError, EmailSyntaxError
 from flask import jsonify, request, Blueprint, render_template, session, current_app
 
-from sqlalchemy import select
+from sqlalchemy import select, func, extract
 
 from core.models import (
     db,
@@ -33,7 +33,11 @@ from core.utils import (
     get_mail_subject,
     stringify,
 )
-
+from core.exceptions import (
+    UserEventNbExceded,
+    UserEventNbExcededAdmin,
+    UserEventNbExcededUser,
+)
 
 app_routes = Blueprint("app_routes", __name__)
 
@@ -257,10 +261,6 @@ def get_reservations():
     )
 
 
-class EventIsFull(Exception):
-    pass
-
-
 class BodyParamValidationError(Exception):
     pass
 
@@ -275,8 +275,12 @@ def _post_reservations_by_user(post_data):
             f"Event with ID {reservation.id_event} not found"
         )
 
-    if not event.is_reservation_possible_for(reservation.nb_participants):
-        raise EventIsFull
+    try:
+        event.is_reservation_possible_for(
+            reservation.nb_participants, reservation.email
+        )
+    except UserEventNbExceded:
+        raise UserEventNbExcededUser
 
     reservation.token = generate_token()
 
@@ -308,8 +312,12 @@ def _post_reservations_by_admin(post_data):
             f"Event with ID {reservation.id_event} not found"
         )
 
-    if not event.is_reservation_possible_for(reservation.nb_participants):
-        raise EventIsFull
+    try:
+        event.is_reservation_possible_for(
+            reservation.nb_participants, reservation.email
+        )
+    except UserEventNbExceded:
+        raise UserEventNbExcededAdmin
 
     if reservation.confirmed and reservation.liste_attente is None:
         if not event.capacity:
@@ -390,9 +398,13 @@ def confirm_reservation():
         return jsonify({"error": "Reservation already confirmed"}), 400
 
     event = resa.event
-    if not event.is_reservation_possible_for(resa.nb_participants):
-        raise EventIsFull
-    elif not event.capacity:
+
+    try:
+        event.is_reservation_possible_for(resa.nb_participants, resa.email)
+    except UserEventNbExceded:
+        raise UserEventNbExcededUser
+
+    if not event.capacity:
         resa.liste_attente = False
     elif event.sum_participants + resa.nb_participants <= event.capacity:
         resa.liste_attente = False
