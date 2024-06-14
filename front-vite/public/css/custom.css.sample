@@ -1,0 +1,30 @@
+   #app-header,
+   .p-menubar {
+     --tw-bg-opacity: 1;
+      background-color: #f29000;  
+     border-radius: 0;
+     padding-bottom: 0;
+   }
+
+
+   .p-menuitem-content {
+     color: black;
+     border-radius: 0;
+   }
+
+   /* 
+  .p-menubar .p-menubar-root-list>.p-menuitem:not(.p-highlight):not(.p-disabled)>.p-menuitem-content:hover {
+    background: #ffbc56;
+  } */
+
+   .p-menuitem-content {
+     color: black;
+   }
+
+   .p-menuitem-active {
+     background-color: rgb(255, 255, 255);
+   }
+
+   .p-menuitem-active .item-label {
+     text-decoration: underline;
+   }

@@ -28,14 +28,15 @@
           <template #header>
             <form @submit.prevent="search">
               <div class="w-full flex justify-between mb-4">
-                <span class="p-input-icon-right w-full">
-                  <i class="pi pi-search" />
+                <span class=" w-full">
+                  
                   <p-input-text
                     v-model="filters.search_name"
-                    class="rounded-sm w-full p-inputtext-sm"
+                    class="rounded-sm w-full p-inputtext-sm p-2 ring-1 ring-inset ring-gray-300"
                     placeholder="Nom animation"
                   />
-                </span>
+                </span> 
+
                 <button
                   v-if="!formOpened"
                   type="submit"
@@ -55,10 +56,10 @@
                   />
                 </button>
               </div>
-              <div v-if="formOpened" class="space-y-4">
+              <div v-if="formOpened" class="space-y-4 w-full">
                 <p-calendar
                   v-model="filters.begin_date"
-                  class="rounded-sm p-inputtext-sm w-64 mr-2"
+                  class="rounded-sm p-inputtext-sm w-64 mr-2 w-full ring-1 ring-inset ring-gray-300"
                   placeholder="Date de début"
                   dateFormat="dd/mm/yy"
                   showIcon
@@ -66,18 +67,18 @@
                 />
                 <p-calendar
                   v-model="filters.end_date"
-                  class="rounded-sm p-inputtext-sm w-64"
+                  class="rounded-sm p-inputtext-sm w-64  mr-2 w-full  ring-1 ring-inset ring-gray-300"
                   placeholder="Date de fin"
                   dateFormat="dd/mm/yy"
                   showIcon
-                  showButtonBar
+                  showButtonBar                  
                 />
                 <p-multi-select
                   v-model="filters.massif"
                   display="chip"
                   :options="districts"
                   placeholder="Massifs"
-                  class="rounded-sm p-inputtext-sm w-64 mr-2"
+                  class="rounded-sm p-inputtext-sm w-64 mr-2 w-full ring-1 ring-inset ring-gray-300"
                 />
                 <p-multi-select
                   v-model="filters.type_id"
@@ -87,7 +88,7 @@
                   option-label="name"
                   option-value="id"
                   placeholder="Type"
-                  class="rounded-sm p-inputtext-sm w-64"
+                  class="rounded-sm p-inputtext-sm w-64  mr-2 w-full ring-1 ring-inset ring-gray-300"
                 />
 
                 <div class="flex items-center">
@@ -130,7 +131,9 @@
             </form>
 
           </template>
-          <template #list="{ data }">
+          <template #list="slotProps"> 
+
+            <div v-for="(data, index) in slotProps.items" :key="index" class="col-12">
             <router-link
               class="flex justify-between gap-x-6 p-5 hover:bg-gray-200 hover:shadow-inner border-b border-gray-200"
               :to="{ name: ROUTES_NAMES.EVENT_DETAIL, params: { id: data.id }}"
@@ -171,6 +174,7 @@
                 </span>
               </div>
             </router-link>
+            </div>
           </template>
         </p-data-view>
 
@@ -182,7 +186,7 @@
           <i class="pi pi-chevron-left" />Retourner au résultats
         </div>
 
-        <p-card class="rounded-sm md:mt-8 mx-auto max-w-6xl">
+        <p-card class="rounded-sm md:mt-8 md:mr-2 mx-auto">
           <template #title>
             <div class="md:flex items-center justify-between space-y-4">
               {{ selectedEvent.name }}
@@ -441,8 +445,8 @@ import EventReservationForm from '@/components/EventReservationForm.vue'
 
 import PDataView from 'primevue/dataview'
 import PCalendar from 'primevue/calendar'
-import PInputText from 'primevue/inputtext'
-import PMultiSelect from 'primevue/multiselect'
+import PInputText from 'primevue/inputtext' 
+import PMultiSelect from 'primevue/multiselect';
 import PCard from 'primevue/card'
 import PTabView from 'primevue/tabview'
 import PTabPanel from 'primevue/tabpanel'
@@ -733,7 +737,7 @@ async function loadSelectedEvent () {
  * Chargement initial : événements + glossaires
  */
 onBeforeMount(async () => {
-  await loadEvents()
+  await loadEvents() 
   await loadSelectedEvent()
   filters.value = defaultFilters.value;
   const districtsResponse = await getDistricts()
@@ -761,4 +765,9 @@ onBeforeMount(async () => {
 .p-tabview .p-tabview-nav li .p-tabview-nav-link:not(.p-disabled):focus {
   box-shadow: unset;
 }
+
+.p-inputtext, .p-checkbox-box {
+  border: 1px solid var(--gray-300); 
+}
+
 </style>

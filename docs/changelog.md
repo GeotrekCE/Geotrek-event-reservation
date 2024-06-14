@@ -2,9 +2,17 @@
 # Changelog
 
 ## 0.3.0 (unrelease)
-
+ 
 **🚀 Nouveautés**
- - Mise à jour vers SQLAlchemy 1.4 (#63)
+
+- Mise à jour vers SQLAlchemy 1.4 (#63)
+- Mise à jour des librairies javascript (#65)
+- Utilisation de MenuBar pour la barre de menu (#65)
+- Style page des statistiques (#65)
+
+**⚠️ Notes de version**
+ - Les paramètres de configuration css de la barre de menu ont changé. Se référer au fichier `front-vite/public/css/custom.css.sample` pour évaluer les impacts
+
 
 ## 0.2.0 (2024-06-14)
 
