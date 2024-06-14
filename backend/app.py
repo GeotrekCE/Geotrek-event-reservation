@@ -18,6 +18,7 @@ from core.exceptions import (
     UserEventNbExcededUser,
     UserEventNbExcededAdmin,
     NotBookable,
+    ParticipantNbExceded,
 )
 
 mail = None
@@ -104,6 +105,17 @@ def create_app():
             jsonify(
                 {
                     "error": "Vous avez atteind la limite du nombre de réservation possible par personne"
+                }
+            ),
+            422,
+        )
+
+    @app.errorhandler(ParticipantNbExceded)
+    def handle_participant_nb_exceded_error(e):
+        return (
+            jsonify(
+                {
+                    "error": "Vous avez ne pouvez pas inscrire autant de personne sur une animation"
                 }
             ),
             422,

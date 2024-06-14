@@ -16,3 +16,7 @@ class UserEventNbExcededAdmin(Exception):
 
 class UserEventNbExcededUser(Exception):
     pass
+
+
+class ParticipantNbExceded(Exception):
+    pass

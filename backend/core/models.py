@@ -8,7 +8,12 @@ from sqlalchemy.orm import aliased
 
 from .env import db
 
-from core.exceptions import EventIsFull, UserEventNbExceded, NotBookable
+from core.exceptions import (
+    EventIsFull,
+    UserEventNbExceded,
+    NotBookable,
+    ParticipantNbExceded,
+)
 
 class GTEventsQuery:
     def filter_properties(self, query, filters):
@@ -180,6 +185,9 @@ class GTEvents(db.Model):
         # ne sera pas suppérieur une fois l'animation ajoutée
         if nb_reservation > current_app.config["NB_ANIM_MAX_PER_USER"] - 1:
             raise UserEventNbExceded
+
+        if nb_people > current_app.config["NB_PARTICIPANTS_PER_ANIM"]:
+            raise ParticipantNbExceded
 
         if not self.capacity:
             return True

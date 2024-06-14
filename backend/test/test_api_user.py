@@ -53,6 +53,19 @@ TEST_RESERVATION_1_PERSONNE = {
     "num_departement": "48",
 }
 
+TEST_RESERVATION_PLEIN_PERSONNES = {
+    "nom": "YO",
+    "prenom": "yo",
+    "commentaire": "saisie test",
+    "tel": "00 00 00 00 00 ",
+    "email": "user.tropmonde@test.fr",
+    "nb_adultes": 10,
+    "nb_moins_6_ans": 10,
+    "nb_6_8_ans": 10,
+    "nb_9_12_ans": 10,
+    "nb_plus_12_ans": 0,
+    "num_departement": "48",
+}
 
 @pytest.mark.usefixtures("client_class")
 class TestAPI:
@@ -109,7 +122,7 @@ class TestAPI:
 
         assert response.status_code == 200
 
-    def test_post_limit(self, events):
+    def test_post_limit_nb_animations(self, events):
         login(self.client, "user@test.fr")
         # Create reservation
         event = db.session.scalars(
@@ -149,4 +162,25 @@ class TestAPI:
         assert (
             json_of_response(resp)["error"]
             == "Vous avez atteind la limite du nombre de réservation possible par personne"
+        )
+
+    def test_post_limit_nb_participants(self, events):
+        login(self.client, "user@test.fr")
+        # Create reservation
+        event = db.session.scalars(
+            select(GTEvents)
+            .where(GTEvents.name == "Pytest bookable")
+            .order_by(GTEvents.id.desc())
+        ).first()
+
+        data_resa = TEST_RESERVATION_PLEIN_PERSONNES
+        data_resa["id_event"] = event.id
+
+        resp = post_json(
+            self.client, url_for("app_routes.post_reservations"), data_resa
+        )
+        assert resp.status_code == 422
+        assert (
+            json_of_response(resp)["error"]
+            == "Vous avez ne pouvez pas inscrire autant de personne sur une animation"
         )

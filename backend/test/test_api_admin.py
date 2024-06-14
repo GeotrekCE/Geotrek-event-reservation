@@ -257,7 +257,7 @@ class TestAPI:
         assert resa.cancelled == True
         assert resa.cancel_by == "admin"
 
-    def test_post_limit(self, events):
+    def test_post_limit_nb_animations(self, events):
         login(self.client)
         # Create reservation
         event = db.session.scalars(
