@@ -3,6 +3,9 @@
 
 ## 0.3.0 (unrelease)
 
+**🚀 Nouveautés**
+ - Mise à jour vers SQLAlchemy 1.4 (#63)
+
 ## 0.2.0 (2024-06-14)
 
 **🚀 Nouveautés**
