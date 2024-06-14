@@ -9,6 +9,7 @@
 - Mise à jour des librairies javascript (#65)
 - Utilisation de MenuBar pour la barre de menu (#65)
 - Style page des statistiques (#65)
+- Utilisation de toast pour afficher les messages d'erreur du formulaire d'inscription aux animations (#66)
 
 **⚠️ Notes de version**
  - Les paramètres de configuration css de la barre de menu ont changé. Se référer au fichier `front-vite/public/css/custom.css.sample` pour évaluer les impacts
