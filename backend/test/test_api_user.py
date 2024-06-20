@@ -137,8 +137,7 @@ class TestAPI:
 
         nb_limit_per_user = current_app.config["NB_ANIM_MAX_PER_USER"]
 
-        # Création du nombre de reservations spécifiée dans NB_ANIM_MAX_PER_USER
-
+        # Création du nombre de reservations spécifié dans NB_ANIM_MAX_PER_USER
         for loop in range(nb_limit_per_user):
             resp = post_json(
                 self.client, url_for("app_routes.post_reservations"), data_resa
@@ -162,7 +161,7 @@ class TestAPI:
         assert resp.status_code == 422
         assert (
             json_of_response(resp)["error"]
-            == "Vous avez atteind la limite du nombre de réservation possible par personne"
+            == "Vous avez atteint la limite du nombre de réservations possible par personne"
         )
 
     def test_post_limit_nb_participants(self, events):
@@ -183,5 +182,5 @@ class TestAPI:
         assert resp.status_code == 422
         assert (
             json_of_response(resp)["error"]
-            == "Vous avez ne pouvez pas inscrire autant de personne sur une animation"
+            == "Vous ne pouvez pas inscrire autant de personnes sur une animation"
         )

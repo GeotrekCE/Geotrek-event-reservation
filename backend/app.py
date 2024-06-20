@@ -104,7 +104,7 @@ def create_app():
         return (
             jsonify(
                 {
-                    "error": "Vous avez atteind la limite du nombre de réservation possible par personne"
+                    "error": "Vous avez atteint la limite du nombre de réservations possible par personne"
                 }
             ),
             422,
@@ -115,7 +115,7 @@ def create_app():
         return (
             jsonify(
                 {
-                    "error": "Vous avez ne pouvez pas inscrire autant de personne sur une animation"
+                    "error": "Vous ne pouvez pas inscrire autant de personnes sur une animation"
                 }
             ),
             422,
