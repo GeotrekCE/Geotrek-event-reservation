@@ -69,7 +69,7 @@
 
 <script setup lang="ts">
 import { getGlobalStats } from '@/utils/appli_api'
-import { type Statistics } from '@/declaration'
+import type { Statistics } from '@/declaration'
 
 import { ref, onBeforeMount, watch } from 'vue'
 

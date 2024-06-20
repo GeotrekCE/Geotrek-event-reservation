@@ -2,9 +2,6 @@
   <vv-form @submit="values => emits('submit', values)" class="mt-4" :validation-schema="formSchema"
     :initial-values="formValues" v-slot="{ errors }">
   
-    <div class="card flex justify-content-center">
-      <button @click="showTemplate()" label="Save">Save</button>
-    </div>
     <div class="space-y-12">
   
       <div class="border-b border-gray-900/10 pb-12">
@@ -207,9 +204,8 @@
           </span>
         </div>
         </vv-form>
-        <Toast :position="toastPosition">
+        <Toast>
           <template #message="slotProps">
-            <span :class="iconClass"></span>
             <div class="p-toast-message-text">
               <span class="p-toast-summary">{{ slotProps.message.summary }}</span>
               <div class="p-toast-detail" v-html="slotProps.message.detail" />
@@ -236,8 +232,8 @@ const props = defineProps({
     required: true
   },
   saveError: {
-    type: String,
-    required: false,
+    type: Object,
+    required: false, 
     default: ''
   },
   displayCancel: {
@@ -262,8 +258,7 @@ const origins = CONFIGURATION.ORIGINS
 
 
 watch(
-  () => props.saveError, (prev, next) => {
-    console.log(props.saveError)
+  () => props.saveError, (prev, next) => { 
     if (props.saveError.name == "Error") {
       toast.add({ severity: 'error', summary: 'Sauvegarde impossible', detail: props.saveError.message, life: 10000 });
     }

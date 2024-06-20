@@ -164,7 +164,7 @@ onBeforeMount(async () => {
   loadData()
   const response = await fetch('page_reservation.md')
   const text = await response.text()
-  markdownToHTML.value = marked(text) || 'Erreur lors de la récupération des informations à afficher.'
+  markdownToHTML.value = await marked(text) || 'Erreur lors de la récupération des informations à afficher.'
 
 })
 

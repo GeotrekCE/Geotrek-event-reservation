@@ -30,7 +30,7 @@ onMounted(async () => {
   loading.value = true
   const response = await fetch('page_info_admin.md')
   const text = await response.text()
-  markdownToHTML.value = marked(text) || 'Erreur lors de la récupération des informations à afficher.'
+  markdownToHTML.value = await marked(text) || 'Erreur lors de la récupération des informations à afficher.'
   loading.value = false
 })
 </script>
