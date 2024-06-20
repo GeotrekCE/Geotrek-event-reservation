@@ -9,6 +9,7 @@ import router from './router'
  */
 import PrimeVue from 'primevue/config'
 import ConfirmationService from 'primevue/confirmationservice'
+import ToastService from 'primevue/toastservice';
 import 'primevue/resources/themes/lara-light-teal/theme.css'
 import 'primevue/resources/primevue.min.css'
 import 'primeicons/primeicons.css'
@@ -20,6 +21,7 @@ import { useAuthStore } from './stores/auth'
 
 
 import App from './App.vue'
+ 
 
 /**
  * Check the auth
@@ -39,6 +41,7 @@ async function boot() {
 
   app.use(PrimeVue)
   app.use(ConfirmationService)
+  app.use(ToastService)
 
   app.use(pinia)
   app.use(router)
