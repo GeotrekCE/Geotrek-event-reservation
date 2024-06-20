@@ -429,11 +429,26 @@ def update_reservation(reservation_id):
     if not reservation:
         return jsonify({"error": f"Reservation #{reservation_id} not found"}), 404
 
+    event = db.session.get(GTEvents, reservation.id_event)
+    old_nb_participants = reservation.nb_participants
+
+    if not event:
+        raise BodyParamValidationError(
+            f"Event with ID {reservation.id_event} not found"
+        )
+
     post_data = request.get_json()
     post_data["digitizer"] = session["user"]
     validated_data = TReservationsUpdateSchema().load(post_data)
+
     for k, v in validated_data.items():
         setattr(reservation, k, v)
+    # On retranche l'ancien nombre de participants
+    if not event.is_reservation_possible_for(
+        reservation.nb_participants - old_nb_participants
+    ):
+        raise EventIsFull
+
     db.session.add(reservation)
     db.session.commit()
 
