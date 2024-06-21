@@ -430,7 +430,8 @@ def update_reservation(reservation_id):
         return jsonify({"error": f"Reservation #{reservation_id} not found"}), 404
 
     event = db.session.get(GTEvents, reservation.id_event)
-    old_nb_participants = reservation.nb_participants
+    old_reservation_nb_participants = reservation.nb_participants
+    old_reservation_email = reservation.email
 
     if not event:
         raise BodyParamValidationError(
@@ -443,11 +444,22 @@ def update_reservation(reservation_id):
 
     for k, v in validated_data.items():
         setattr(reservation, k, v)
-    # On retranche l'ancien nombre de participants
-    if not event.is_reservation_possible_for(
-        reservation.nb_participants - old_nb_participants
-    ):
-        raise EventIsFull
+    try:
+        # On retranche l'ancien nombre de participants de façon a éviter de compter en double le nombre de personnes
+        nb_participants_to_test = (
+            reservation.nb_participants - old_reservation_nb_participants
+        )
+        # skip_nb_max_per_user = True de façon à ne pas tester le nombre max d'animation par utilisateur
+        #   sauf si le mail change
+        skip_nb_max_per_user = True
+        if not reservation.email == old_reservation_email:
+            skip_nb_max_per_user = False
+
+        event.is_reservation_possible_for(
+            nb_participants_to_test, reservation.email, skip_nb_max_per_user
+        )
+    except UserEventNbExceded:
+        raise UserEventNbExcededAdmin
 
     db.session.add(reservation)
     db.session.commit()

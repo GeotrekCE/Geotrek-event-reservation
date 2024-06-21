@@ -15,6 +15,9 @@
  
 
 
+**🐛 Corrections**
+ - Ajout de test concernant la capacité de l'événement (`is_reservation_possible_for`) lors de la mise à jour d'une réservation
+
 **⚠️ Notes de version**
  - Les paramètres de configuration css de la barre de menu ont changé. Se référer au fichier `front-vite/public/css/custom.css.sample` pour évaluer les impacts
 

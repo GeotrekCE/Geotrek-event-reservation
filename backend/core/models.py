@@ -165,7 +165,13 @@ class GTEvents(db.Model):
     def massif(cls):
         return func.animations.get_secteur_name(cls.id)
 
-    def is_reservation_possible_for(self, nb_people, email):
+    def is_reservation_possible_for(self, nb_people, email, skip_nb_max_per_user=False):
+        #  Test si la réservation est possible pour cette animation
+        # params :
+        #   - nb_people:int = nombre de personne à inscrite
+        #   - email:string = mail de la personne à inscrire permet d'identifier les personnes
+        #   - skip_nb_max_per_user:boolean (False) = eviter le test nb maximal d'animation par utilisateur
+        #       ce paramètre est a utiliser lors des updates
 
         if not self.bookable:
             raise NotBookable
@@ -182,9 +188,12 @@ class GTEvents(db.Model):
         )
         nb_reservation = db.session.scalar(query)
 
-        # On retranche un de façon a s'assurer que le nb d'animation
+        # On retranche 1 de façon a s'assurer que le nb d'animation
         # ne sera pas suppérieur une fois l'animation ajoutée
-        if nb_reservation > current_app.config["NB_ANIM_MAX_PER_USER"] - 1:
+        if (
+            nb_reservation > current_app.config["NB_ANIM_MAX_PER_USER"] - 1
+            and not skip_nb_max_per_user
+        ):
             raise UserEventNbExceded
 
         if nb_people > current_app.config["NB_PARTICIPANTS_MAX_PER_ANIM_PER_USER"]:
