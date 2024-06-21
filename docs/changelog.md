@@ -10,6 +10,10 @@
 - Utilisation de MenuBar pour la barre de menu (#65)
 - Style page des statistiques (#65)
 - Utilisation de toast pour afficher les messages d'erreur du formulaire d'inscription aux animations (#66)
+- [BACK] Ajout paramètre `NB_PARTICIPANTS_MAX_PER_ANIM_PER_USER` qui permet d'indiquer le nombre maximal de participants que l'on peut enregistrer lors de la création d'une réservation 
+- [BACK] Ajout paramètre `NB_ANIM_MAX_PER_USER` qui permet d'indiquer le nombre maximal d'animations auxquelles un utilisateur peut s'inscrire par an.
+ 
+
 
 **⚠️ Notes de version**
  - Les paramètres de configuration css de la barre de menu ont changé. Se référer au fichier `front-vite/public/css/custom.css.sample` pour évaluer les impacts

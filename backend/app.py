@@ -11,7 +11,15 @@ from flask_mail import Mail
 from marshmallow.exceptions import ValidationError as MarshmallowValidationError
 
 from core.env import db
-from core.routes import app_routes, QueryParamValidationError, EventIsFull
+from core.routes import app_routes, QueryParamValidationError
+from core.exceptions import (
+    EventIsFull,
+    UserEventNbExceded,
+    UserEventNbExcededUser,
+    UserEventNbExcededAdmin,
+    NotBookable,
+    ParticipantNbExceded,
+)
 
 mail = None
 
@@ -67,6 +75,47 @@ def create_app():
             jsonify(
                 {
                     "error": "Réservation ou placement sur liste d'attente impossible, l'événement est complet"
+                }
+            ),
+            422,
+        )
+
+    @app.errorhandler(NotBookable)
+    def handle_event_is_full_error(e):
+        return (
+            jsonify({"error": "L'animation n'est pas ouverte à la réservation"}),
+            422,
+        )
+
+    @app.errorhandler(UserEventNbExceded)
+    @app.errorhandler(UserEventNbExcededAdmin)
+    def handle_user_event_nb_exceded_error(e):
+        return (
+            jsonify(
+                {
+                    "error": "La limite du nombre de réservation pour cet utilisateur est atteinte"
+                }
+            ),
+            422,
+        )
+
+    @app.errorhandler(UserEventNbExcededUser)
+    def handle_user_event_nb_exceded_error(e):
+        return (
+            jsonify(
+                {
+                    "error": "Vous avez atteint la limite du nombre de réservations possible par personne"
+                }
+            ),
+            422,
+        )
+
+    @app.errorhandler(ParticipantNbExceded)
+    def handle_participant_nb_exceded_error(e):
+        return (
+            jsonify(
+                {
+                    "error": "Vous ne pouvez pas inscrire autant de personnes sur une animation"
                 }
             ),
             422,

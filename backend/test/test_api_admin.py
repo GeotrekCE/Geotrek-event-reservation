@@ -10,7 +10,7 @@ from io import StringIO
 from sqlalchemy import select
 from core.models import GTEvents, TReservations
 from core.models import TTokens
-from core.routes import EventIsFull
+from core.exceptions import EventIsFull
 from core.env import db
 
 from .utils import login
@@ -41,6 +41,21 @@ TEST_RESERVATION = {
     "num_departement": "48",
     "confirmed": True,
 }
+TEST_RESERVATION_1_PERSONNE = {
+    "nom": "BLAIR",
+    "prenom": "Eric",
+    "commentaire": "saisie test",
+    "tel": "00 00 00 00 00 ",
+    "email": "trop.resa@test.fr",
+    "nb_adultes": 1,
+    "nb_moins_6_ans": 0,
+    "nb_6_8_ans": 0,
+    "nb_9_12_ans": 0,
+    "nb_plus_12_ans": 0,
+    "num_departement": "48",
+    "confirmed": True,
+}
+
 TEST_BILAN = {
     "commentaire": "test bilan",
     "nb_6_8_ans": 1,
@@ -241,6 +256,37 @@ class TestAPI:
         resa = db.session.get(TReservations, id_reservation)
         assert resa.cancelled == True
         assert resa.cancel_by == "admin"
+
+    def test_post_limit_nb_animations(self, events):
+        login(self.client)
+        # Create reservation
+        event = db.session.scalars(
+            select(GTEvents)
+            .where(GTEvents.name == "Pytest bookable")
+            .order_by(GTEvents.id.desc())
+        ).first()
+
+        data_resa = TEST_RESERVATION_1_PERSONNE
+        data_resa["id_event"] = event.id
+
+        nb_limit_per_user = current_app.config["NB_ANIM_MAX_PER_USER"]
+
+        # Création du nombre de reservation spécifié dans NB_ANIM_MAX_PER_USER
+        for loop in range(nb_limit_per_user):
+            resp = post_json(
+                self.client, url_for("app_routes.post_reservations"), data_resa
+            )
+            assert resp == 200
+
+        #  Ajout de 1 reservation ce qui doit retourner une erreur
+        resp = post_json(
+            self.client, url_for("app_routes.post_reservations"), data_resa
+        )
+        assert resp.status_code == 422
+        assert (
+            json_of_response(resp)["error"]
+            == "La limite du nombre de réservation pour cet utilisateur est atteinte"
+        )
 
     # def test_post_one_bilan(self):
     #     # POST

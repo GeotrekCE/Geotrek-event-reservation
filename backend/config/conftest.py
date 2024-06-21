@@ -13,6 +13,10 @@ ORGANISM_FOR_EMAIL_SUBJECT = ""
 
 # Le nombre maximale de personnes que l'on peut mettre en liste d'attente sur un événement.
 LISTE_ATTENTE_CAPACITY = 10
+# Le nombre maximal d'animations auxquelles une personne peut s'inscrire
+NB_ANIM_MAX_PER_USER = 3
+# Le nombre maximale de participant pouvant s'inscrire à une animation
+NB_PARTICIPANTS_MAX_PER_ANIM_PER_USER = 10
 # L'adresse où écoute le frontend du portail de réservation, par exemple : 'www.png-resa.fr' ou 'localhost:5000'.
 PUBLIC_SERVER_NAME = "http://localhost:5173"
 
