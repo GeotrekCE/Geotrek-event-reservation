@@ -1,8 +1,15 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@layer tailwind-base, primevue, tailwind-utilities;
 
+@layer tailwind-base {
+    @tailwind base;
+}
 
+@layer tailwind-utilities {
+    @tailwind components;
+      @tailwind utilities;
+}
+
+@layer primeui, primevue;
 :root {
   --border-radius: 2px;
   --primary-color: var(--blue-500);
@@ -20,4 +27,34 @@ html, body, #app {
 
 body {
   font-family: var(--font-family);
+}
+.p-button-label {
+  flex: 1 1 auto;
+}
+
+.p-button {
+  padding: 0.75rem 1.25rem;
+  font-size: 1rem;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
+  border-radius: 6px;
+  outline-color: transparent;
+  border: 1px solid #14b8a6;
+}
+
+.p-confirm-popup .p-confirm-popup-accept {
+  color: #ffffff;
+  background: #14b8a6;
+}
+
+.p-confirm-popup .p-confirm-popup-footer button {
+  margin: 0 0.5rem 0 0;
+  margin-top: 0px;
+  margin-right: 0.5rem;
+  margin-bottom: 0px;
+  margin-left: 0px;
+  width: auto;
+}
+
+.p-confirm-popup .p-button-icon-only {
+  padding: 0;
 }
