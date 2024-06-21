@@ -10,8 +10,8 @@
 - Utilisation de MenuBar pour la barre de menu (#65)
 - Style page des statistiques (#65)
 - Utilisation de toast pour afficher les messages d'erreur du formulaire d'inscription aux animations (#66)
-- [BACK] Ajout paramètre `NB_PARTICIPANTS_PER_ANIM` qui permet d'indiquer le nombre maximale de participant pouvant s'inscrire à une animation
-- [BACK] Ajout paramètre `NB_ANIM_MAX_PER_USER` qui permet d'indiquer le nombre maximale d'animation par utilisateur (et par an)
+- [BACK] Ajout paramètre `NB_PARTICIPANTS_MAX_PER_ANIM_PER_USER` qui permet d'indiquer le nombre maximal de participants que l'on peut enregistrer lors de la création d'une réservation 
+- [BACK] Ajout paramètre `NB_ANIM_MAX_PER_USER` qui permet d'indiquer le nombre maximal d'animations auxquelles un utilisateur peut s'inscrire par an.
  
 
 
