@@ -1,4 +1,5 @@
 <template>
+  <div>
   <vv-form @submit="values => emits('submit', values)" class="mt-4" :validation-schema="formSchema"
     :initial-values="formValues" v-slot="{ errors }">
   
@@ -214,6 +215,7 @@
             </div>
           </template>
         </Toast>
+      </div>
 </template>
 
 <script setup lang="ts">
@@ -234,7 +236,7 @@ const props = defineProps({
   saveError: {
     type: Object,
     required: false, 
-    default: ''
+    default: { name: '' }
   },
   displayCancel: {
     type: Boolean,
@@ -258,11 +260,10 @@ const origins = CONFIGURATION.ORIGINS
 
 
 watch(
-  () => props.saveError, (prev, next) => { 
+  () => props.saveError, (prev, next) => {  
     if (props.saveError.name == "Error") {
       toast.add({ severity: 'error', summary: 'Sauvegarde impossible', detail: props.saveError.message, life: 10000 });
     }
-
   },
   { deep: true });
 

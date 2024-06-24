@@ -9,7 +9,7 @@
     <template #item="{ item, props, hasSubmenu }">
       <div v-if="isAdmin == item.isAdmin && isAuth == item.isAuth">
         <router-link v-if="item.route" v-slot="{ href, navigate }" :to="item.route" custom>
-          <a v-ripple :href="href" v-bind="props.action" @click="navigate"
+          <a :href="href" v-bind="props.action" @click="navigate"
             :class="item.route == $route.fullPath ? 'p-menuitem-active' : ' '">
             <span :class="item.icon" />
             <span class="ml-2 item-label">{{ item.label }}</span>
