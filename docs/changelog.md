@@ -1,7 +1,7 @@
 
 # Changelog
 
-## 0.3.0 (unrelease)
+## 0.3.0 (2024-06-24)
  
 **🚀 Nouveautés**
 
