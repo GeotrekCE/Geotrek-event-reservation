@@ -37,7 +37,10 @@
         <div v-if="error" class="text-red-500">
           Une erreur est survenue pendant la demande de votre lien de connexion.<br/>
           Merci d'essayer à nouveau.<br/>
-          Si vous n'arrivez pas à obtenir le lien de connexion, merci de prendre contact avec le parc.        
+          Si vous n'arrivez pas à obtenir le lien de connexion, merci de prendre contact avec le parc.
+        </div>
+        <div v-if="default_message">
+          La connexion est obligatoire pour pouvoir effectuer une réservation ou gérer vos inscriptions.
         </div>
       </form>
     </div>
@@ -52,6 +55,7 @@ import { useRoute } from 'vue-router';
 const loading = ref(false)
 const success = ref(false)
 const error = ref(false)
+const default_message = ref(true)
 
 const route = useRoute()
 const email = ref(route.query.email as string)
@@ -64,8 +68,10 @@ async function login() {
   try {
     await authStore.sendLoginEmail(email.value)
     success.value = true
+    default_message.value = false
   } catch {
     error.value = true
+    default_message.value = false
   }
   loading.value = false
 }
