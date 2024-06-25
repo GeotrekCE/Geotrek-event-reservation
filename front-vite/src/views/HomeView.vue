@@ -11,7 +11,7 @@
       <p class="mb-4">
         Bienvenue sur l'outil de gestion des réservations d'événements du {{ parkLabel }}.
       </p>
-      <p class="mb-4">
+      <p class="mb-4" v-if="!authStore.isAuth">
         Il est nécessaire de se connecter pour effectuer une réservation ou gérer vos inscriptions.
       </p>
 
