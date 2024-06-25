@@ -78,6 +78,7 @@ def send_confirmation_email(reservation):
                 "resa_confirmed_mail.html",
                 reservation=stringify(reservation),
                 event=stringify(reservation.event),
+                event_info=stringify(reservation.event.info),
                 portal_link=get_portal_link(reservation),
             ),
         )

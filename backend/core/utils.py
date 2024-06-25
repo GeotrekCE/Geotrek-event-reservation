@@ -61,6 +61,8 @@ def send_email(subject, recipients, html):
 def _get_property_names(model_object):
     from sqlalchemy.ext.hybrid import hybrid_property
 
+    if not model_object:
+        return []
     return [
         p
         for p in dir(model_object)
@@ -73,6 +75,8 @@ def _get_property_names(model_object):
 
 
 def _get_orm_attribute_names(model_object):
+    if not model_object:
+        return []
     return [a for a in model_object.__dict__.keys() if not a.startswith("_")]
 
 

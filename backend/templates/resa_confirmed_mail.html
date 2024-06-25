@@ -3,6 +3,14 @@
 <p>Nous avons le plaisir de vous confirmer votre réservation de {{ reservation.nb_participants }} places pour
     l'événement {{ event.name }} le {{ event.begin_date|format_date }}.</p>
 
+<p>RDV {{ event.start_time|format_time }} à : {{ event.meeting_point }}</p>
+
+{% if event_info.info_rdv %}
+<b>Informations supplémentaires</b>
+
+<p>{{ event_info.info_rdv }}</p>
+{%endif %}
+
 <p><a href="{{ portal_link }}">Vous pouvez à tout moment consulter la liste de vos réservations en suivant
     ce lien.</a></p>
 
