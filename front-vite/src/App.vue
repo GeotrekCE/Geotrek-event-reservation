@@ -16,6 +16,14 @@
           </a>
         </router-link>
       </div>
+      <div v-if="item.label == 'Évènements' && config.DISPLAY_MENU_WITH_EVENTS !== '-1'">
+        <a v-ripple :href="config.URL_GTR + '/search?event=' + config.DISPLAY_MENU_WITH_EVENTS" :target="item.target" v-bind="props.action">
+            <span :class="item.icon" />
+            <span class="ml-2">{{ item.label }}</span>
+            <span v-if="hasSubmenu" class="pi pi-fw pi-angle-down ml-2" />
+        </a>
+      </div>
+    </template>
     </template>
     <template #end>
       <router-link @click="isMenuOpened = false" :to="isAuth ? '/logout' : '/login'"
@@ -48,11 +56,17 @@ const { isAuth, isAdmin, user } = storeToRefs(authStore)
 
 const isMenuOpened = ref(false)
 
+const config = ref(CONFIGURATION)
 
 const items = ref([
   {
-    label: 'Animations',
+    label: 'Évènements',
     icon: 'pi pi-calendar',
+    target: '_blank'
+  },
+  {
+    label: 'Gestion',
+    icon: 'pi pi-cog',
     isAuth: true,
     isAdmin: true,
     route: '/events',
