@@ -2,7 +2,7 @@
 # Changelog
 
 **🐛 Corrections**
- - Redirection du formulaire d'inscription vers la page d'accueil si l'utilisateur n'est pas authentifié.
+ - Redirection du formulaire d'inscription vers la page d'accueil si l'utilisateur n'est pas authentifié (#70).
 
 ## 0.4.0 (unreleased)
 
