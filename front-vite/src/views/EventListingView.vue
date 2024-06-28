@@ -2,7 +2,9 @@
   <div class="flex min-h-full flex-col">
     <header class="hidden md:block bg-white shadow">
       <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-        <h1 class="text-3xl font-bold tracking-tight text-gray-900">Listing des animations</h1>
+        <h1 class="text-3xl font-bold tracking-tight text-gray-900">
+          Gestion des animations
+        </h1>
       </div>
     </header>
 
@@ -28,7 +30,7 @@
                     class="rounded-sm w-full p-inputtext-sm p-2 ring-1 ring-inset ring-gray-300"
                     placeholder="Nom animation"
                   />
-                </span>
+                </span> 
 
                 <button
                   v-if="!formOpened"
@@ -121,7 +123,8 @@
               </div>
             </form>
           </template>
-          <template #list="slotProps">
+          <template #list="slotProps"> 
+
             <div v-for="(data, index) in slotProps.items" :key="index" class="col-12">
               <router-link
                 class="flex justify-between gap-x-6 p-5 hover:bg-gray-200 hover:shadow-inner border-b border-gray-200"
