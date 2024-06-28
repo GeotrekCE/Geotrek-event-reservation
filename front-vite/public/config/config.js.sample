@@ -1,6 +1,7 @@
 // URL_APPLICATION: Url de l'application backend
 // URL_GTA: url de l'application geotrek admin
 // URL_GTR: url de l'application geotrek public
+// DISPLAY_MENU_WITH_EVENTS: Affichage du menu des évènements. Spécifier les indexes des filtres geotrek rando (après URL 'search?event=') ou laisser vide si non affiché
 // RESA_NB_DELTA: nombre de participants surnuméraire acepté en plus du nombre de participants spécifiés dans geotrek
 // DAY_BEFORE_RESA: nombre de jours avant la date de debut de l'animation ou l'inscription est possible (si -1 aucune limitation de date)
 // RESA_BEGINNING_DATE: date à partir de laquelle les réservations sont ouvertes (PNG)

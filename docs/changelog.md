@@ -1,6 +1,9 @@
 
 # Changelog
 
+**🚀 Fonctionnalités**
+ - Ajout d'un menu public "Évènements" pointant vers les évènements de geotrek-rando
+
 ## 0.4.0 (unreleased)
 
 ## 0.3.0 (2024-06-24)
