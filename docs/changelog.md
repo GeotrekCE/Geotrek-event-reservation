@@ -1,11 +1,13 @@
 
 # Changelog
 
+## 0.4.0 (unreleased)
+
 ## 0.3.0 (2024-06-24)
  
 **🚀 Nouveautés**
 
-- Mise à jour vers SQLAlchemy 1.4 (#63)
+- Mise à jour vers SQLAlchemy 1.4 (#63)P
 - Mise à jour des librairies javascript (#65)
 - Utilisation de MenuBar pour la barre de menu (#65)
 - Style page des statistiques (#65)
