@@ -5,6 +5,9 @@
  - Ajout d'un menu automatique "Évènements" pointant vers les évènements de geotrek-rando. Choix d'afficher/masquer via paramètre `DISPLAY_GTR_EVENTS_MENU`. 
 
 **🐛 Corrections**
+ - Menu administration "Animations" renommé en "Gestion"
+ 
+**🐛 Corrections**
  - Correction des informations de rendez-vous qui ne sont pas enregistrées.
 
 ## 0.4.0 (unreleased)
