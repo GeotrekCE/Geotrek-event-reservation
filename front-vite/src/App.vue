@@ -3,7 +3,7 @@
     <template #start>
       <router-link to="/" class="-m-1.5 p-1.5 flex items-center">
         <img class="h-8 w-auto pr-1.5" src="/assets/logo.svg" alt="">
-        <span class=" font-small text-gray-900 m-2">Réservation animations</span>
+        <span class=" font-small text-gray-900 m-2">{{ config.TITLE }}</span>
       </router-link>
     </template>
     <template #item="{ item, props, hasSubmenu }">
@@ -48,6 +48,7 @@ const { isAuth, isAdmin, user } = storeToRefs(authStore)
 
 const isMenuOpened = ref(false)
 
+const config = ref(CONFIGURATION)
 
 const items = ref([
   {

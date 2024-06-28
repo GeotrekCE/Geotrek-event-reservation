@@ -1,3 +1,4 @@
+// TITLE: Titre de l'application
 // URL_APPLICATION: Url de l'application backend
 // URL_GTA: url de l'application geotrek admin
 // URL_GTR: url de l'application geotrek public
@@ -8,6 +9,7 @@
 // PARK_LABEL: label du parc utilisant l'outil
 
 const CONFIGURATION = {
+  TITLE: 'Réservation animations',
   URL_APPLICATION: 'URL_BACKEND',
   URL_GTA: 'URL_GEOTREK_ADMIN',
   URL_GTR: 'URL_GEOTREK_PUBLIC',
