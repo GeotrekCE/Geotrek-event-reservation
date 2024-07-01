@@ -5,14 +5,16 @@ declare let CONFIGURATION: {
   URL_GTA: string,
   // URL GeoTrek public
   URL_GTR: string,
+  // Affichage du menu vers les évènements
+  DISPLAY_MENU_WITH_EVENTS: string,
   // utilisateur peut ou non annuler lui même une réservation
   USER_CAN_CANCEL: boolean,
   // Donnée utilisée pour savoir si une réservation d'animation est ouverte
-  // 
-  // Deux possibilités : 
+  //
+  // Deux possibilités :
   // * nombre de jours avant la date de l'anim (DAY_BEFORE_RESA)
   // * date fixe pour tous les événements
-  // 
+  //
   // Attention, si le nombre de jours est précisé,
   // la date fixe ne sera pas utilisée.
 
