@@ -77,7 +77,7 @@
                   v-model="filters.massif"
                   display="chip"
                   :options="districts"
-                  placeholder="Massifs"
+                  placeholder="Localisation"
                   class="rounded-sm p-inputtext-sm w-64 mr-2 w-full ring-1 ring-inset ring-gray-300"
                 />
                 <p-multi-select

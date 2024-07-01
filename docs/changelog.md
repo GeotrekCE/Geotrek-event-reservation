@@ -3,6 +3,9 @@
 
 ## 0.4.0 (unreleased)
 
+**🐛 Corrections**
+ - Changement du texte "massifs" par "localisation" sur la page du formulaire d'inscription.
+
 ## 0.3.0 (2024-06-24)
  
 **🚀 Nouveautés**
