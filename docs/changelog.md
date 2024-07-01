@@ -1,6 +1,9 @@
 
 # Changelog
 
+**🚀 Nouveautés**
+ - Ajout de l'option `TITLE` qui permet de définir le titre de l'application.
+
 ## 0.4.0 (unreleased)
 
 **🐛 Corrections**

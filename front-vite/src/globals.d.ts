@@ -1,4 +1,6 @@
 declare let CONFIGURATION: {
+  // Titre de l'application
+  TITLE: string,
   // URL de l'application Backend résa
   URL_APPLICATION: string,
   // URL GeoTrek Admin
@@ -8,11 +10,11 @@ declare let CONFIGURATION: {
   // utilisateur peut ou non annuler lui même une réservation
   USER_CAN_CANCEL: boolean,
   // Donnée utilisée pour savoir si une réservation d'animation est ouverte
-  // 
-  // Deux possibilités : 
+  //
+  // Deux possibilités :
   // * nombre de jours avant la date de l'anim (DAY_BEFORE_RESA)
   // * date fixe pour tous les événements
-  // 
+  //
   // Attention, si le nombre de jours est précisé,
   // la date fixe ne sera pas utilisée.
 
