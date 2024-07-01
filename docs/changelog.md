@@ -1,6 +1,9 @@
 
 # Changelog
 
+**🐛 Corrections**
+ - Menu administration "Animations" renommé en "Gestion"
+ 
 ## 0.4.0 (unreleased)
 
 **🐛 Corrections**

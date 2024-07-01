@@ -4,7 +4,7 @@
     <header class="hidden md:block bg-white shadow">
       <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
         <h1 class="text-3xl font-bold tracking-tight text-gray-900">
-          Listing des animations
+          Gestion des animations
         </h1>
       </div>
     </header>
@@ -29,13 +29,13 @@
             <form @submit.prevent="search">
               <div class="w-full flex justify-between mb-4">
                 <span class=" w-full">
-                  
+
                   <p-input-text
                     v-model="filters.search_name"
                     class="rounded-sm w-full p-inputtext-sm p-2 ring-1 ring-inset ring-gray-300"
                     placeholder="Nom animation"
                   />
-                </span> 
+                </span>
 
                 <button
                   v-if="!formOpened"
@@ -71,7 +71,7 @@
                   placeholder="Date de fin"
                   dateFormat="dd/mm/yy"
                   showIcon
-                  showButtonBar                  
+                  showButtonBar
                 />
                 <p-multi-select
                   v-model="filters.massif"
@@ -131,7 +131,7 @@
             </form>
 
           </template>
-          <template #list="slotProps"> 
+          <template #list="slotProps">
 
             <div v-for="(data, index) in slotProps.items" :key="index" class="col-12">
             <router-link
@@ -445,7 +445,7 @@ import EventReservationForm from '@/components/EventReservationForm.vue'
 
 import PDataView from 'primevue/dataview'
 import PCalendar from 'primevue/calendar'
-import PInputText from 'primevue/inputtext' 
+import PInputText from 'primevue/inputtext'
 import PMultiSelect from 'primevue/multiselect';
 import PCard from 'primevue/card'
 import PTabView from 'primevue/tabview'
@@ -737,7 +737,7 @@ async function loadSelectedEvent () {
  * Chargement initial : événements + glossaires
  */
 onBeforeMount(async () => {
-  await loadEvents() 
+  await loadEvents()
   await loadSelectedEvent()
   filters.value = defaultFilters.value;
   const districtsResponse = await getDistricts()
@@ -767,7 +767,7 @@ onBeforeMount(async () => {
 }
 
 .p-inputtext, .p-checkbox-box {
-  border: 1px solid var(--gray-300); 
+  border: 1px solid var(--gray-300);
 }
 
 </style>

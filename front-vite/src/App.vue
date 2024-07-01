@@ -51,8 +51,8 @@ const isMenuOpened = ref(false)
 
 const items = ref([
   {
-    label: 'Animations',
-    icon: 'pi pi-calendar',
+    label: 'Gestion',
+    icon: 'pi pi-cog',
     isAuth: true,
     isAdmin: true,
     route: '/events',
