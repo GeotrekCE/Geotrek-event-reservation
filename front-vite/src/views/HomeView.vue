@@ -8,17 +8,20 @@
   </header>
   <main class="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8 px-4 py-6">
     <section class="pb-12 mx-auto">
-    	<p class="mb-8">
-        Bienvenue sur l'outil de gestion des réservations d'événement du {{ parkLabel }}.
-    	</p>
+      <p class="mb-4">
+        Bienvenue sur l'outil de gestion des réservations d'événements du {{ parkLabel }}.
+      </p>
+      <p v-if="!authStore.isAuth">
+        Il est nécessaire de se connecter pour effectuer une réservation ou gérer vos inscriptions.
+      </p>
 
       <p class="flex items-center">
         <router-link
           v-if="!authStore.isAuth"
           to="/login"
-          class="rounded-sm bg-sky-600 px-3 py-1.5 text-sm font-medium leading-6 text-white shadow-sm hover:bg-sky-500 my-4 mx-auto"
+          class="rounded-sm bg-sky-600 px-3 py-1.5 text-sm font-medium leading-6 text-white shadow-sm hover:bg-sky-500 my-6 mx-auto"
         >
-          Aller à la page de connexion
+          Se connecter
         </router-link>
       </p>
 

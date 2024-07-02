@@ -116,13 +116,18 @@ def get_portal_link(reservation):
     return f"{protocol}{hostname}{front_path}?email={reservation.email}"
 
 
-def get_login_link(token):
+def get_login_link(token, redirect_to):
     from flask import current_app
 
     protocol = "http://" if current_app.config["DEBUG"] else "https://"
     hostname = current_app.config["PUBLIC_SERVER_NAME"]
     front_path = current_app.config["FRONTEND_LOGIN_PATHNAME"]
-    return f"{protocol}{hostname}{front_path}?token={token}"
+
+    route = f"{protocol}{hostname}{front_path}?token={token}"
+
+    if redirect_to:
+        route = f"{route}&route={redirect_to}"
+    return route
 
 
 class QueryParamValidationError(Exception):
@@ -538,6 +543,7 @@ def cancel_reservation(reservation_id):
 def send_login_email():
     try:
         email = request.get_json()["email"]
+        redirect_to = request.get_json().get("route", None)
     except KeyError:
         return jsonify({"error": "'email' property is mandatory"}), 400
 
@@ -551,11 +557,12 @@ def send_login_email():
 
     db.session.add(token)
     db.session.commit()
-
     send_email(
         get_mail_subject("Lien de connexion au site de réservation des animations"),
         recipients=[email],
-        html=render_template("login_mail.html", login_link=get_login_link(token.token)),
+        html=render_template(
+            "login_mail.html", login_link=get_login_link(token.token, redirect_to)
+        ),
     )
 
     return "lien de login envoyé", 204

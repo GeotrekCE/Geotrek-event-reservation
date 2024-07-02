@@ -31,6 +31,7 @@ import { ref, onMounted } from 'vue'
 import { ROUTES_PATHS } from '@/router'
 
 const token = useRoute().query.token as string
+const redirectTo = useRoute().query.route as string
 const authStore = useAuthStore()
 const router = useRouter()
 
@@ -46,14 +47,20 @@ onMounted(async () => {
 		await authStore.login(token)
 		success.value = true
 		/**
-		 * Si l'utilisateur est admin, on le renvoie sur la page des événements
+		 * Si le paramètre route est spécifié on le renvoie vers la page demandé sauf si login ou home
 		 */
-		if (authStore.isAdmin) {
+		if (redirectTo && ![ROUTES_PATHS.LOGIN, ROUTES_PATHS.HOME].includes(redirectTo)) {
+			router.push(redirectTo)
+		}
+		else if (authStore.isAdmin) {
+			/**
+			 * Si l'utilisateur est admin, on le renvoie sur la page des événements
+			 */
 			router.push(ROUTES_PATHS.EVENT_LISTING)
 		} else {
-  		/**
-  		 * Sinon, sur les réservations
-  		 */
+			/**
+			 * Sinon, sur les réservations
+			 */
 			router.push(ROUTES_PATHS.RESA_LISTING)
 		}
 	} catch {

@@ -94,7 +94,7 @@ const routes = [
     name: ROUTES_NAMES.RESA_FORM,
     component: () => import('@/views/ReservationFormView.vue'),
     meta: {
-      requiresAuth: false
+      requiresAuth: true
     }
   }, {
     path: ROUTES_PATHS.RESA_LISTING,
@@ -151,17 +151,26 @@ router.beforeEach((to, from, next) => {
     // we are going to a route that may require auth
     if (to.meta.requiresAuth) {
       // if user is not auth, go to login
+      // Store requested route
       if (!authStore.isAuth) {
-        next({
-          path: ROUTES_PATHS.LOGIN,
-          replace: true,
+        authStore.requestedRoute(to.path as string)
+        if (to.name===ROUTES_NAMES.RESA_FORM) {
+          next({
+            path: ROUTES_PATHS.HOME,
+            replace: true,
         });
+        } else {
+          next({
+            path: ROUTES_PATHS.LOGIN,
+            replace: true,
+          });
+        }
       } else if (
         to.meta.requiresAdmin &&
         !authStore.isAdmin
       ){
         // if the route need admin permission
-        // but user is not ad admin
+        // but user is not admin
         // go to home page
         next({
           path: ROUTES_PATHS.HOME,

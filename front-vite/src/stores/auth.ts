@@ -1,6 +1,7 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import { postApiData, getApiData } from '@/utils/api'
+import type { RouteRecordName } from 'vue-router'
 
 interface User {
   email: string
@@ -10,6 +11,12 @@ interface User {
 export const useAuthStore = defineStore('auth', () => {
 
   const user = ref<null | User>(null)
+
+  const redirectTo = ref<null | string>(null)
+
+  function requestedRoute(route: string) { 
+    redirectTo.value = route as string;
+  }
 
   const isAuth = computed(() => {
     return !!user.value
@@ -61,11 +68,11 @@ export const useAuthStore = defineStore('auth', () => {
   /**
    * Ask for sending a password-less email login to the user
    */
-  async function sendLoginEmail (email: string) {
+  async function sendLoginEmail(email: string) {
     await postApiData(
       CONFIGURATION.URL_APPLICATION,
       'send-login-email',
-      { email },
+      { "email": email, "route": redirectTo.value }
     )
   }
 
@@ -73,10 +80,12 @@ export const useAuthStore = defineStore('auth', () => {
     user,
     isAuth,
     isAdmin,
+    redirectTo,
 
     checkAuth,
     login,
     logout,
     sendLoginEmail,
+    requestedRoute
   }
 })
