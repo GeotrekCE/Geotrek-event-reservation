@@ -543,7 +543,7 @@ def cancel_reservation(reservation_id):
 def send_login_email():
     try:
         email = request.get_json()["email"]
-        redirect_to = request.get_json()["route"]
+        redirect_to = request.get_json().get("route", None)
     except KeyError:
         return jsonify({"error": "'email' property is mandatory"}), 400
 
@@ -557,7 +557,6 @@ def send_login_email():
 
     db.session.add(token)
     db.session.commit()
-
     send_email(
         get_mail_subject("Lien de connexion au site de réservation des animations"),
         recipients=[email],
