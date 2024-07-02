@@ -98,6 +98,7 @@
           @submit="saveReservation"
           :saving="saving"
           :save-error="saveError"
+          :original-values="resaToEdit || {}"
         />
 
       </section>
@@ -134,7 +135,15 @@ import EventSummary from '@/components/EventSummary.vue'
 import EventReservationForm from '@/components/EventReservationForm.vue'
 import type { ResaEvent } from '@/declaration';
 import { isReservationOpened, isReservationGloballyOpened } from '@/utils/isReservationOpened'
+import type { Resa } from '@/declaration';
+import { useAuthStore } from '@/stores/auth';
+import { storeToRefs } from 'pinia'
 
+const authStore = useAuthStore()
+const { user } = storeToRefs(authStore)
+
+
+const resaToEdit = ref<Resa | null>(null)
 const currentRoute = useRoute()
 const geotrekId = currentRoute.params.geotrekid
 
@@ -180,7 +189,9 @@ onBeforeMount(async () => {
       default:
         eventError.value = "Une erreur est survenue. Il est impossible d'effecuter une réservation. Merci de prendre contact avec le parc."
     }
-  }
+  } 
+  // Prefil email 
+  resaToEdit.value = { email: user.value?.email } as Resa
   loadingEvent.value = false
 })
 
