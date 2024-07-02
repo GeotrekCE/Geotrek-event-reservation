@@ -151,7 +151,9 @@ router.beforeEach((to, from, next) => {
     // we are going to a route that may require auth
     if (to.meta.requiresAuth) {
       // if user is not auth, go to login
+      // Store requested route
       if (!authStore.isAuth) {
+        authStore.requestedRoute(to.path as string)
         if (to.name===ROUTES_NAMES.RESA_FORM) {
           next({
             path: ROUTES_PATHS.HOME,
