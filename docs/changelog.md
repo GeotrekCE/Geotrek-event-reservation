@@ -2,7 +2,7 @@
 # Changelog
 
 **🚀 Fonctionnalités**
- - Ajout d'un menu public "Évènements" pointant vers les évènements de geotrek-rando
+ - Ajout d'un menu automatique "Évènements" pointant vers les évènements de geotrek-rando. Choix d'afficher/masquer via paramètre `DISPLAY_GTR_EVENTS_MENU`. 
 
 ## 0.4.0 (unreleased)
 

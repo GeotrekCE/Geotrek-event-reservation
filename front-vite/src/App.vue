@@ -16,8 +16,8 @@
           </a>
         </router-link>
       </div>
-      <div v-if="item.label == 'Évènements' && config.DISPLAY_MENU_WITH_EVENTS !== ''">
-        <a v-ripple :href="config.URL_GTR + '/search?event=' + config.DISPLAY_MENU_WITH_EVENTS" v-bind="props.action">
+      <div v-if="item.label == 'Évènements' && eventtypes_id != '' && config.DISPLAY_GTR_EVENTS_MENU === true">
+        <a v-ripple :href="config.URL_GTR + '/search?event=' + eventtypes_id" v-bind="props.action">
             <span :class="item.icon" />
             <span class="ml-2">{{ item.label }}</span>
             <span v-if="hasSubmenu" class="pi pi-fw pi-angle-down ml-2" />
@@ -45,16 +45,16 @@
 import { RouterLink, RouterView } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { useAuthStore } from '@/stores/auth'
-import { ref } from 'vue'
+import { ref, onBeforeMount } from 'vue'
 import PConfirmPopup from 'primevue/confirmpopup'
-
+import { getTouristiceventType } from '@/utils/gta_api';
 import Menubar from 'primevue/menubar';
 const authStore = useAuthStore()
 
 const { isAuth, isAdmin, user } = storeToRefs(authStore)
 
 const isMenuOpened = ref(false)
-
+const eventtypes_id = ref<string>('')
 const config = ref(CONFIGURATION)
 
 const items = ref([
@@ -92,4 +92,10 @@ const items = ref([
     route: '/resalisting'
   },
 ]);
+
+onBeforeMount(async () => {
+  const eventtypesResponse = await getTouristiceventType()
+  eventtypes_id.value = eventtypesResponse.results.map((item: any) => ([item.id])).join(",");
+})
+
 </script>
