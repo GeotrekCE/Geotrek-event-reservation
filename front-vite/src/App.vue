@@ -17,7 +17,7 @@
         </router-link>
       </div>
       <div v-if="item.label == 'Évènements' && config.DISPLAY_MENU_WITH_EVENTS !== ''">
-        <a v-ripple :href="config.URL_GTR + '/search?event=' + config.DISPLAY_MENU_WITH_EVENTS" :target="item.target" v-bind="props.action">
+        <a v-ripple :href="config.URL_GTR + '/search?event=' + config.DISPLAY_MENU_WITH_EVENTS" v-bind="props.action">
             <span :class="item.icon" />
             <span class="ml-2">{{ item.label }}</span>
             <span v-if="hasSubmenu" class="pi pi-fw pi-angle-down ml-2" />
@@ -60,8 +60,7 @@ const config = ref(CONFIGURATION)
 const items = ref([
   {
     label: 'Évènements',
-    icon: 'pi pi-calendar',
-    target: '_blank'
+    icon: 'pi pi-calendar'
   },
   {
     label: 'Animations',
