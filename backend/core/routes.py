@@ -369,7 +369,8 @@ def post_reservations():
     is_admin = is_user_admin()
     post_data = request.get_json()
 
-    post_data["digitizer"] = session["user"]
+    if "user" in session:
+        post_data["digitizer"] = session["user"]
     if is_admin:
         reservation = _post_reservations_by_admin(post_data)
     else:

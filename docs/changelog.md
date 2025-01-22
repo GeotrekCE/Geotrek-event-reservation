@@ -14,6 +14,7 @@
 
 **🐛 Corrections**
  - Changement du texte "massifs" par "localisation" sur la page du formulaire d'inscription.
+ - Correction de l'erreur 500 lié au token non généré sur validation du formulaire.
 
 ## 0.3.0 (2024-06-24)
  

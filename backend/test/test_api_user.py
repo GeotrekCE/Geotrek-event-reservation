@@ -117,10 +117,24 @@ class TestAPI:
         )
         assert resp == 400
 
+    def test_post_reservation_without_login(self, events):
+        # Create reservation
+        event = db.session.scalars(
+            select(GTEvents)
+            .where(GTEvents.name == "Pytest bookable")
+            .order_by(GTEvents.id.desc())
+        ).first()
+
+        data_resa = TEST_RESERVATION
+        data_resa["id_event"] = event.id
+        resp = post_json(
+            self.client, url_for("app_routes.post_reservations"), data_resa
+        )
+        assert resp == 200
+
     def test_get_reservations(self):
         login(self.client, "user@test.fr")
         response = self.client.get(url_for("app_routes.get_reservations"))
-
         assert response.status_code == 200
 
     def test_post_limit_nb_animations(self, events):
