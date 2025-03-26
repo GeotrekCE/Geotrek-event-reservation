@@ -299,18 +299,25 @@ class TestAPI:
     def test_bilan_global(self):
         login(self.client)
         donnees_exemple = {
-            "nb_animations": 1,
+            "nb_animations": 142,
+            "nb_animations_capacity": 78,
+            "nb_animations_capacity_passe": 0,
+            "nb_animations_passe": 6,
             "nb_annulation": 0,
-            "sum_nb_inscriptions": 2,
-            "sum_nb_participants_possible": 2089,
-            "taux_remplissage": 0.0007017543859649122,
-            "taux_remplissage_passe": 0.0007017543859649122,
+            "nb_annulation_passe": 0,
+            "sum_animations_capacity": 1680,
+            "sum_animations_capacity_passe": 0,
+            "sum_nb_inscriptions": 8,
+            "sum_nb_inscriptions_passe": 0,
+            "taux_remplissage_global": 0.005,
+            "taux_remplissage_global_passe": 0,
+            "taux_remplissage_moyen": 0.004,
+            "taux_remplissage_moyen_passe": 0,
         }
         response = self.client.get(url_for("app_routes.get_stats_global"))
         assert response.status_code == 200
 
         data = json_of_response(response)
-
         assert set(data.keys()) == set(donnees_exemple.keys())
         # Todo test return value
 

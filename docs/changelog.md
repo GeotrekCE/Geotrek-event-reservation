@@ -8,6 +8,9 @@
  - Menu administration "Animations" renommé en "Gestion"
  
 **🐛 Corrections**
+ - Correction du taux de remplissage des bilans et ajout de statistiques.
+
+**🐛 Corrections**
  - Correction des informations de rendez-vous qui ne sont pas enregistrées.
 
 ## 0.4.0 (unreleased)
