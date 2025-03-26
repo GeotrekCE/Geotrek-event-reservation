@@ -68,8 +68,18 @@ export interface ResaEventInfo {
 export interface Statistics {
   nb_animations?: number
   nb_annulation?: number
-  taux_remplissage?: number
-  taux_remplissage_passe?: number
+  nb_animations_capacity?: number
+  sum_animations_capacity?: number
+  sum_nb_inscriptions?: number
+  taux_remplissage_global?: number
+  taux_remplissage_moyen?: number
+  nb_animations_passe?: number
+  nb_annulation_passe?: number
+  nb_animations_capacity_passe?: number
+  sum_animations_capacity_passe?: number
+  sum_nb_inscriptions_passe?: number
+  taux_remplissage_global_passe?: number
+  taux_remplissage_moyen_passe?: number
 }
 
 /**

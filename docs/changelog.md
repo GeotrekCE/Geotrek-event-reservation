@@ -1,6 +1,9 @@
 
 # Changelog
 
+**🐛 Corrections**
+ - Correction du taux de remplissage des bilans et ajout de statistiques.
+
 ## 0.4.0 (unreleased)
 
 **🐛 Corrections**
