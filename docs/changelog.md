@@ -1,6 +1,9 @@
 
 # Changelog
 
+**🚀 Nouveautés**
+ - Les réservations des évènements passés sont masquées aux utilisateurs.
+
 ## 0.4.0 (unreleased)
 
 **🐛 Corrections**

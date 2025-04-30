@@ -249,6 +249,14 @@ def get_reservations():
     query = db.paginate(query, page=page, per_page=limit)
     results = TReservationsSchema(many=True).dump(query.items)
 
+    # Masquer les réservations passées aux utilisateurs uniquement
+    if not is_admin:
+        for reservation in results.copy():
+            begin_date = reservation["event"]["begin_date"]
+            event_date = datetime.strptime(begin_date, "%Y-%m-%d")
+            if event_date.date() < datetime.today().date():
+                results.remove(reservation)
+
     return jsonify(
         {
             "page": page,
