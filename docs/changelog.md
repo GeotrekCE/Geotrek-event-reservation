@@ -1,6 +1,9 @@
 
 # Changelog
 
+**🐛 Corrections**
+ - Correction des informations de rendez-vous qui ne sont pas enregistrées.
+
 ## 0.4.0 (unreleased)
 
 **🐛 Corrections**
