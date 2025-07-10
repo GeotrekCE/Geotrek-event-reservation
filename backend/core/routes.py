@@ -756,7 +756,7 @@ def set_event_info(event_id):
     # TODO ADD TEST
     """Met à jour les infos liées à l'événement indiqué."""
     post_data = request.get_json()
-    event_info = db.session.scalars(
+    event_info = db.session.execute(
         select(TEventInfo).where(TEventInfo.id_event == event_id).limit(1)
     ).scalar_one_or_none()
 
