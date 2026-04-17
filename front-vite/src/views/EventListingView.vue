@@ -443,6 +443,14 @@
         </div>
       </section>
     </main>
+    <Toast>
+      <template #message="slotProps">
+        <div class="p-toast-message-text">
+          <span class="p-toast-summary">{{ slotProps.message.summary }}</span>
+          <div class="p-toast-detail" v-html="slotProps.message.detail" />
+        </div>
+      </template>
+    </Toast>
   </div>
 </template>
 
@@ -476,6 +484,8 @@ import TabPanel from 'primevue/tabpanel'
 import { ROUTES_NAMES } from '@/router'
 
 import type { ResaEventFilters, ResaBilan, Resa, ResaEventInfo } from '@/declaration'
+import { useToast } from 'primevue/usetoast'
+import Toast from 'primevue/toast'
 
 import {
   getEvents,
@@ -496,6 +506,7 @@ import { fieldsClasseAge } from '@/utils/fields'
 
 const currentRoute = useRoute()
 
+const toast = useToast()
 /**
  * Données des événements / animations
  */
@@ -667,6 +678,12 @@ async function onSaveInfos() {
       info_rdv: selectedEventInfoRDV.value.info_rdv
     })
     infosSaving.value = false
+    toast.add({
+      severity: 'success',
+      summary: 'Sauvegarde réalisée',
+      detail: 'Modification des informations complémentaire pour le rendez-vous',
+      life: 1000
+    })
   } catch (error) {
     infosError.value = error
   }

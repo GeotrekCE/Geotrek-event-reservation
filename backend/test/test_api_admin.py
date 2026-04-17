@@ -8,8 +8,7 @@ import logging
 from io import StringIO
 
 from sqlalchemy import select
-from core.models import GTEvents, TReservations
-from core.models import TTokens
+from core.models import GTEvents, TReservations, TEventInfo, TTokens
 from core.exceptions import EventIsFull
 from core.env import db
 
@@ -371,27 +370,25 @@ class TestAPI:
         )
         assert response.status_code == 200
 
-    # def test_put_event_info(self):
-    #     login(self.client)
+    def test_put_event_info(self):
+        login(self.client)
 
-    #     data = db.session.scalars(select(GTEvents)).first()
-    #     event_id = data.id
-    #     info = {
-    #             "info_rdv": "Nouvelle information"
-    #     }
+        data = db.session.scalars(select(GTEvents)).first()
+        event_id = data.id
+        info = {"info_rdv": "Nouvelle information"}
+        print(url_for("app_routes.set_event_info", event_id=event_id))
+        # --- Appel API ---
+        response = self.client.put(
+            url_for("app_routes.set_event_info", event_id=event_id),
+            json=info,
+        )
 
-    #     # --- Appel API ---
-    #     response = self.client.put(
-    #         f"/events/{event_id}/info",
-    #         json=json.dumps(info)
-    #     )
+        # --- Vérifications HTTP ---
+        assert response.status_code == 200
 
-    #     # --- Vérifications HTTP ---
-    #     assert response.status_code == 200
+        # --- Vérifications base ---
+        updated = db.session.execute(
+            select(TEventInfo).where(TEventInfo.id_event == event_id)
+        ).scalar_one()
 
-    #     # --- Vérifications base ---
-    #     updated = db_session.execute(
-    #         select(TEventInfo).where(TEventInfo.id_event == event_id)
-    #     ).scalar_one()
-
-    #     assert updated.info_rdv == "Nouvelle information"
+        assert updated.info_rdv == "Nouvelle information"
