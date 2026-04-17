@@ -376,7 +376,7 @@ class TestAPI:
         data = db.session.scalars(select(GTEvents)).first()
         event_id = data.id
         info = {"info_rdv": "Nouvelle information"}
-        print( url_for("app_routes.set_event_info", event_id=event_id))
+        print(url_for("app_routes.set_event_info", event_id=event_id))
         # --- Appel API ---
         response = self.client.put(
             url_for("app_routes.set_event_info", event_id=event_id),
@@ -385,7 +385,7 @@ class TestAPI:
 
         # --- Vérifications HTTP ---
         assert response.status_code == 200
-        
+
         # --- Vérifications base ---
         updated = db.session.execute(
             select(TEventInfo).where(TEventInfo.id_event == event_id)
