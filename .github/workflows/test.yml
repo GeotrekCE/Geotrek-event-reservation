@@ -12,28 +12,23 @@ on:
 
 env:
   DEBIAN_FRONTEND: noninteractive
+  POSTGRES_DB: geotrekdb
+  POSTGRES_PASSWORD: geotrek
+  POSTGRES_USER: geotrek
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
-
-    strategy:
-      matrix:
-        os: [ubuntu-20.04]
-        tests-env: ['tests', 'tests_nds']
-        include:
-          - os: ubuntu-20.04
-            python-version: 3.8  # default python version in 20.04
-
+    runs-on: ubuntu-latest
+ 
     name: ${{ matrix.name }}
 
     services:
       postgres:
-        image: postgis/postgis:12-2.5
+        image: pgrouting/pgrouting:14-3.5-3.7
         env:
-          POSTGRES_DB: geotrekdb
-          POSTGRES_PASSWORD: geotrek
-          POSTGRES_USER: geotrek
+          POSTGRES_DB: ${{ env.POSTGRES_DB }}
+          POSTGRES_USER: ${{ env.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ env.POSTGRES_PASSWORD }}
         ports:
           - 5432:5432
         options: >-
@@ -42,21 +37,19 @@ jobs:
           --health-timeout 5s
           --health-retries 5
     steps:
-      - name: Add postgis_raster database extension
-        if: ${{ matrix.postgis-version >= 3 }}
-        run: |
-          psql -h localhost -U geotrek -d geotrekdb -tc 'CREATE EXTENSION "postgis_raster";'
-        env:
-          PGPASSWORD: geotrek
       - name: Add database extensions
         run: |
-          psql -h localhost -U geotrek -d geotrekdb -tc 'CREATE EXTENSION "hstore";'
-          psql -h localhost -U geotrek -d geotrekdb -tc 'CREATE EXTENSION "uuid-ossp";'
-          psql -h localhost -U geotrek -d geotrekdb -tc 'CREATE EXTENSION "pg_trgm";'
-          psql -h localhost -U geotrek -d geotrekdb -tc 'CREATE EXTENSION "unaccent";'
+          psql -h localhost -U "$POSTGRES_USER" -d "$POSTGRES_DB" -tc 'CREATE EXTENSION "postgis";'
+          psql -h localhost -U "$POSTGRES_USER" -d "$POSTGRES_DB" -tc 'CREATE EXTENSION "postgis_raster";'
+          psql -h localhost -U "$POSTGRES_USER" -d "$POSTGRES_DB" -tc 'CREATE EXTENSION "hstore";'
+          psql -h localhost -U "$POSTGRES_USER" -d "$POSTGRES_DB" -tc 'CREATE EXTENSION "uuid-ossp";'
+          psql -h localhost -U "$POSTGRES_USER" -d "$POSTGRES_DB" -tc 'CREATE EXTENSION "pg_trgm";'
+          psql -h localhost -U "$POSTGRES_USER" -d "$POSTGRES_DB" -tc 'CREATE EXTENSION "unaccent";'
         env:
-          PGPASSWORD: geotrek
-      - uses: actions/checkout@v2
+          POSTGRES_DB: ${{ env.POSTGRES_DB }}
+          POSTGRES_USER: ${{ env.POSTGRES_USER }}
+          PGPASSWORD: ${{ env.POSTGRES_PASSWORD }}
+      - uses: actions/checkout@v6
         with:
           submodules: true
       - name: Install Geotrek
@@ -66,27 +59,30 @@ jobs:
           sudo apt update
           sudo apt install debconf-utils
           cat << EOF | sudo debconf-set-selections
-            geotrek-admin geotrek-admin/POSTGRES_PASSWORD password geotrek
+            geotrek-admin geotrek-admin/POSTGRES_PASSWORD password $POSTGRES_PASSWORD
             geotrek-admin geotrek-admin/SERVER_NAME string localhost
             geotrek-admin geotrek-admin/SRID string 2154
             geotrek-admin geotrek-admin/POSTGRES_HOST string localhost
             geotrek-admin geotrek-admin/TIMEOUT string 300
             geotrek-admin geotrek-admin/MANAGE_DB boolean false
             geotrek-admin geotrek-admin/LANGUAGES string fr en
-            geotrek-admin geotrek-admin/POSTGRES_USER string geotrek
-            geotrek-admin geotrek-admin/POSTGRES_DB string geotrekdb
+            geotrek-admin geotrek-admin/POSTGRES_USER string $POSTGRES_USER
+            geotrek-admin geotrek-admin/POSTGRES_DB string $POSTGRES_DB
             geotrek-admin geotrek-admin/POSTGRES_PORT string 5432
             geotrek-admin geotrek-admin/DEFAULT_STRUCTURE string TEST
-            geotrek-admin geotrek-admin/RANDO_SERVER_NAME string *
-            geotrek-admin geotrek-admin/TIME_ZONE string Etc/GMT-1
-            geotrek-admin geotrek-admin/WORKERS string 4
+            geotrek-admin geotrek-admin/RANDO_SERVER_NAME string * 
           EOF
           sudo apt-get --quiet --yes install geotrek-admin
-      - name: Install database
+        env:
+          POSTGRES_DB: ${{ env.POSTGRES_DB }}
+          POSTGRES_USER: ${{ env.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ env.POSTGRES_PASSWORD }}
+      - name: Install event reservation database
         run: |
-          psql -h localhost -d geotrekdb -U geotrek --set ON_ERROR_STOP=on -f create_db_structure.sql
+          psql -h localhost -d $POSTGRES_DB -U geotrek --set ON_ERROR_STOP=on -f create_db_structure.sql
         working-directory: ./db
         env:
+          POSTGRES_DB: ${{ env.POSTGRES_DB }} 
           PGPASSWORD: geotrek
           VERBOSITY: verbose
       - name: Install backend dependencies
@@ -112,6 +108,4 @@ jobs:
           MAIL_PASSWORD: ${{secrets.MAIL_PASSWORD}}
           MAIL_DEFAULT_SENDER: ${{secrets.MAIL_USERNAME}}
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
-        with:
-          flags: pytest
+        uses: codecov/codecov-action@v5

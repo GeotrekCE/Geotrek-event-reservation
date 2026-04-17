@@ -10,7 +10,6 @@ from app import create_app
 from core.models import TTokens, GTEvents
 from core.env import db
 
-
 headers = {"Content-type": "application/json", "Accept": "application/json"}
 
 events_data = [
@@ -26,6 +25,7 @@ events_data = [
         "published_fr": True,
         "published_en": True,
         "bookable": True,
+        "eid": "0",
     },
     {
         # id:
@@ -39,6 +39,7 @@ events_data = [
         "published_fr": True,
         "published_en": True,
         "bookable": False,
+        "eid": "0",
     },
     {
         # id:
@@ -52,6 +53,7 @@ events_data = [
         "published_fr": True,
         "published_en": True,
         "bookable": False,
+        "eid": "0",
     },
 ]
 
@@ -108,7 +110,7 @@ def get_token(client):
 
 def post_json(client, url, json_dict):
     """Send dictionary json_dict as a json to the specified url"""
-    return client.post(url, data=json.dumps(json_dict), content_type="application/json")
+    return client.post(url, json=json_dict, content_type="application/json")
 
 
 def json_of_response(response):
@@ -123,21 +125,19 @@ def events():
             # Fait en sql direct pour éviter de réaliser un mapping complet
             #  du model tourism_touristicevent et notamment le champ géométrie
             db.session.execute(
-                text(
-                    """
+                text("""
                 INSERT INTO public.tourism_touristicevent
                 (
                   date_insert, date_update, deleted, structure_id,
                   geom,published,"name",capacity, begin_date, end_date,
                   published_fr, published_en,
-                  bookable
+                  bookable, eid
                 )
                 VALUES (CURRENT_TIMESTAMP,CURRENT_TIMESTAMP, false, 1,
                  st_setsrid(st_point(:x, :y), 2154), :published, :name, :capacity,:begin_date , :end_date ,
                  :published_fr, :published_en,
-                 :bookable
+                 :bookable, :eid
                  )
-                """
-                ),
+                """),
                 params=e,
             )
