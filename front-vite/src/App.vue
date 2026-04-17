@@ -3,7 +3,7 @@
     <template #start>
       <router-link to="/" class="-m-1.5 p-1.5 flex items-center">
         <img class="h-8 w-auto pr-1.5" src="./assets/logo.svg" alt="" />
-        <span class="font-small text-gray-900 m-2">Réservation animations</span>
+        <span class="font-small text-gray-900 m-2">{{ privateEnvVar }}</span>
       </router-link>
     </template>
     <template #item="{ item, props, hasSubmenu }">
@@ -52,8 +52,10 @@ import { ref, onBeforeMount } from 'vue'
 import PConfirmPopup from 'primevue/confirmpopup'
 import { getTouristiceventType } from '@/utils/gta_api'
 import Menubar from 'primevue/menubar'
+
 const authStore = useAuthStore()
 
+const privateEnvVar = import.meta.env.VITE_APP_TITLE
 const { isAuth, isAdmin, user } = storeToRefs(authStore)
 
 const isMenuOpened = ref(false)

@@ -1,6 +1,9 @@
 
 # Changelog
 
+**🚀 Nouveautés**
+ - Le titre de l'application qui s'affiche dans la bare de menu correspond à la valeur de la variable `VITE_APP_TITLE` du fichier .env .
+
 **🚀 Fonctionnalités**
  - Ajout d'un menu automatique "Évènements" pointant vers les évènements de geotrek-rando. Choix d'afficher/masquer via paramètre `DISPLAY_GTR_EVENTS_MENU`. 
 
