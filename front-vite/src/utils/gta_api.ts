@@ -1,4 +1,4 @@
-import { getApiData } from './api';
+import { getApiData } from './api'
 
 const URL_GT_API = `${CONFIGURATION.URL_GTA}/api/v2`
 
@@ -8,4 +8,4 @@ const getTouristiceventType = () => getApiData(URL_GT_API, 'touristicevent_type/
 
 const getTouristicEventDetail = (id: number) => getApiData(URL_GT_API, `touristicevent/${id}/`, {})
 
-export { getDistricts, getTouristiceventType, getTouristicEventDetail };
+export { getDistricts, getTouristiceventType, getTouristicEventDetail }

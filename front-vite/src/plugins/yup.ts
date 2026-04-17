@@ -1,4 +1,4 @@
-import { setLocale } from 'yup';
+import { setLocale } from 'yup'
 
 setLocale({
   mixed: {
@@ -11,6 +11,6 @@ setLocale({
     email: '${path} doit être un mail valide'
   },
   number: {
-    min: '${path} doit être supérieur ou égal à 0',
+    min: '${path} doit être supérieur ou égal à 0'
   }
 })

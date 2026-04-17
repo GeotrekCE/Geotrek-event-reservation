@@ -1,13 +1,17 @@
 <template>
   <div class="flex flex-col justify-center px-6 py-12 lg:px-8">
     <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-      <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Recevoir mon lien de connexion</h2>
+      <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+        Recevoir mon lien de connexion
+      </h2>
     </div>
 
     <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm md:max-w-md">
       <form class="space-y-6" @submit.prevent="login">
         <div>
-          <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Adresse email</label>
+          <label for="email" class="block text-sm font-medium leading-6 text-gray-900"
+            >Adresse email</label
+          >
           <div class="mt-2">
             <input
               id="email"
@@ -31,13 +35,14 @@
           </button>
         </div>
         <div v-if="success">
-          Un email de connexion vient de vous être envoyé.<br/>
+          Un email de connexion vient de vous être envoyé.<br />
           En cliquant sur le lien contenu dans ce dernier, vous pourrez vous connecter.
         </div>
         <div v-if="error" class="text-red-500">
-          Une erreur est survenue pendant la demande de votre lien de connexion.<br/>
-          Merci d'essayer à nouveau.<br/>
-          Si vous n'arrivez pas à obtenir le lien de connexion, merci de prendre contact avec le parc.        
+          Une erreur est survenue pendant la demande de votre lien de connexion.<br />
+          Merci d'essayer à nouveau.<br />
+          Si vous n'arrivez pas à obtenir le lien de connexion, merci de prendre contact avec le
+          parc.
         </div>
       </form>
     </div>
@@ -47,7 +52,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useAuthStore } from '@/stores/auth'
-import { useRoute } from 'vue-router';
+import { useRoute } from 'vue-router'
 
 const loading = ref(false)
 const success = ref(false)
@@ -69,5 +74,4 @@ async function login() {
   }
   loading.value = false
 }
-
 </script>

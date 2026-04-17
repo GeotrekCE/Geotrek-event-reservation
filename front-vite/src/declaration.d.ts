@@ -44,13 +44,12 @@ export interface ResaEvent {
   sum_participants_6_8_ans: number
   sum_participants_9_12_ans: number
   sum_participants_plus_12_ans: number
-
 }
 
 export interface ResaField {
-  name: string,
-  label: string,
-  class: string,
+  name: string
+  label: string
+  class: string
   type: 'number' | 'date' | 'paragraph' | 'string' | 'boolean'
 }
 

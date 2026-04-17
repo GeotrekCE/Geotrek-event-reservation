@@ -1,11 +1,6 @@
 <template>
-
   <p class="text-center my-4">
-    <a
-      class="text-blue-600 visited:text-purple-600"
-      :href="lienExport + idEvent"
-      target="_blank"
-    >
+    <a class="text-blue-600 visited:text-purple-600" :href="lienExport + idEvent" target="_blank">
       Exporter les données de réservation
     </a>
   </p>
@@ -52,13 +47,7 @@
 
     <p-column field="confirmed" header="Statut">
       <template #body="{ data }">
-
-        <p-tag
-          class="rounded-sm"
-          v-if="data.cancelled"
-          value="Annulée"
-          severity="danger"
-        />
+        <p-tag class="rounded-sm" v-if="data.cancelled" value="Annulée" severity="danger" />
         <p-tag
           class="rounded-sm"
           v-else-if="!data.confirmed"
@@ -77,12 +66,7 @@
           value="Liste d'attente"
           severity="warning"
         />
-        <p-tag
-          class="rounded-sm"
-          v-else-if="!data.liste_attente"
-          value="OK"
-          severity="success"
-        />
+        <p-tag class="rounded-sm" v-else-if="!data.liste_attente" value="OK" severity="success" />
       </template>
     </p-column>
     <!--
@@ -112,32 +96,31 @@
           class="rounded-sm px-3 py-2 text-sm font-medium text-white shadow-sm bg-sky-600 hover:bg-sky-500"
           @click="onCancelResa($event, data.id_reservation)"
           v-if="!data.cancelled"
-        >Annuler</button>
+        >
+          Annuler
+        </button>
       </template>
     </p-column>
     <template #expansion="{ data }">
       <div class="grid grid-cols-1 sm:grid-cols-10 gap-x-2 gap-y-4 mt-4">
-        <div
-          v-for="(field) in expandedFields"
-          :key="field.name"
-          :class="field.class"
-        >
-          <reservation-field
-            :field="field"
-            :value="data[field.name]"
-          />
+        <div v-for="field in expandedFields" :key="field.name" :class="field.class">
+          <reservation-field :field="field" :value="data[field.name]" />
         </div>
         <div class="col-span-full mx-auto">
           <button
             @click="emits('confirm', data.id_reservation)"
-            v-if="! data.confirmed"
+            v-if="!data.confirmed"
             class="rounded-sm px-3 py-2 text-sm font-medium text-white shadow-sm bg-sky-600 hover:bg-sky-500"
-          >Confirmer la réservation</button>
+          >
+            Confirmer la réservation
+          </button>
 
           <button
             @click="emits('edit', data.id_reservation)"
             class="rounded-sm ml-4 px-3 py-2 text-sm font-medium text-white shadow-sm bg-sky-600 hover:bg-sky-500"
-          >Modifier la réservation</button>
+          >
+            Modifier la réservation
+          </button>
         </div>
       </div>
     </template>
@@ -151,7 +134,7 @@ import PTag from 'primevue/tag'
 import { ref } from 'vue'
 import { expandedFields } from '@/utils/fields'
 import { formatDateTimeString } from '@/utils/formatDate'
-import { useConfirm } from "primevue/useconfirm";
+import { useConfirm } from 'primevue/useconfirm'
 import ReservationField from '@/components/ReservationField.vue'
 
 const confirm = useConfirm()
@@ -193,7 +176,7 @@ function onCancelResa(event: any, id_reservation: number) {
     rejectLabel: 'Non',
     accept: () => {
       emits('cancel', id_reservation)
-    },
+    }
   })
 }
 

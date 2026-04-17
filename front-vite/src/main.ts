@@ -1,28 +1,20 @@
 import { createApp } from 'vue'
 
-import { pinia } from './plugins/pinia'
-import './plugins/yup'
-import router from './router'
-
-/**
- * Prime Vue
- */
 import PrimeVue from 'primevue/config'
 import ConfirmationService from 'primevue/confirmationservice'
-import ToastService from 'primevue/toastservice';
-import 'primevue/resources/themes/lara-light-teal/theme.css'
-import 'primevue/resources/primevue.min.css'
-import 'primeicons/primeicons.css'
+import ToastService from 'primevue/toastservice'
+import Aura from '@primeuix/themes/aura'
+import './style.css'
 
-import './index.css'
-import '../public/css/custom.css'
+import App from './App.vue'
 
 import { useAuthStore } from './stores/auth'
 
+// import './plugins/yup'
+import router from './router'
+import { createPinia } from 'pinia'
 
-import App from './App.vue'
- 
-
+export const pinia = createPinia()
 /**
  * Check the auth
  */
@@ -39,10 +31,13 @@ async function boot() {
    */
   const app = createApp(App)
 
-  app.use(PrimeVue)
+  app.use(PrimeVue, {
+    theme: {
+      preset: Aura
+    }
+  })
   app.use(ConfirmationService)
   app.use(ToastService)
-
   app.use(pinia)
   app.use(router)
 
@@ -50,3 +45,13 @@ async function boot() {
 }
 
 boot()
+
+// const app = createApp(App);
+// app.use(PrimeVue, {
+//     theme: {
+//         preset: Aura
+//     }
+// });
+
+// app.use(PrimeVue);
+// app.mount('#app');
