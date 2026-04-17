@@ -376,15 +376,10 @@ class TestAPI:
 
         data = db.session.scalars(select(GTEvents)).first()
         event_id = data.id
-        info = {
-                "info_rdv": "Nouvelle information"
-        }
+        info = {"info_rdv": "Nouvelle information"}
 
         # --- Appel API ---
-        response = self.client.put(
-            f"/events/{event_id}/info",
-            json=json.dumps(info)
-        )
+        response = self.client.put(f"/events/{event_id}/info", json=json.dumps(info))
 
         # --- Vérifications HTTP ---
         assert response.status_code == 200
