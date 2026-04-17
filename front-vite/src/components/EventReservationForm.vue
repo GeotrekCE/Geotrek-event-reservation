@@ -9,18 +9,14 @@
     >
       <div class="space-y-12">
         <div class="border-b border-gray-900/10 pb-12">
-          <h2 class="text-base font-medium leading-7 text-gray-900">
-            Informations personnelles
-          </h2>
+          <h2 class="text-base font-medium leading-7 text-gray-900">Informations personnelles</h2>
           <p class="mt-1 text-sm leading-6 text-gray-600">
             Utilisez une adresse mail sur laquelle vous pouvez vous connecter.
           </p>
 
           <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
             <div class="col-span-1 sm:col-span-3">
-              <label
-                for="prenom"
-                class="block text-sm font-medium leading-6 text-gray-900"
+              <label for="prenom" class="block text-sm font-medium leading-6 text-gray-900"
                 >Prénom</label
               >
               <div class="mt-2">
@@ -36,11 +32,7 @@
             </div>
 
             <div class="col-span-1 sm:col-span-3">
-              <label
-                for="nom"
-                class="block text-sm font-medium leading-6 text-gray-900"
-                >Nom</label
-              >
+              <label for="nom" class="block text-sm font-medium leading-6 text-gray-900">Nom</label>
               <div class="mt-2">
                 <vv-field
                   type="text"
@@ -54,9 +46,7 @@
             </div>
 
             <div class="col-span-1 sm:col-span-2">
-              <label
-                for="email"
-                class="block text-sm font-medium leading-6 text-gray-900"
+              <label for="email" class="block text-sm font-medium leading-6 text-gray-900"
                 >Email</label
               >
               <div class="mt-2">
@@ -72,9 +62,7 @@
             </div>
 
             <div class="col-span-1 sm:col-span-2">
-              <label
-                for="tel"
-                class="block text-sm font-medium leading-6 text-gray-900"
+              <label for="tel" class="block text-sm font-medium leading-6 text-gray-900"
                 >Téléphone</label
               >
               <div class="mt-2">
@@ -90,9 +78,7 @@
             </div>
 
             <div class="col-span-1 sm:col-span-2">
-              <label
-                for="num_departement"
-                class="block text-sm font-medium leading-6 text-gray-900"
+              <label for="num_departement" class="block text-sm font-medium leading-6 text-gray-900"
                 >Lieu d'origine</label
               >
               <div class="mt-2">
@@ -123,9 +109,7 @@
 
           <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-10">
             <div class="sm:col-span-2">
-              <label
-                for="nb_adultes"
-                class="block text-sm font-medium leading-6 text-gray-900"
+              <label for="nb_adultes" class="block text-sm font-medium leading-6 text-gray-900"
                 >Adulte(s)</label
               >
               <div class="mt-2">
@@ -141,9 +125,7 @@
               </div>
             </div>
             <div class="sm:col-span-2">
-              <label
-                for="nb_moins_6_ans"
-                class="block text-sm font-medium leading-6 text-gray-900"
+              <label for="nb_moins_6_ans" class="block text-sm font-medium leading-6 text-gray-900"
                 >Moins de 6 ans</label
               >
               <div class="mt-2">
@@ -159,9 +141,7 @@
               </div>
             </div>
             <div class="sm:col-span-2">
-              <label
-                for="nb_6_8_ans"
-                class="block text-sm font-medium leading-6 text-gray-900"
+              <label for="nb_6_8_ans" class="block text-sm font-medium leading-6 text-gray-900"
                 >6 - 8 ans</label
               >
               <div class="mt-2">
@@ -177,9 +157,7 @@
               </div>
             </div>
             <div class="sm:col-span-2">
-              <label
-                for="nb_9_12_ans"
-                class="block text-sm font-medium leading-6 text-gray-900"
+              <label for="nb_9_12_ans" class="block text-sm font-medium leading-6 text-gray-900"
                 >9 - 12 ans</label
               >
               <div class="mt-2">
@@ -195,9 +173,7 @@
               </div>
             </div>
             <div class="sm:col-span-2">
-              <label
-                for="nb_plus_12_ans"
-                class="block text-sm font-medium leading-6 text-gray-900"
+              <label for="nb_plus_12_ans" class="block text-sm font-medium leading-6 text-gray-900"
                 >Plus de 12 ans</label
               >
               <div class="mt-2">
@@ -219,10 +195,7 @@
           </div>
         </div>
 
-        <div
-          class="border-b border-gray-900/10 pb-12"
-          v-if="displayAdminFields"
-        >
+        <div class="border-b border-gray-900/10 pb-12" v-if="displayAdminFields">
           <h2 class="text-base font-medium leading-7 text-gray-900">
             Informations administrateurs
           </h2>
@@ -232,9 +205,7 @@
 
           <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-10">
             <div class="sm:col-span-2">
-              <label
-                for="liste_attente"
-                class="block text-sm font-medium leading-6 text-gray-900"
+              <label for="liste_attente" class="block text-sm font-medium leading-6 text-gray-900"
                 >En liste d'attente</label
               >
               <div class="mt-2">
@@ -252,9 +223,7 @@
               </div>
             </div>
             <div class="sm:col-span-2">
-              <label
-                for="confirmed"
-                class="block text-sm font-medium leading-6 text-gray-900"
+              <label for="confirmed" class="block text-sm font-medium leading-6 text-gray-900"
                 >Confirmée par le créateur</label
               >
               <div class="mt-2">
@@ -275,12 +244,10 @@
         </div>
 
         <div class="border-b border-gray-900/10 pb-12">
-          <h2 class="text-base font-medium leading-7 text-gray-900">
-            Commentaire
-          </h2>
+          <h2 class="text-base font-medium leading-7 text-gray-900">Commentaire</h2>
           <p class="mt-1 text-sm leading-6 text-gray-600">
-            Vous souhaitez préciser certains points sur votre réservation, vous
-            pouvez les inscrire ici.
+            Vous souhaitez préciser certains points sur votre réservation, vous pouvez les inscrire
+            ici.
           </p>
 
           <div class="col-span-full">
@@ -315,23 +282,21 @@
               'hover:bg-sky-500': !saving,
               'bg-sky-100': saving,
               'hover:bg-sky-100': saving,
-              'text-black': saving,
+              'text-black': saving
             }"
             :disabled="saving"
           >
-            {{
-              saving ? "Enregistrement en cours..." : "Enregistrer réservation"
-            }}
+            {{ saving ? 'Enregistrement en cours...' : 'Enregistrer réservation' }}
           </button>
         </div>
         <span v-if="Object.keys(errors).length === 1" class="text-red-500">
           Une erreur est présente dans le formulaire (champ
-          {{ Object.keys(errors)[0] }}). Merci de la corriger avant de soumettre
-          à nouveau le formulaire
+          {{ Object.keys(errors)[0] }}). Merci de la corriger avant de soumettre à nouveau le
+          formulaire
         </span>
         <span v-if="Object.keys(errors).length > 1" class="text-red-500">
-          Plusieurs erreurs sont présentes dans le formulaire. Merci de les
-          corriger avant de soumettre à nouveau le formulaire
+          Plusieurs erreurs sont présentes dans le formulaire. Merci de les corriger avant de
+          soumettre à nouveau le formulaire
         </span>
       </div>
     </vv-form>
@@ -342,8 +307,8 @@
           <div class="p-toast-detail" v-html="slotProps.message.detail" />
           <div>
             <small
-              >N'hésitez pas à prendre contact avec le parc si l'erreur
-              persiste. Veuillez nous excuser pour la gêne occasionnée.</small
+              >N'hésitez pas à prendre contact avec le parc si l'erreur persiste. Veuillez nous
+              excuser pour la gêne occasionnée.</small
             >
           </div>
         </div>
@@ -353,103 +318,82 @@
 </template>
 
 <script setup lang="ts">
-import {
-  Form as VvForm,
-  Field as VvField,
-  ErrorMessage as VvErrorMessage,
-} from "vee-validate";
-import * as yup from "yup";
-import { watch } from "vue";
-import { useToast } from "primevue/usetoast";
-import Toast from "primevue/toast";
-const toast = useToast();
+import { Form as VvForm, Field as VvField, ErrorMessage as VvErrorMessage } from 'vee-validate'
+import * as yup from 'yup'
+import { watch } from 'vue'
+import { useToast } from 'primevue/usetoast'
+import Toast from 'primevue/toast'
+const toast = useToast()
 
-const emits = defineEmits(["submit", "cancel"]);
+const emits = defineEmits(['submit', 'cancel'])
 const props = defineProps({
   saving: {
     type: Boolean,
-    required: true,
+    required: true
   },
   saveError: {
     type: Object,
     required: false,
-    default: { name: "" },
+    default: { name: '' }
   },
   displayCancel: {
     type: Boolean,
     required: false,
-    default: false,
+    default: false
   },
   originalValues: {
     type: Object,
     required: false,
-    default: () => ({}),
+    default: () => ({})
   },
   displayAdminFields: {
     type: Boolean,
     required: false,
-    default: false,
-  },
-});
-const origins = CONFIGURATION.ORIGINS;
+    default: false
+  }
+})
+const origins = CONFIGURATION.ORIGINS
 
 watch(
   () => props.saveError,
   (prev, next) => {
-    if (props.saveError.name == "Error") {
+    if (props.saveError.name == 'Error') {
       toast.add({
-        severity: "error",
-        summary: "Sauvegarde impossible",
+        severity: 'error',
+        summary: 'Sauvegarde impossible',
         detail: props.saveError.message,
-        life: 10000,
-      });
+        life: 10000
+      })
     }
   },
-  { deep: true },
-);
+  { deep: true }
+)
 
 const formSchema = yup.object().shape({
-  email: yup.string().email().required().label("Email"),
-  tel: yup.string().required().label("Téléphone"),
-  nom: yup.string().required().label("Nom"),
-  prenom: yup.string().required().label("Prénom"),
+  email: yup.string().email().required().label('Email'),
+  tel: yup.string().required().label('Téléphone'),
+  nom: yup.string().required().label('Nom'),
+  prenom: yup.string().required().label('Prénom'),
   num_departement: yup
     .string()
     .required()
     .oneOf(CONFIGURATION.ORIGINS.map((x) => String(x.value)))
     .label("Lieu d'origine"),
-  commentaire: yup.string().nullable().label("Commentaire"),
-  nb_adultes: yup.number().min(0).default(0).label("Adulte(s)"),
-  nb_moins_6_ans: yup.number().min(0).default(0).label("Moins de 6 ans"),
-  nb_6_8_ans: yup.number().min(0).default(0).label("6 - 8 ans"),
-  nb_9_12_ans: yup.number().min(0).default(0).label("9 - 12 ans"),
-  nb_plus_12_ans: yup.number().min(0).default(0).label("Plus de 12 ans"),
+  commentaire: yup.string().nullable().label('Commentaire'),
+  nb_adultes: yup.number().min(0).default(0).label('Adulte(s)'),
+  nb_moins_6_ans: yup.number().min(0).default(0).label('Moins de 6 ans'),
+  nb_6_8_ans: yup.number().min(0).default(0).label('6 - 8 ans'),
+  nb_9_12_ans: yup.number().min(0).default(0).label('9 - 12 ans'),
+  nb_plus_12_ans: yup.number().min(0).default(0).label('Plus de 12 ans'),
   liste_attente: yup.bool().label("En liste d'attente"),
-  confirmed: yup.bool().label("Confirmée par le créateur"),
+  confirmed: yup.bool().label('Confirmée par le créateur'),
   nb_total: yup
     .number()
-    .test(
-      "nb_total_notnull",
-      "Au moins un participant doit être inscrit",
-      function (code) {
-        const {
-          nb_adultes,
-          nb_moins_6_ans,
-          nb_6_8_ans,
-          nb_9_12_ans,
-          nb_plus_12_ans,
-        } = this.parent;
-        return (
-          nb_adultes +
-            nb_moins_6_ans +
-            nb_6_8_ans +
-            nb_9_12_ans +
-            nb_plus_12_ans >=
-          1
-        );
-      },
-    ),
-});
+    .test('nb_total_notnull', 'Au moins un participant doit être inscrit', function (code) {
+      const { nb_adultes, nb_moins_6_ans, nb_6_8_ans, nb_9_12_ans, nb_plus_12_ans } = this.parent
+      return nb_adultes + nb_moins_6_ans + nb_6_8_ans + nb_9_12_ans + nb_plus_12_ans >= 1
+    })
+})
 
 const formValues = {
   email: props.originalValues.email,
@@ -464,12 +408,12 @@ const formValues = {
   nb_9_12_ans: props.originalValues.nb_9_12_ans || 0,
   nb_plus_12_ans: props.originalValues.nb_plus_12_ans || 0,
   liste_attente: props.originalValues.liste_attente,
-  confirmed: props.originalValues.confirmed,
-};
+  confirmed: props.originalValues.confirmed
+}
 </script>
 
 <style scoped>
-span[role="alert"] {
+span[role='alert'] {
   color: var(--red-500);
 }
 </style>

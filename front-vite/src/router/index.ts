@@ -1,39 +1,39 @@
-import { createRouter, createWebHistory } from "vue-router";
-import { useAuthStore } from "@/stores/auth";
+import { createRouter, createWebHistory } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
 
-import HomeView from "@/views/HomeView.vue";
+import HomeView from '@/views/HomeView.vue'
 
-import LoginView from "@/views/LoginView.vue";
-import LoginCallbackView from "@/views/LoginCallbackView.vue";
-import LogoutView from "@/views/LogoutView.vue";
-import InfoAdminView from "@/views/InfoAdminView.vue";
+import LoginView from '@/views/LoginView.vue'
+import LoginCallbackView from '@/views/LoginCallbackView.vue'
+import LogoutView from '@/views/LogoutView.vue'
+import InfoAdminView from '@/views/InfoAdminView.vue'
 
 export const ROUTES_NAMES = {
-  HOME: "HOME",
-  LOGIN: "LOGIN",
-  LOGIN_CALLBACK: "LOGIN_CALLBACK",
-  LOGOUT: "LOGOUT",
-  EVENT_LISTING: "EVENT_LISTING",
-  EVENT_DETAIL: "EVENT_DETAIL",
-  STATS: "STATS",
-  RESA_FORM: "RESA_FORM",
-  RESA_LISTING: "RESA_LISTING",
-  RESA_CONFIRM: "RESA_CONFIRM",
-  INFO_ADMIN: "INFO_ADMIN",
-};
+  HOME: 'HOME',
+  LOGIN: 'LOGIN',
+  LOGIN_CALLBACK: 'LOGIN_CALLBACK',
+  LOGOUT: 'LOGOUT',
+  EVENT_LISTING: 'EVENT_LISTING',
+  EVENT_DETAIL: 'EVENT_DETAIL',
+  STATS: 'STATS',
+  RESA_FORM: 'RESA_FORM',
+  RESA_LISTING: 'RESA_LISTING',
+  RESA_CONFIRM: 'RESA_CONFIRM',
+  INFO_ADMIN: 'INFO_ADMIN'
+}
 export const ROUTES_PATHS = {
-  HOME: "/",
-  LOGIN: "/login",
-  LOGIN_CALLBACK: "/login/callback",
-  LOGOUT: "/logout",
-  EVENT_LISTING: "/events",
-  EVENT_DETAIL: "/events/:id",
-  STATS: "/stats",
-  RESA_FORM: "/resa/:geotrekid",
-  RESA_LISTING: "/resalisting",
-  RESA_CONFIRM: "/resaconfirm",
-  INFO_ADMIN: "/info_admin",
-};
+  HOME: '/',
+  LOGIN: '/login',
+  LOGIN_CALLBACK: '/login/callback',
+  LOGOUT: '/logout',
+  EVENT_LISTING: '/events',
+  EVENT_DETAIL: '/events/:id',
+  STATS: '/stats',
+  RESA_FORM: '/resa/:geotrekid',
+  RESA_LISTING: '/resalisting',
+  RESA_CONFIRM: '/resaconfirm',
+  INFO_ADMIN: '/info_admin'
+}
 
 const routes = [
   {
@@ -41,83 +41,83 @@ const routes = [
     name: ROUTES_NAMES.HOME,
     component: HomeView,
     meta: {
-      requiresAuth: false,
-    },
+      requiresAuth: false
+    }
   },
   {
     path: ROUTES_PATHS.LOGIN,
     name: ROUTES_NAMES.LOGIN,
     component: LoginView,
     meta: {
-      requiresAuth: false,
-    },
+      requiresAuth: false
+    }
   },
   {
     path: ROUTES_PATHS.LOGIN_CALLBACK,
     name: ROUTES_NAMES.LOGIN_CALLBACK,
     component: LoginCallbackView,
     meta: {
-      requiresAuth: false,
-    },
+      requiresAuth: false
+    }
   },
   {
     path: ROUTES_PATHS.LOGOUT,
     name: ROUTES_NAMES.LOGOUT,
     component: LogoutView,
     meta: {
-      requiresAuth: true,
-    },
+      requiresAuth: true
+    }
   },
   {
     path: ROUTES_PATHS.EVENT_LISTING,
     name: ROUTES_NAMES.EVENT_LISTING,
-    component: () => import("@/views/EventListingView.vue"),
+    component: () => import('@/views/EventListingView.vue'),
     meta: {
       requiresAuth: true,
-      requiresAdmin: true,
-    },
+      requiresAdmin: true
+    }
   },
   {
     path: ROUTES_PATHS.EVENT_DETAIL,
     name: ROUTES_NAMES.EVENT_DETAIL,
-    component: () => import("@/views/EventListingView.vue"),
+    component: () => import('@/views/EventListingView.vue'),
     meta: {
       requiresAuth: true,
-      requiresAdmin: true,
-    },
+      requiresAdmin: true
+    }
   },
   {
     path: ROUTES_PATHS.STATS,
     name: ROUTES_NAMES.STATS,
-    component: () => import("@/views/StatsView.vue"),
+    component: () => import('@/views/StatsView.vue'),
     meta: {
       requiresAuth: true,
-      requiresAdmin: true,
-    },
+      requiresAdmin: true
+    }
   },
   {
     path: ROUTES_PATHS.RESA_FORM,
     name: ROUTES_NAMES.RESA_FORM,
-    component: () => import("@/views/ReservationFormView.vue"),
+    component: () => import('@/views/ReservationFormView.vue'),
     meta: {
-      requiresAuth: false,
-    },
+      requiresAuth: false
+    }
   },
   {
     path: ROUTES_PATHS.RESA_LISTING,
     name: ROUTES_NAMES.RESA_LISTING,
-    component: () => import("@/views/ReservationListingView.vue"),
+    component: () => import('@/views/ReservationListingView.vue'),
     meta: {
-      requiresAuth: true,
-    },
+      requiresAuth: true
+    }
   },
   {
     path: ROUTES_PATHS.RESA_CONFIRM,
     name: ROUTES_NAMES.RESA_CONFIRM,
-    component: () => import("@/views/ReservationConfirmationView.vue"),
+    component: () => import('@/views/ReservationConfirmationView.vue'),
     meta: {
-      requiresAuth: false,
-    },
+      requiresAuth: false
+    }
   },
   {
     path: ROUTES_PATHS.INFO_ADMIN,
@@ -125,18 +125,18 @@ const routes = [
     component: InfoAdminView,
     meta: {
       requiresAuth: true,
-      requiresAdmin: true,
-    },
-  },
-];
+      requiresAdmin: true
+    }
+  }
+]
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes,
-});
+  routes
+})
 
 router.beforeEach((to, from) => {
-  const authStore = useAuthStore();
+  const authStore = useAuthStore()
 
   // if we want to display login page
   if (to.name === ROUTES_NAMES.LOGIN) {
@@ -146,14 +146,14 @@ router.beforeEach((to, from) => {
       if (authStore.isAdmin) {
         return {
           name: ROUTES_PATHS.EVENT_LISTING,
-          replace: true,
-        };
+          replace: true
+        }
       } else {
         // we go to resa listing if user is not admin
         return {
           name: ROUTES_PATHS.RESA_LISTING,
-          replace: true,
-        };
+          replace: true
+        }
       }
     }
   } else {
@@ -163,21 +163,21 @@ router.beforeEach((to, from) => {
       if (!authStore.isAuth) {
         return {
           name: ROUTES_PATHS.LOGIN,
-          replace: true,
-        };
+          replace: true
+        }
       } else if (to.meta.requiresAdmin && !authStore.isAdmin) {
         // if the route need admin permission
         // but user is not ad admin
         // go to home page
         return {
           name: ROUTES_PATHS.HOME,
-          replace: true,
-        };
+          replace: true
+        }
       }
     } else {
-      return;
+      return
     }
   }
-});
+})
 
-export default router;
+export default router

@@ -2,9 +2,7 @@
   <form @submit.prevent="onSubmit">
     <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-10">
       <div class="sm:col-span-2">
-        <label
-          for="nb_adultes"
-          class="block text-sm font-medium leading-6 text-gray-900"
+        <label for="nb_adultes" class="block text-sm font-medium leading-6 text-gray-900"
           >Adulte(s)</label
         >
         <div class="mt-2">
@@ -19,9 +17,7 @@
         </div>
       </div>
       <div class="sm:col-span-2">
-        <label
-          for="nb_moins_6_ans"
-          class="block text-sm font-medium leading-6 text-gray-900"
+        <label for="nb_moins_6_ans" class="block text-sm font-medium leading-6 text-gray-900"
           >Moins de 6 ans</label
         >
         <div class="mt-2">
@@ -36,9 +32,7 @@
         </div>
       </div>
       <div class="sm:col-span-2">
-        <label
-          for="nb_6_8_ans"
-          class="block text-sm font-medium leading-6 text-gray-900"
+        <label for="nb_6_8_ans" class="block text-sm font-medium leading-6 text-gray-900"
           >6 - 8 ans</label
         >
         <div class="mt-2">
@@ -53,9 +47,7 @@
         </div>
       </div>
       <div class="sm:col-span-2">
-        <label
-          for="nb_9_12_ans"
-          class="block text-sm font-medium leading-6 text-gray-900"
+        <label for="nb_9_12_ans" class="block text-sm font-medium leading-6 text-gray-900"
           >9 - 12 ans</label
         >
         <div class="mt-2">
@@ -70,9 +62,7 @@
         </div>
       </div>
       <div class="sm:col-span-2">
-        <label
-          for="nb_plus_12_ans"
-          class="block text-sm font-medium leading-6 text-gray-900"
+        <label for="nb_plus_12_ans" class="block text-sm font-medium leading-6 text-gray-900"
           >Plus de 12 ans</label
         >
         <div class="mt-2">
@@ -95,9 +85,7 @@
         </button>
       </div>
       <div class="col-span-full">
-        <label
-          for="commentaire"
-          class="block text-sm font-medium leading-6 text-gray-900"
+        <label for="commentaire" class="block text-sm font-medium leading-6 text-gray-900"
           >Commentaire</label
         >
         <div class="mt-2">
@@ -121,11 +109,11 @@
           'hover:bg-sky-500': !saving,
           'bg-sky-100': saving,
           'hover:bg-sky-100': saving,
-          'text-black': saving,
+          'text-black': saving
         }"
         :disabled="saving"
       >
-        {{ saving ? "Enregistrement en cours..." : "Enregistrer bilan" }}
+        {{ saving ? 'Enregistrement en cours...' : 'Enregistrer bilan' }}
       </button>
 
       <div v-if="error" class="text-red-500">
@@ -137,37 +125,37 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-import type { ResaBilan, ResaEvent } from "@/declaration";
+import { ref } from 'vue'
+import type { ResaBilan, ResaEvent } from '@/declaration'
 
 const props = defineProps<{
-  saving: boolean;
-  originalData: Partial<ResaBilan>;
-  error?: string;
-  summary?: Partial<ResaEvent>;
-}>();
-const emits = defineEmits(["submit"]);
+  saving: boolean
+  originalData: Partial<ResaBilan>
+  error?: string
+  summary?: Partial<ResaEvent>
+}>()
+const emits = defineEmits(['submit'])
 
 const bilan = ref<any>({
-  commentaire: "",
+  commentaire: '',
   nb_adultes: 0,
   nb_moins_6_ans: 0,
   nb_6_8_ans: 0,
   nb_9_12_ans: 0,
   nb_plus_12_ans: 0,
-  ...props.originalData,
-});
+  ...props.originalData
+})
 
 function onSubmit() {
-  emits("submit", bilan.value);
+  emits('submit', bilan.value)
 }
 
 function onPrefillSummary() {
-  if (!props.summary) return;
-  bilan.value.nb_adultes = props.summary?.sum_participants_adultes;
-  bilan.value.nb_moins_6_ans = props.summary?.sum_participants_moins_6_ans;
-  bilan.value.nb_6_8_ans = props.summary?.sum_participants_6_8_ans;
-  bilan.value.nb_9_12_ans = props.summary?.sum_participants_9_12_ans;
-  bilan.value.nb_plus_12_ans = props.summary?.sum_participants_plus_12_ans;
+  if (!props.summary) return
+  bilan.value.nb_adultes = props.summary?.sum_participants_adultes
+  bilan.value.nb_moins_6_ans = props.summary?.sum_participants_moins_6_ans
+  bilan.value.nb_6_8_ans = props.summary?.sum_participants_6_8_ans
+  bilan.value.nb_9_12_ans = props.summary?.sum_participants_9_12_ans
+  bilan.value.nb_plus_12_ans = props.summary?.sum_participants_plus_12_ans
 }
 </script>

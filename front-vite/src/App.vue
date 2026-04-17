@@ -8,12 +8,7 @@
     </template>
     <template #item="{ item, props, hasSubmenu }">
       <div v-if="isAdmin == item.isAdmin && isAuth == item.isAuth">
-        <router-link
-          v-if="item.route"
-          v-slot="{ href, navigate }"
-          :to="item.route"
-          custom
-        >
+        <router-link v-if="item.route" v-slot="{ href, navigate }" :to="item.route" custom>
           <a
             :href="href"
             v-bind="props.action"
@@ -30,9 +25,9 @@
       <router-link
         @click="isMenuOpened = false"
         :to="isAuth ? '/logout' : '/login'"
-        class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-medium leading-7 text-gray-900 hover:bg-gray-50"
+        class="-mx-3 block rounded-lg px-3 text-base font-medium leading-7 text-gray-900 hover:bg-gray-50"
       >
-        {{ isAuth ? "Déconnexion (" + user?.email + ")" : "Connexion" }}
+        {{ isAuth ? 'Déconnexion (' + user?.email + ')' : 'Connexion' }}
       </router-link>
     </template>
   </Menubar>
@@ -45,48 +40,48 @@
 </template>
 
 <script setup lang="ts">
-import { RouterLink, RouterView } from "vue-router";
-import { storeToRefs } from "pinia";
-import { useAuthStore } from "./stores/auth";
-import { ref } from "vue";
-import PConfirmPopup from "primevue/confirmpopup";
+import { RouterLink, RouterView } from 'vue-router'
+import { storeToRefs } from 'pinia'
+import { useAuthStore } from './stores/auth'
+import { ref } from 'vue'
+import PConfirmPopup from 'primevue/confirmpopup'
 
-import Menubar from "primevue/menubar";
-const authStore = useAuthStore();
+import Menubar from 'primevue/menubar'
+const authStore = useAuthStore()
 
-const { isAuth, isAdmin, user } = storeToRefs(authStore);
+const { isAuth, isAdmin, user } = storeToRefs(authStore)
 
-const isMenuOpened = ref(false);
+const isMenuOpened = ref(false)
 
 const items = ref([
   {
-    label: "Animations",
-    icon: "pi pi-calendar",
+    label: 'Animations',
+    icon: 'pi pi-calendar',
     isAuth: true,
     isAdmin: true,
-    route: "/events",
-    active: false,
+    route: '/events',
+    active: false
   },
   {
-    label: "Informations",
-    icon: "pi pi-link",
+    label: 'Informations',
+    icon: 'pi pi-link',
     isAuth: true,
     isAdmin: true,
-    route: "/info_admin",
+    route: '/info_admin'
   },
   {
-    label: "Statistiques",
-    icon: "pi pi-chart-line",
+    label: 'Statistiques',
+    icon: 'pi pi-chart-line',
     isAuth: true,
     isAdmin: true,
-    route: "/stats",
+    route: '/stats'
   },
   {
-    label: "Mes réservations",
-    icon: "pi pi-calendar",
+    label: 'Mes réservations',
+    icon: 'pi pi-calendar',
     isAuth: true,
     isAdmin: false,
-    route: "/resalisting",
-  },
-]);
+    route: '/resalisting'
+  }
+])
 </script>

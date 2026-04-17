@@ -1,22 +1,22 @@
-import { ref, computed } from "vue";
-import { defineStore } from "pinia";
-import { postApiData, getApiData } from "@/utils/api";
+import { ref, computed } from 'vue'
+import { defineStore } from 'pinia'
+import { postApiData, getApiData } from '@/utils/api'
 
 interface User {
-  email: string;
-  is_admin: boolean;
+  email: string
+  is_admin: boolean
 }
 
-export const useAuthStore = defineStore("auth", () => {
-  const user = ref<null | User>(null);
+export const useAuthStore = defineStore('auth', () => {
+  const user = ref<null | User>(null)
 
   const isAuth = computed(() => {
-    return !!user.value;
-  });
+    return !!user.value
+  })
 
   const isAdmin = computed(() => {
-    return user.value?.is_admin;
-  });
+    return user.value?.is_admin
+  })
 
   /**
    * Ask the API to log the user,
@@ -24,9 +24,9 @@ export const useAuthStore = defineStore("auth", () => {
    * and store it in the auth state
    */
   async function login(token: string) {
-    user.value = await postApiData(CONFIGURATION.URL_APPLICATION, "login", {
-      login_token: token,
-    });
+    user.value = await postApiData(CONFIGURATION.URL_APPLICATION, 'login', {
+      login_token: token
+    })
   }
 
   /**
@@ -35,9 +35,9 @@ export const useAuthStore = defineStore("auth", () => {
    */
   async function checkAuth() {
     try {
-      user.value = await getApiData(CONFIGURATION.URL_APPLICATION, "ping");
+      user.value = await getApiData(CONFIGURATION.URL_APPLICATION, 'ping')
     } catch {
-      user.value = null;
+      user.value = null
     }
   }
 
@@ -45,17 +45,17 @@ export const useAuthStore = defineStore("auth", () => {
    * Ask the API to destroy cookie
    */
   async function logout() {
-    user.value = null;
-    await getApiData(CONFIGURATION.URL_APPLICATION, "logout");
+    user.value = null
+    await getApiData(CONFIGURATION.URL_APPLICATION, 'logout')
   }
 
   /**
    * Ask for sending a password-less email login to the user
    */
   async function sendLoginEmail(email: string) {
-    await postApiData(CONFIGURATION.URL_APPLICATION, "send-login-email", {
-      email,
-    });
+    await postApiData(CONFIGURATION.URL_APPLICATION, 'send-login-email', {
+      email
+    })
   }
 
   return {
@@ -66,6 +66,6 @@ export const useAuthStore = defineStore("auth", () => {
     checkAuth,
     login,
     logout,
-    sendLoginEmail,
-  };
-});
+    sendLoginEmail
+  }
+})

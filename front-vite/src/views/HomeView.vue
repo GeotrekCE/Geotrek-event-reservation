@@ -1,9 +1,7 @@
 <template>
   <header class="bg-white shadow">
     <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-      <h1 class="text-3xl font-bold tracking-tight text-gray-900">
-        Bienvenue !
-      </h1>
+      <h1 class="text-3xl font-bold tracking-tight text-gray-900">Bienvenue !</h1>
     </div>
   </header>
   <main class="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8 px-4 py-6">
@@ -30,24 +28,23 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
-import { marked } from "marked";
-import { useAuthStore } from "@/stores/auth";
+import { ref, onMounted } from 'vue'
+import { marked } from 'marked'
+import { useAuthStore } from '@/stores/auth'
 
-const markdownToHTML = ref("");
-const loading = ref(false);
+const markdownToHTML = ref('')
+const loading = ref(false)
 
-const parkLabel = CONFIGURATION.PARK_LABEL;
+const parkLabel = CONFIGURATION.PARK_LABEL
 
-const authStore = useAuthStore();
+const authStore = useAuthStore()
 
 onMounted(async () => {
-  loading.value = true;
-  const response = await fetch("page_accueil.md");
-  const text: string = await response.text();
+  loading.value = true
+  const response = await fetch('page_accueil.md')
+  const text: string = await response.text()
   markdownToHTML.value =
-    (await marked(text)) ||
-    "Erreur lors de la récupération des informations à afficher.";
-  loading.value = false;
-});
+    (await marked(text)) || 'Erreur lors de la récupération des informations à afficher.'
+  loading.value = false
+})
 </script>

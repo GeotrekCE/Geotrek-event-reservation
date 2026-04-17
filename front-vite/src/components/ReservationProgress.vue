@@ -4,55 +4,48 @@
     :pt="{ value: { style: { background: colorRemplissage } } }"
     class="border border-solid border-gray-500 rounded-sm"
   >
-    <span v-if="displayText"
-      >{{ reservationNb }} / {{ participantNb }} + ({{ attenteNb }})
-      {{ colorRemplissage }}</span
-    >
+    <span v-if="displayText">{{ reservationNb }} / {{ participantNb }} + ({{ attenteNb }}) </span>
     <span v-else>{{ tauxRemplissage }} %</span>
   </p-progress-bar>
 </template>
 
 <script setup lang="ts">
-import PProgressBar from "primevue/progressbar";
-import { computed } from "vue";
+import PProgressBar from 'primevue/progressbar'
+import { computed } from 'vue'
 
 const props = defineProps({
   reservationNb: {
     type: Number,
-    required: true,
+    required: true
   },
   participantNb: {
     type: Number,
     required: true,
-    default: 0,
+    default: 0
   },
   attenteNb: {
     type: Number,
-    required: true,
+    required: true
   },
   displayText: {
     type: Boolean,
     required: false,
-    default: true,
-  },
-});
+    default: true
+  }
+})
 
 const colorRemplissage = computed(() => {
-  console.log(props.reservationNb, props.participantNb);
-  if (props.participantNb === 0) return "blue-grey";
-
-  if (props.reservationNb / props.participantNb >= 1) return "red";
-  if (props.reservationNb / props.participantNb > 0.75) return "lime accent-4";
-  if (props.reservationNb / props.participantNb > 0.5) return "lime";
-  return "green";
-});
+  const nbTotal = props.reservationNb + props.attenteNb
+  if (props.participantNb === 0) return 'blue-grey'
+  if (nbTotal / props.participantNb >= 1) return 'red'
+  if (nbTotal / props.participantNb > 0.75) return 'lime accent-4'
+  if (nbTotal / props.participantNb > 0.5) return 'lime'
+  return 'green'
+})
 
 const tauxRemplissage = computed(() => {
-  if (props.participantNb === 0) return 0;
+  if (props.participantNb === 0) return 0
 
-  return Math.min(
-    Math.round((props.reservationNb / props.participantNb) * 100),
-    100,
-  );
-});
+  return Math.min(Math.round((props.reservationNb / props.participantNb) * 100), 100)
+})
 </script>

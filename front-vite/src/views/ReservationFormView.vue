@@ -9,10 +9,7 @@
       </div>
     </header>
 
-    <main
-      class="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8 px-4 py-6"
-      v-if="!reservationOpened.value"
-    >
+    <main class="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8 px-4 py-6" v-if="!reservationOpened.value">
       <section class="pb-12 mx-auto space-y-4">
         <p>Nous sommes désolés, les réservations ne sont pas possibles.</p>
         <p v-if="reservationOpened.text">
@@ -49,11 +46,11 @@
               class="w-4 h-4 pi"
               :class="{
                 'pi-chevron-down': isSummaryDisplayed,
-                'pi-chevron-right': !isSummaryDisplayed,
+                'pi-chevron-right': !isSummaryDisplayed
               }"
             />
             Résumé de l'animation
-            {{ isSummaryDisplayed ? "" : "(Cliquez pour afficher)" }}
+            {{ isSummaryDisplayed ? '' : '(Cliquez pour afficher)' }}
           </h2>
 
           <event-summary v-if="event && isSummaryDisplayed" :event="event" />
@@ -61,16 +58,14 @@
 
         <section>
           <div class="mt-4">
-            <h1 class="text-xl font-medium leading-7 text-gray-900">
-              Inscription
-            </h1>
+            <h1 class="text-xl font-medium leading-7 text-gray-900">Inscription</h1>
             <p class="mt-1 text-sm leading-6 text-gray-600">
-              En remplissant ce formulaire, puis en le validant, vous recevrez
-              un email de confirmation.
+              En remplissant ce formulaire, puis en le validant, vous recevrez un email de
+              confirmation.
               <br />
               <strong
-                >Veillez bien à confirmer votre inscription via le lien contenu
-                dans cet email.</strong
+                >Veillez bien à confirmer votre inscription via le lien contenu dans cet
+                email.</strong
               >
             </p>
           </div>
@@ -89,13 +84,13 @@
           Merci pour votre inscription !
         </h2>
         <p class="mb-4">
-          Vous allez recevoir un email dans votre boîte de réception attestant
-          votre demande de réservation.
+          Vous allez recevoir un email dans votre boîte de réception attestant votre demande de
+          réservation.
         </p>
         <h2 class="text-xl font-medium">Mais ce n'est pas fini !</h2>
         <p>
-          Vous devez <strong>confirmer</strong> cette demande en cliquant sur le
-          lien présent dans l'email.
+          Vous devez <strong>confirmer</strong> cette demande en cliquant sur le lien présent dans
+          l'email.
         </p>
       </template>
     </main>
@@ -103,92 +98,89 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onBeforeMount, computed } from "vue";
-import { useRoute } from "vue-router";
-import { getEvent, postReservation } from "@/utils/appli_api";
-import { formatDateString } from "@/utils/formatDate";
-import EventSummary from "@/components/EventSummary.vue";
-import EventReservationForm from "@/components/EventReservationForm.vue";
-import type { ResaEvent } from "@/declaration";
-import {
-  isReservationOpened,
-  isReservationGloballyOpened,
-} from "@/utils/isReservationOpened";
+import { ref, onBeforeMount, computed } from 'vue'
+import { useRoute } from 'vue-router'
+import { getEvent, postReservation } from '@/utils/appli_api'
+import { formatDateString } from '@/utils/formatDate'
+import EventSummary from '@/components/EventSummary.vue'
+import EventReservationForm from '@/components/EventReservationForm.vue'
+import type { ResaEvent } from '@/declaration'
+import { isReservationOpened, isReservationGloballyOpened } from '@/utils/isReservationOpened'
 
-const currentRoute = useRoute();
-const geotrekId = currentRoute.params.geotrekid;
+const currentRoute = useRoute()
+const geotrekId = currentRoute.params.geotrekid
 
-const parkLabel = CONFIGURATION.PARK_LABEL;
+const parkLabel = CONFIGURATION.PARK_LABEL
 
 const STATUS = {
-  PRISTINE: "PRISTINE",
-  VALID: "VALID",
-  INVALID: "INVALID",
-  SAVING: "SAVING",
-  ERROR: "ERROR",
-  SUCCESS: "SUCCESS",
-};
+  PRISTINE: 'PRISTINE',
+  VALID: 'VALID',
+  INVALID: 'INVALID',
+  SAVING: 'SAVING',
+  ERROR: 'ERROR',
+  SUCCESS: 'SUCCESS'
+}
 
 /**
  * State local
  */
-const isSummaryDisplayed = ref(false);
-const status = ref(STATUS.PRISTINE);
-const loadingEvent = ref(false);
-const eventError = ref("");
+const isSummaryDisplayed = ref(false)
+const status = ref(STATUS.PRISTINE)
+const loadingEvent = ref(false)
+const eventError = ref('')
 
 /**
  * Chargement de l'événement corrélé
  */
-const event = ref<ResaEvent | null>(null);
+const event = ref<ResaEvent | null>(null)
 onBeforeMount(async () => {
-  if (!isReservationGloballyOpened()) return;
-  loadingEvent.value = true;
+  if (!isReservationGloballyOpened()) return
+  loadingEvent.value = true
   try {
-    event.value = await getEvent(geotrekId);
+    event.value = await getEvent(geotrekId)
     if (!event.value.bookable) {
-      eventError.value = `L'animation n° ${geotrekId} (${event.value.name}) n'est pas ouverte à la réservation.`;
+      eventError.value = `L'animation n° ${geotrekId} (${event.value.name}) n'est pas ouverte à la réservation.`
     }
     if (event.value.cancelled) {
-      eventError.value = `L'animation n° ${geotrekId} (${event.value.name}) a été annulée. Il est impossible d'effectuer une réservation.`;
+      eventError.value = `L'animation n° ${geotrekId} (${event.value.name}) a été annulée. Il est impossible d'effectuer une réservation.`
     }
   } catch (error: any) {
     switch (error.message) {
-      case "NOT FOUND":
-        eventError.value = `L'animation n° ${geotrekId} n'a pas été trouvée. Il est impossible d'effectuer une réservation`;
-        break;
+      case 'NOT FOUND':
+        eventError.value = `L'animation n° ${geotrekId} n'a pas été trouvée. Il est impossible d'effectuer une réservation`
+        break
       default:
         eventError.value =
-          "Une erreur est survenue. Il est impossible d'effecuter une réservation. Merci de prendre contact avec le parc.";
+          "Une erreur est survenue. Il est impossible d'effecuter une réservation. Merci de prendre contact avec le parc."
     }
   }
-  loadingEvent.value = false;
-});
+  loadingEvent.value = false
+})
 
 const reservationOpened = computed(() => {
   if (!event.value) {
-    return isReservationGloballyOpened();
-  } else return isReservationOpened(event.value);
-});
+    return isReservationGloballyOpened()
+  } else return isReservationOpened(event.value)
+})
 
 /**
  * Fonctions d'enregistrement de la réservation
  */
-const saving = ref(false);
-const saveError = ref<any>(null);
+const saving = ref(false)
+const saveError = ref<any>(null)
 async function saveReservation(values: any) {
-  status.value = STATUS.SAVING;
-  saving.value = true;
+  status.value = STATUS.SAVING
+  saving.value = true
   try {
     await postReservation({
       id_event: geotrekId,
-      ...values,
-    });
-    status.value = STATUS.SUCCESS;
+      ...values
+    })
+    status.value = STATUS.SUCCESS
   } catch (error) {
-    saveError.value = error;
-    status.value = STATUS.ERROR;
+    saveError.value = error
+    status.value = STATUS.ERROR
   }
-  saving.value = false;
+  saving.value = false
 }
 </script>

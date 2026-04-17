@@ -1,10 +1,6 @@
 <template>
   <p class="text-center my-4">
-    <a
-      class="text-blue-600 visited:text-purple-600"
-      :href="lienExport + idEvent"
-      target="_blank"
-    >
+    <a class="text-blue-600 visited:text-purple-600" :href="lienExport + idEvent" target="_blank">
       Exporter les données de réservation
     </a>
   </p>
@@ -45,22 +41,13 @@
     </p-column>
     <p-column header="Nombre d'inscrits">
       <template #body="{ data }">
-        {{
-          data.liste_attente
-            ? data.sum_participants_liste_attente
-            : data.sum_participants
-        }}
+        {{ data.liste_attente ? data.sum_participants_liste_attente : data.sum_participants }}
       </template>
     </p-column>
 
     <p-column field="confirmed" header="Statut">
       <template #body="{ data }">
-        <p-tag
-          class="rounded-sm"
-          v-if="data.cancelled"
-          value="Annulée"
-          severity="danger"
-        />
+        <p-tag class="rounded-sm" v-if="data.cancelled" value="Annulée" severity="danger" />
         <p-tag
           class="rounded-sm"
           v-else-if="!data.confirmed"
@@ -79,12 +66,7 @@
           value="Liste d'attente"
           severity="warning"
         />
-        <p-tag
-          class="rounded-sm"
-          v-else-if="!data.liste_attente"
-          value="OK"
-          severity="success"
-        />
+        <p-tag class="rounded-sm" v-else-if="!data.liste_attente" value="OK" severity="success" />
       </template>
     </p-column>
     <!--
@@ -121,11 +103,7 @@
     </p-column>
     <template #expansion="{ data }">
       <div class="grid grid-cols-1 sm:grid-cols-10 gap-x-2 gap-y-4 mt-4">
-        <div
-          v-for="field in expandedFields"
-          :key="field.name"
-          :class="field.class"
-        >
+        <div v-for="field in expandedFields" :key="field.name" :class="field.class">
           <reservation-field :field="field" :value="data[field.name]" />
         </div>
         <div class="col-span-full mx-auto">
@@ -150,18 +128,18 @@
 </template>
 
 <script setup lang="ts">
-import PDataTable from "primevue/datatable";
-import PColumn from "primevue/column";
-import PTag from "primevue/tag";
-import { ref } from "vue";
-import { expandedFields } from "@/utils/fields";
-import { formatDateTimeString } from "@/utils/formatDate";
-import { useConfirm } from "primevue/useconfirm";
-import ReservationField from "@/components/ReservationField.vue";
+import PDataTable from 'primevue/datatable'
+import PColumn from 'primevue/column'
+import PTag from 'primevue/tag'
+import { ref } from 'vue'
+import { expandedFields } from '@/utils/fields'
+import { formatDateTimeString } from '@/utils/formatDate'
+import { useConfirm } from 'primevue/useconfirm'
+import ReservationField from '@/components/ReservationField.vue'
 
-const confirm = useConfirm();
+const confirm = useConfirm()
 
-const lienExport = CONFIGURATION.URL_APPLICATION + "/export_reservation/";
+const lienExport = CONFIGURATION.URL_APPLICATION + '/export_reservation/'
 
 defineProps({
   resas: {
@@ -169,37 +147,37 @@ defineProps({
     required: false,
     default: () => ({
       results: [],
-      total: 0,
-    }),
+      total: 0
+    })
   },
   loading: {
     type: Boolean,
-    required: true,
+    required: true
   },
   idEvent: {
     type: Number,
-    required: true,
+    required: true
   },
   errorCancellation: {
     type: String,
-    required: false,
-  },
-});
-const emits = defineEmits(["page", "cancel", "confirm", "edit"]);
+    required: false
+  }
+})
+const emits = defineEmits(['page', 'cancel', 'confirm', 'edit'])
 
-const expandedRows = ref([]);
+const expandedRows = ref([])
 
 function onCancelResa(event: any, id_reservation: number) {
   confirm.require({
     target: event.currentTarget,
-    message: "Êtes vous sûr de vouloir annuler cette réservation ?",
-    icon: "pi pi-exclamation-triangle",
-    acceptLabel: "Oui",
-    rejectLabel: "Non",
+    message: 'Êtes vous sûr de vouloir annuler cette réservation ?',
+    icon: 'pi pi-exclamation-triangle',
+    acceptLabel: 'Oui',
+    rejectLabel: 'Non',
     accept: () => {
-      emits("cancel", id_reservation);
-    },
-  });
+      emits('cancel', id_reservation)
+    }
+  })
 }
 
 /*

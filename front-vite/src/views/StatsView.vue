@@ -2,9 +2,7 @@
   <div class="flex min-h-full flex-col">
     <header class="hidden md:block bg-white shadow">
       <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-        <h1 class="text-3xl font-bold tracking-tight text-gray-900">
-          Bilan des animations
-        </h1>
+        <h1 class="text-3xl font-bold tracking-tight text-gray-900">Bilan des animations</h1>
       </div>
     </header>
 
@@ -51,39 +49,37 @@
 </template>
 
 <script setup lang="ts">
-import { getGlobalStats } from "@/utils/appli_api";
-import type { Statistics } from "@/declaration";
+import { getGlobalStats } from '@/utils/appli_api'
+import type { Statistics } from '@/declaration'
 
-import { ref, onBeforeMount, watch } from "vue";
+import { ref, onBeforeMount, watch } from 'vue'
 
-const beginYear = 2016;
-const selectedYear = ref(new Date().getFullYear());
+const beginYear = 2016
+const selectedYear = ref(new Date().getFullYear())
 
-const URL_APPLICATION = CONFIGURATION.URL_APPLICATION;
-const loading = ref(false);
-const errorStats = ref<string>("");
-const stats = ref<Statistics>({});
-const listeYear = [...Array(1 + (selectedYear.value - beginYear)).keys()].map(
-  (i) => i + beginYear,
-);
+const URL_APPLICATION = CONFIGURATION.URL_APPLICATION
+const loading = ref(false)
+const errorStats = ref<string>('')
+const stats = ref<Statistics>({})
+const listeYear = [...Array(1 + (selectedYear.value - beginYear)).keys()].map((i) => i + beginYear)
 
 async function refreshGlobalStats() {
-  loading.value = true;
-  errorStats.value = "";
+  loading.value = true
+  errorStats.value = ''
   try {
-    stats.value = await getGlobalStats({ year: selectedYear.value });
+    stats.value = await getGlobalStats({ year: selectedYear.value })
   } catch (error) {
-    errorStats.value = error as string;
+    errorStats.value = error as string
   }
-  loading.value = false;
+  loading.value = false
 }
 onBeforeMount(() => {
-  refreshGlobalStats();
-});
+  refreshGlobalStats()
+})
 
 watch(selectedYear, (newselectedYear, oldselectedYear) => {
   if (newselectedYear !== oldselectedYear) {
-    refreshGlobalStats();
+    refreshGlobalStats()
   }
-});
+})
 </script>
