@@ -10,27 +10,27 @@
     <section>
       <div v-if="loading">Loading...</div>
       <div v-html="markdownToHTML" v-else></div>
-
     </section>
   </main>
-
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { marked } from 'marked';
-import { useAuthStore } from '@/stores/auth'
+import { ref, onMounted } from "vue";
+import { marked } from "marked";
+import { useAuthStore } from "@/stores/auth";
 
-const markdownToHTML = ref('')
-const loading = ref(false)
+const markdownToHTML = ref("");
+const loading = ref(false);
 
-const authStore = useAuthStore()
+const authStore = useAuthStore();
 
 onMounted(async () => {
-  loading.value = true
-  const response = await fetch('page_info_admin.md')
-  const text = await response.text()
-  markdownToHTML.value = await marked(text) || 'Erreur lors de la récupération des informations à afficher.'
-  loading.value = false
-})
+  loading.value = true;
+  const response = await fetch("page_info_admin.md");
+  const text = await response.text();
+  markdownToHTML.value =
+    (await marked(text)) ||
+    "Erreur lors de la récupération des informations à afficher.";
+  loading.value = false;
+});
 </script>

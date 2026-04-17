@@ -9,16 +9,15 @@
 </template>
 
 <script setup lang="ts">
-import { useRouter } from 'vue-router'
-import { useAuthStore } from '@/stores/auth';
-import { onBeforeMount } from 'vue'
+import { useRouter } from "vue-router";
+import { useAuthStore } from "@/stores/auth";
+import { onBeforeMount } from "vue";
 
-const authStore = useAuthStore()
-const router = useRouter()
+const authStore = useAuthStore();
+const router = useRouter();
 
 onBeforeMount(async () => {
-  authStore.logout()
-  router.push('/')
-})
-
+  authStore.logout();
+  router.push("/");
+});
 </script>

@@ -7,13 +7,13 @@
     </div>
   </header>
 
-
   <main class="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8 px-4 py-6">
-
     <section class="pb-12">
+      <div
+        v-html="markdownToHTML"
+        class="my-8 text-base leading-7 text-gray-900 space-y-4"
+      ></div>
 
-      <div v-html="markdownToHTML" class="my-8 text-base leading-7 text-gray-900 space-y-4"></div>
-    
       <div v-if="errorCancellation" class="text-red-500 my-4">
         Une erreur est survenue :
         <p>{{ errorCancellation }}</p>
@@ -41,8 +41,8 @@
         <p-column frozen expander />
         <p-column frozen field="event.name" header="Événement"></p-column>
         <p-column field="event.begin_date" header="Date">
-          <template #body="{data}">
-            {{ formatDateString(data.event?.begin_date)}}
+          <template #body="{ data }">
+            {{ formatDateString(data.event?.begin_date) }}
           </template>
         </p-column>
         <p-column field="nb_adultes" header="adultes"></p-column>
@@ -52,7 +52,6 @@
         <p-column field="nb_plus_12_ans" header="+12 ans"></p-column>
         <p-column field="confirmed" header="Statut">
           <template #body="{ data }">
-
             <p-tag
               class="rounded-sm"
               v-if="data.cancelled"
@@ -91,127 +90,125 @@
               class="rounded-sm px-3 py-2 text-sm font-medium text-white shadow-sm bg-sky-600 hover:bg-sky-500"
               @click="onCancelResa($event, data.id_reservation)"
               v-if="!data.cancelled && user_can_cancel"
-            >Annuler</button>
+            >
+              Annuler
+            </button>
           </template>
         </p-column>
 
         <template #expansion="{ data }">
           <div class="grid grid-cols-1 sm:grid-cols-10 gap-x-2 gap-y-4 mt-4">
             <div
-              v-for="(field) in expandedFields"
+              v-for="field in expandedFields"
               :key="field.name"
               :class="field.class"
             >
-              <reservation-field
-                :field="field"
-                :value="data[field.name]"
-              />
+              <reservation-field :field="field" :value="data[field.name]" />
             </div>
             <div v-if="data.infos" class="col-span-full">
-              <label class="block text-sm font-medium leading-6 text-gray-900">Informations de rendez-vous : </label>
+              <label class="block text-sm font-medium leading-6 text-gray-900"
+                >Informations de rendez-vous :
+              </label>
               <template v-if="data.infos.info_rdv">
                 <p
                   v-for="comment in data.infos.info_rdv?.split('\n')"
                   :key="comment"
                 >
-                  {{comment }}
+                  {{ comment }}
                 </p>
               </template>
-              <p v-else>
-                Aucune information à ce jour
-              </p>
+              <p v-else>Aucune information à ce jour</p>
             </div>
           </div>
         </template>
-
       </p-data-table>
-
     </section>
-
   </main>
-
-	
 </template>
 
 <script setup lang="ts">
-import { ref, onBeforeMount } from 'vue'
-import { getReservations, deleteReservation, getEventInfo } from '@/utils/appli_api'
-import { formatDateString } from '@/utils/formatDate'
-import { marked } from 'marked';
-import { expandedFields } from '@/utils/fields'
+import { ref, onBeforeMount } from "vue";
+import {
+  getReservations,
+  deleteReservation,
+  getEventInfo,
+} from "@/utils/appli_api";
+import { formatDateString } from "@/utils/formatDate";
+import { marked } from "marked";
+import { expandedFields } from "@/utils/fields";
 
-import PDataTable from 'primevue/datatable'
-import PColumn from 'primevue/column'
-import PTag from 'primevue/tag'
-import { useConfirm } from "primevue/useconfirm"
+import PDataTable from "primevue/datatable";
+import PColumn from "primevue/column";
+import PTag from "primevue/tag";
+import { useConfirm } from "primevue/useconfirm";
 
-import ReservationField from '@/components/ReservationField.vue'
+import ReservationField from "@/components/ReservationField.vue";
 
-const confirm = useConfirm()
+const confirm = useConfirm();
 
-const loading = ref(false)
-const resas = ref<{results: any[], total: number}>({results: [], total: 0})
-const error = ref(false)
-const errorCancellation = ref('')
+const loading = ref(false);
+const resas = ref<{ results: any[]; total: number }>({ results: [], total: 0 });
+const error = ref(false);
+const errorCancellation = ref("");
 
-const markdownToHTML = ref('')
+const markdownToHTML = ref("");
 
-const expandedRows = ref([])
+const expandedRows = ref([]);
 
 const user_can_cancel = CONFIGURATION.USER_CAN_CANCEL;
- 
-onBeforeMount(async () => {
-  loadData()
-  const response = await fetch('page_reservation.md')
-  const text = await response.text()
-  markdownToHTML.value = await marked(text) || 'Erreur lors de la récupération des informations à afficher.'
 
-})
+onBeforeMount(async () => {
+  loadData();
+  const response = await fetch("page_reservation.md");
+  const text = await response.text();
+  markdownToHTML.value =
+    (await marked(text)) ||
+    "Erreur lors de la récupération des informations à afficher.";
+});
 
 async function onPage($event: any) {
-  loadData($event.page)
+  loadData($event.page);
 }
 
-async function loadData (page = 0, sortField = null, sortOrder = null) {
-  loading.value = true
+async function loadData(page = 0, sortField = null, sortOrder = null) {
+  loading.value = true;
   try {
     resas.value = await getReservations({
-      page: page + 1, 
-      limit: 10, 
-      sortBy: sortField, 
+      page: page + 1,
+      limit: 10,
+      sortBy: sortField,
       sortOrder,
-    })
+    });
   } catch {
-    error.value = true
+    error.value = true;
   }
-  loading.value = false
-};
+  loading.value = false;
+}
 
 function onCancelResa(event: any, id_reservation: number) {
   confirm.require({
     target: event.currentTarget,
-    message: 'Êtes vous sûr de vouloir annuler cette réservation ?',
-    icon: 'pi pi-exclamation-triangle',
-    acceptLabel: 'Oui',
-    rejectLabel: 'Non',
-    async accept () {
-      errorCancellation.value = ''
+    message: "Êtes vous sûr de vouloir annuler cette réservation ?",
+    icon: "pi pi-exclamation-triangle",
+    acceptLabel: "Oui",
+    rejectLabel: "Non",
+    async accept() {
+      errorCancellation.value = "";
       try {
-        await deleteReservation(id_reservation)
-        await loadData()
+        await deleteReservation(id_reservation);
+        await loadData();
       } catch (error) {
-        errorCancellation.value = error as string
+        errorCancellation.value = error as string;
       }
     },
-  })
+  });
 }
 
 async function onRowExpand(event: any) {
-  console.log(event.data.id_event)
-  const infos = await getEventInfo(event.data.id_event)
+  console.log(event.data.id_event);
+  const infos = await getEventInfo(event.data.id_event);
   event.data.infos = {
-    info_rdv: infos.info_rdv
-  }
+    info_rdv: infos.info_rdv,
+  };
 }
-
 </script>
