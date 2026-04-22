@@ -1,10 +1,13 @@
 import pytest
 import json
 
-from datetime import date
+
+from datetime import date, datetime, timedelta
 from flask import url_for
 from sqlalchemy import select
 from sqlalchemy.sql import text
+from geoalchemy2.shape import from_shape
+from shapely.geometry import Point
 from app import create_app
 
 from core.models import TTokens, GTEvents
@@ -17,11 +20,9 @@ events_data = [
         # id:
         "name": "Pytest bookable",
         "capacity": 10,
-        "begin_date": "01/07/2023",
-        "end_date": "01/10/2023",
+        "begin_date": datetime.today().date() + timedelta(6 * 30),
+        "end_date": datetime.today().date() + timedelta(6 * 30),
         "published": True,
-        "x": 765227.4922990737,
-        "y": 6365673.938623513,
         "published_fr": True,
         "published_en": True,
         "bookable": True,
@@ -31,11 +32,9 @@ events_data = [
         # id:
         "name": "Pytest not bookable",
         "capacity": None,
-        "begin_date": "01/07/2023",
-        "end_date": "01/10/2023",
+        "begin_date": datetime.today().date(),
+        "end_date": datetime.today().date(),
         "published": True,
-        "x": 765227.4922990737,
-        "y": 6365673.938623513,
         "published_fr": True,
         "published_en": True,
         "bookable": False,
@@ -45,14 +44,24 @@ events_data = [
         # id:
         "name": "Pytest avec accents àeù öhôh",
         "capacity": None,
-        "begin_date": "01/07/2023",
-        "end_date": "01/10/2023",
+        "begin_date": datetime.today().date(),
+        "end_date": datetime.today().date(),
         "published": True,
-        "x": 765227.4922990737,
-        "y": 6365673.938623513,
         "published_fr": True,
         "published_en": True,
         "bookable": False,
+        "eid": "0",
+    },
+    {
+        # id:
+        "name": "Pytest past",
+        "capacity": None,
+        "begin_date": "01/07/2023",
+        "end_date": "01/10/2023",
+        "published": True,
+        "published_fr": True,
+        "published_en": True,
+        "bookable": True,
         "eid": "0",
     },
 ]
@@ -120,24 +129,12 @@ def json_of_response(response):
 
 @pytest.fixture(scope="function")
 def events():
+    events_list = {}
     with db.session.begin_nested():
         for e in events_data:
-            # Fait en sql direct pour éviter de réaliser un mapping complet
-            #  du model tourism_touristicevent et notamment le champ géométrie
-            db.session.execute(
-                text("""
-                INSERT INTO public.tourism_touristicevent
-                (
-                  date_insert, date_update, deleted, structure_id,
-                  geom,published,"name",capacity, begin_date, end_date,
-                  published_fr, published_en,
-                  bookable, eid
-                )
-                VALUES (CURRENT_TIMESTAMP,CURRENT_TIMESTAMP, false, 1,
-                 st_setsrid(st_point(:x, :y), 2154), :published, :name, :capacity,:begin_date , :end_date ,
-                 :published_fr, :published_en,
-                 :bookable, :eid
-                 )
-                """),
-                params=e,
-            )
+            geom = from_shape(Point(765227.4922990737, 6365673.938623513), srid=2154)
+            e["geom"] = geom
+            event = GTEvents(**e)
+            db.session.add(event)
+            events_list[e["name"]] = event
+    return events_list

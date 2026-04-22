@@ -11,3 +11,5 @@ marshmallow-sqlalchemy
 psycopg2
 SQLAlchemy
 Werkzeug
+geoalchemy2
+shapely
