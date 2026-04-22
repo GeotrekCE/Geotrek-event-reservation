@@ -3,7 +3,7 @@
     <template #start>
       <router-link to="/" class="-m-1.5 p-1.5 flex items-center">
         <img class="h-8 w-auto pr-1.5" src="./assets/logo.svg" alt="" />
-        <span class="font-small text-gray-900 dark:text-gray-100 m-2">{{ privateEnvVar }}</span>
+        <span class="font-small text-gray-900 dark:text-gray-100 m-2">{{ envAppName }}</span>
       </router-link>
     </template>
     <template #item="{ item, props, hasSubmenu }">
@@ -21,7 +21,7 @@
         </router-link>
       </div>
       <div v-if="item.href">
-        <a :href="item.href" target="_blank">
+        <a :href="item.href">
           <span :class="item.icon" />
           <span class="ml-2">{{ item.label }}</span>
         </a>
@@ -57,7 +57,7 @@ import type { MenuItem } from '@/declaration'
 
 const authStore = useAuthStore()
 
-const privateEnvVar = import.meta.env.VITE_APP_TITLE
+const envAppName = import.meta.env.VITE_APP_TITLE
 const { isAuth, isAdmin, user } = storeToRefs(authStore)
 
 const isMenuOpened = ref(false)
