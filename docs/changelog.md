@@ -1,29 +1,24 @@
 
 # Changelog
-
-**🚀 Nouveautés**
- - Le titre de l'application qui s'affiche dans la bare de menu correspond à la valeur de la variable `VITE_APP_TITLE` du fichier .env .
-
-**🚀 Fonctionnalités**
- - Ajout d'un menu automatique "Évènements" pointant vers les évènements de geotrek-rando. Choix d'afficher/masquer via paramètre `DISPLAY_GTR_EVENTS_MENU`. 
-
-**🐛 Corrections**
- - Menu administration "Animations" renommé en "Gestion"
  
-**🐛 Corrections**
- - Correction du taux de remplissage des bilans et ajout de statistiques.
-
-**🐛 Corrections**
- - Correction des informations de rendez-vous qui ne sont pas enregistrées.
-**🚀 Nouveautés**
- - Les réservations des évènements passés sont masquées aux utilisateurs.
-
 ## 0.4.0 (unreleased)
+ 
+**🚀 Nouveautés**
+ - Le titre de l'application qui s'affiche dans la bare de menu correspond à la valeur de la variable `VITE_APP_TITLE` du fichier .env. (#74)
+ - Ajout d'un menu automatique "Évènements" pointant vers les évènements de geotrek-rando. Choix d'afficher/masquer via paramètre `DISPLAY_GTR_EVENTS_MENU`.  (#72)
+ - Les réservations des évènements passés sont masquées aux utilisateurs. (#87)
 
 **🐛 Corrections**
- - Changement du texte "massifs" par "localisation" sur la page du formulaire d'inscription.
- - Correction de l'erreur 500 lié au token non généré sur validation du formulaire.
-
+ - Menu administration "Animations" renommé en "Gestion" (#73)
+ - Correction du taux de remplissage des bilans et ajout de statistiques. (#85)
+ - Correction des informations de rendez-vous qui ne sont pas enregistrées.  (#89)
+ - Correction de l'erreur 500 lié au token non généré sur validation du formulaire. (#83)
+ - Changement du texte "massifs" par "localisation" sur la page du formulaire d'inscription. (#71)
+ - Mise à jour des dépendances backend (#91)
+ - Mise à jour des librairies frontend (#92). Notamment primevue 4 et tailwindcss 4.
+ - Mise à jour des actions github (#91)
+  
+     
 ## 0.3.0 (2024-06-24)
  
 **🚀 Nouveautés**
