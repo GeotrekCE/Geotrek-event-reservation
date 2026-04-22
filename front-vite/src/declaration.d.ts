@@ -112,11 +112,21 @@ export interface Resa {
 }
 
 export interface ResaEventFilters {
-  begin_date: string
-  end_date: string
+  begin_date: Date
+  end_date: Date | undefined
   search_name?: string
   cancelled?: boolean
   published?: boolean
   type_id: string[]
   massif: string[]
+}
+
+export interface MenuItem {
+  label: string
+  icon: string
+  route?: string
+  href?: string
+  active?: boolean
+  isAuth: boolean
+  isAdmin: boolean
 }
