@@ -15,6 +15,8 @@
 
 **🐛 Corrections**
  - Correction des informations de rendez-vous qui ne sont pas enregistrées.
+**🚀 Nouveautés**
+ - Les réservations des évènements passés sont masquées aux utilisateurs.
 
 ## 0.4.0 (unreleased)
 

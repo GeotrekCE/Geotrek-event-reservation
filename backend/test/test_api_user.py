@@ -3,7 +3,7 @@ from flask import url_for, current_app
 import pytest
 import json
 import logging
-
+from datetime import datetime
 from sqlalchemy import select
 
 from core.models import GTEvents, TReservations
@@ -134,8 +134,35 @@ class TestAPI:
 
     def test_get_reservations(self):
         login(self.client, "user@test.fr")
+
+        # Insertion d'une réservation dans le passé
+        event = db.session.scalars(
+            select(GTEvents)
+            .where(GTEvents.begin_date < datetime.today().date())
+            .order_by(GTEvents.id.desc())
+        ).first()
+
+        data_resa = TEST_RESERVATION
+        data_resa["id_event"] = event.id
+        resp = post_json(
+            self.client, url_for("app_routes.post_reservations"), data_resa
+        )
+
+        # Récupération des reservations de l'utilisateur
         response = self.client.get(url_for("app_routes.get_reservations"))
+        data = json_of_response(response)
+        nb_response = len(data["results"])
         assert response.status_code == 200
+        assert nb_response >= 1
+        # Test que l'on affiche seulement les reservations de l'utilisateur
+        for resa in data["results"]:
+            assert resa["email"] == "user@test.fr"
+
+        # Test avec le paramètre hide_past_event qui doit retourné une différence de 1 animation
+        response = self.client.get(
+            url_for("app_routes.get_reservations", hide_past_event=True)
+        )
+        assert nb_response - 1 == len(json_of_response(response)["results"])
 
     def test_post_limit_nb_animations(self, events):
         login(self.client, "user@test.fr")
