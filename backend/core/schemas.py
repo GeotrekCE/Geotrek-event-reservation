@@ -159,10 +159,7 @@ class GTEventsSchema(SQLAlchemyAutoSchema):
         model = GTEvents
         include_relationships = True
         load_instance = True
-        exclude = (
-            "reservations",
-            "info",
-        )
+        exclude = ("reservations", "info", "geom")
 
     type = fields.Nested(lambda: GTEventTypeSchema)
     bilan = fields.Nested(lambda: TAnimationsBilansSchema)

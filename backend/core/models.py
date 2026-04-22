@@ -5,6 +5,7 @@ from flask import current_app
 from sqlalchemy import func, or_, select, extract
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import aliased
+from geoalchemy2 import Geometry
 
 from .env import db
 
@@ -71,7 +72,7 @@ class GTEvents(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.Unicode, nullable=False)
-    description_teaser = db.Column(db.Unicode)
+    description_teaser = db.Column(db.Unicode, default="")
     bookable = db.Column(db.Boolean)
     capacity = db.Column(db.Integer)
     practical_info_fr = db.Column(db.Unicode)
@@ -83,14 +84,18 @@ class GTEvents(db.Model):
         db.Integer, db.ForeignKey("public.tourism_touristiceventtype.id")
     )
     published = db.Column(db.Boolean)
-    deleted = db.Column(db.Boolean)
-    cancelled = db.Column(db.Boolean)
+    published_fr = db.Column(db.Boolean, default=False)
+    published_en = db.Column(db.Boolean, default=False)
+    deleted = db.Column(db.Boolean, default=False)
+    cancelled = db.Column(db.Boolean, default=False)
     cancellation_reason_id = db.Column(
         db.Integer, db.ForeignKey("public.tourism_cancellationreason.id")
     )
-    meeting_point = db.Column(db.Unicode)
+    meeting_point = db.Column(db.Unicode, default="")
     start_time = db.Column(db.Time)
-
+    eid = db.Column(db.Unicode)
+    geom = db.Column(Geometry("GEOMETRY", 2154))
+    structure_id = db.Column(db.Integer, default="1")
     reservations = db.relationship(
         "TReservations", lazy="joined", backref=db.backref("event", lazy="joined")
     )
@@ -100,6 +105,9 @@ class GTEvents(db.Model):
     )
     info = db.relationship("TEventInfo", lazy="joined", uselist=False)
     type = db.relationship("GTEventType", lazy="joined")
+    date_insert = db.Column(db.Date, default=datetime.date.today())
+    date_update = db.Column(db.Date, default=datetime.date.today())
+    review = db.Column(db.Boolean, default=False)
 
     @hybrid_property
     def sum_participants(self):

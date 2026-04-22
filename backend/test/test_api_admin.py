@@ -123,7 +123,9 @@ class TestAPI:
         )
         assert (
             self.client.get(
-                url_for("app_routes.get_one_event", event_id=data.id)
+                url_for(
+                    "app_routes.get_one_event", event_id=events["Pytest bookable"].id
+                )
             ).status_code
             == 200
         )
@@ -137,15 +139,8 @@ class TestAPI:
     def test_post_reservation_isfull(self, events):
         login(self.client)
         # POST
-        event = db.session.scalars(
-            select(GTEvents)
-            .where(GTEvents.name == "Pytest bookable")
-            .order_by(GTEvents.id.desc())
-            .limit(1)
-        ).first()
-
         data_resa = TEST_RESERVATION
-        data_resa["id_event"] = event.id
+        data_resa["id_event"] = events["Pytest bookable"].id
         resp = post_json(
             self.client, url_for("app_routes.post_reservations"), data_resa
         )
@@ -166,17 +161,8 @@ class TestAPI:
 
     def test_post_reservation_notbookable(self, events):
         login(self.client)
-
-        event = (
-            db.session.execute(
-                select(GTEvents).where(GTEvents.name == "Pytest not bookable").limit(1)
-            )
-            .unique()
-            .scalar_one_or_none()
-        )
-
         data_resa = TEST_RESERVATION
-        data_resa["id_event"] = event.id
+        data_resa["id_event"] = events["Pytest not bookable"].id
         resp = post_json(
             self.client, url_for("app_routes.post_reservations"), data_resa
         )
@@ -186,19 +172,8 @@ class TestAPI:
     def test_post_export_and_cancel_one_reservation(self, events):
         login(self.client)
         # POST
-        event = (
-            db.session.execute(
-                select(GTEvents)
-                .where(GTEvents.name == "Pytest bookable")
-                .order_by(GTEvents.id.desc())
-                .limit(1)
-            )
-            .unique()
-            .scalar_one_or_none()
-        )
-
         data_resa = TEST_RESERVATION
-        data_resa["id_event"] = event.id
+        data_resa["id_event"] = events["Pytest bookable"].id
         resp = post_json(
             self.client, url_for("app_routes.post_reservations"), data_resa
         )
@@ -260,14 +235,8 @@ class TestAPI:
     def test_post_limit_nb_animations(self, events):
         login(self.client)
         # Create reservation
-        event = db.session.scalars(
-            select(GTEvents)
-            .where(GTEvents.name == "Pytest bookable")
-            .order_by(GTEvents.id.desc())
-        ).first()
-
         data_resa = TEST_RESERVATION_1_PERSONNE
-        data_resa["id_event"] = event.id
+        data_resa["id_event"] = events["Pytest bookable"].id
 
         nb_limit_per_user = current_app.config["NB_ANIM_MAX_PER_USER"]
 
@@ -369,21 +338,19 @@ class TestAPI:
             cvs_reader = csv.DictReader(f, delimiter=";")
             assert cvs_reader.fieldnames == exported_columns
 
-    def test_get_event_info(self):
+    def test_get_event_info(self, events):
         login(self.client)
-        data = db.session.scalars(select(GTEvents)).first()
         response = self.client.get(
-            url_for("app_routes.get_event_info", event_id=data.id)
+            url_for("app_routes.get_event_info", event_id=events["Pytest bookable"].id)
         )
         assert response.status_code == 200
 
-    def test_put_event_info(self):
+    def test_put_event_info(self, events):
         login(self.client)
 
-        data = db.session.scalars(select(GTEvents)).first()
-        event_id = data.id
+        event_id = events["Pytest bookable"].id
         info = {"info_rdv": "Nouvelle information"}
-        print(url_for("app_routes.set_event_info", event_id=event_id))
+
         # --- Appel API ---
         response = self.client.put(
             url_for("app_routes.set_event_info", event_id=event_id),
