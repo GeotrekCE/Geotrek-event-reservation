@@ -156,6 +156,7 @@ async function loadData(page = 0, sortField = null, sortOrder = null) {
     resas.value = await getReservations({
       page: page + 1,
       limit: 10,
+      hide_past_event: true,
       sortBy: sortField,
       sortOrder
     })

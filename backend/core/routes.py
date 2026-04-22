@@ -232,11 +232,13 @@ def get_reservations():
             "page": {"default": 1, "type": int},
             "limit": {"default": 10, "type": int},
             "event_id": {"type": int},
+            "hide_past_event": {"default": False, "type": bool},
         }
     )
     page = validator.get_arg("page")
     limit = validator.get_arg("limit")
     event_id = validator.get_arg("event_id")
+    hide_past_event = validator.get_arg("hide_past_event")
 
     email = session["user"]
     is_admin = is_user_admin()
@@ -246,6 +248,12 @@ def get_reservations():
         query = query.filter_by(id_event=event_id)
     if not is_admin:
         query = query.filter_by(email=email)
+
+    # Masquer les réservations passées aux utilisateurs uniquement
+    if hide_past_event:
+        query = query.join(GTEvents, TReservations.id_event == GTEvents.id)
+        query = query.filter(GTEvents.begin_date >= datetime.today().date())
+
     query = db.paginate(query, page=page, per_page=limit)
     results = TReservationsSchema(many=True).dump(query.items)
 
