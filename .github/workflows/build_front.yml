@@ -1,0 +1,38 @@
+name: Build Frontend App
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout du repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm 
+          cache-dependency-path: front-vite/package-lock.json
+ 
+      - name: Install des dépendances
+        working-directory: front-vite
+        run: npm ci 
+     
+      - name: Create config.js from sample
+        working-directory: front-vite/public/config
+        run: cp config.js.sample config.js
+
+      - name: Build de l'application
+        working-directory: front-vite
+        run: npm run build
