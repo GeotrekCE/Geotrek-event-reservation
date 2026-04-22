@@ -47,11 +47,13 @@
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import { useAuthStore } from '@/stores/auth'
 import { ref, onBeforeMount } from 'vue'
 import PConfirmPopup from 'primevue/confirmpopup'
-import { getTouristiceventType } from '@/utils/gta_api'
 import Menubar from 'primevue/menubar'
+
+import { getTouristiceventType } from '@/utils/gta_api'
+import { useAuthStore } from '@/stores/auth'
+import type { MenuItem } from '@/declaration'
 
 const authStore = useAuthStore()
 
@@ -61,7 +63,7 @@ const { isAuth, isAdmin, user } = storeToRefs(authStore)
 const isMenuOpened = ref(false)
 const config = ref(CONFIGURATION)
 
-const items = ref([
+const items = ref<MenuItem[]>([
   {
     label: 'Gestion',
     icon: 'pi pi-cog',
@@ -103,6 +105,8 @@ onBeforeMount(async () => {
     items.value.unshift({
       label: 'Évènements',
       icon: 'pi pi-calendar',
+      isAuth: false,
+      isAdmin: false,
       href: config.value.URL_GTR + '/search?event=' + eventtypes_id
     })
   }

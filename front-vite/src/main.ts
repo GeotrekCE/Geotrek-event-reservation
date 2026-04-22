@@ -45,13 +45,3 @@ async function boot() {
 }
 
 boot()
-
-// const app = createApp(App);
-// app.use(PrimeVue, {
-//     theme: {
-//         preset: Aura
-//     }
-// });
-
-// app.use(PrimeVue);
-// app.mount('#app');

@@ -17,12 +17,9 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { marked } from 'marked'
-import { useAuthStore } from '@/stores/auth'
 
 const markdownToHTML = ref('')
 const loading = ref(false)
-
-const authStore = useAuthStore()
 
 onMounted(async () => {
   loading.value = true
