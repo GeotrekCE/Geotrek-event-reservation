@@ -8,7 +8,9 @@
   >
     <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-10">
       <div class="col-span-full">
-        <label for="raison_annulation" class="block text-sm font-medium leading-6 text-gray-900"
+        <label
+          for="raison_annulation"
+          class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100"
           >Raison de l'annulation</label
         >
         <div class="mt-2">
@@ -17,7 +19,7 @@
             name="raison_annulation"
             rows="3"
             as="textarea"
-            class="block w-full rounded-sm border-0 p-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6"
+            class="block w-full rounded-sm border-0 p-2 text-gray-900 dark:text-gray-100 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6"
           />
           <vv-error-message name="raison_annulation" />
         </div>

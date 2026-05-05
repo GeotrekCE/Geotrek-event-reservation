@@ -1,7 +1,7 @@
 <template>
-  <header class="bg-white shadow">
+  <header class="shadow">
     <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-      <h1 class="text-3xl font-bold tracking-tight text-gray-900">
+      <h1 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-100">
         Confirmation de la réservation de l'événement {{ name }}
       </h1>
     </div>
@@ -13,7 +13,9 @@
       <p>Merci de patienter...</p>
     </div>
     <div v-else-if="success" class="space-y-6">
-      <h2 class="text-xl font-medium leading-7 text-gray-900 mt-10 mb-4">Merci !</h2>
+      <h2 class="text-xl font-medium leading-7 text-gray-900 dark:text-gray-100 mt-10 mb-4">
+        Merci !
+      </h2>
       <p>Nous avons bien enregistré la confirmation de votre réservation.</p>
       <template v-if="!listeAttente">
         <p>

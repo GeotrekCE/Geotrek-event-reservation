@@ -1,8 +1,8 @@
 <template>
   <div>
-    <header class="bg-white shadow">
+    <header class="shadow">
       <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-        <h1 class="text-3xl font-bold tracking-tight text-gray-900">
+        <h1 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-100">
           Réservation d'un événement
           <template v-if="event"> ({{ event.name }}) </template>
         </h1>
@@ -39,7 +39,7 @@
           </p>
 
           <h2
-            class="text-base font-medium leading-7 text-gray-900 mt-10 cursor-pointer"
+            class="text-base font-medium leading-7 text-gray-900 dark:text-gray-100 mt-10 cursor-pointer"
             @click="isSummaryDisplayed = !isSummaryDisplayed"
           >
             <i
@@ -58,8 +58,10 @@
 
         <section>
           <div class="mt-4">
-            <h1 class="text-xl font-medium leading-7 text-gray-900">Inscription</h1>
-            <p class="mt-1 text-sm leading-6 text-gray-600">
+            <h1 class="text-xl font-medium leading-7 text-gray-900 dark:text-gray-100">
+              Inscription
+            </h1>
+            <p class="mt-1 text-sm leading-6 text-gray-600 dark:text-gray-400">
               En remplissant ce formulaire, puis en le validant, vous recevrez un email de
               confirmation.
               <br />
@@ -80,7 +82,7 @@
       </template>
 
       <template v-else>
-        <h2 class="text-xl font-medium leading-7 text-gray-900 mt-10 mb-4">
+        <h2 class="text-xl font-medium leading-7 text-gray-900 dark:text-gray-100 mt-10 mb-4">
           Merci pour votre inscription !
         </h2>
         <p class="mb-4">

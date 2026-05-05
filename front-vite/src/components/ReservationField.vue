@@ -1,6 +1,8 @@
 <template>
   <span v-if="value">
-    <label class="block text-sm font-medium leading-6 text-gray-900">{{ field.label }} : </label>
+    <label class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100"
+      >{{ field.label }} :
+    </label>
     <span v-if="field.type === 'boolean'">
       {{ Boolean(value) === true ? 'oui' : Boolean(value) === false ? 'non' : 'pas de valeur' }}
     </span>
