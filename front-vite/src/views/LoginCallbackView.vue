@@ -7,12 +7,22 @@
     </div>
   </header>
   <main class="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8 px-4 py-6">
+    <section class="pb-12" v-if="!loading && !error">
+      Pour vous connecter avec votre compte, merci de cliquer sur le bouton ci-dessous.
+      <button
+        class="rounded-sm block mx-auto px-3 py-2 text-sm font-medium bg-sky-600 text-white shadow-sm disabled:text-black disabled:cursor-not-allowed hover:bg-sky-500 disabled:bg-sky-200"
+        @click="onSubmit($event)"
+      >
+        Se connecter
+      </button>
+    </section>
     <section class="pb-12">
       <div v-if="loading">Vérification de votre authentification...</div>
       <template v-else>
         <div v-if="success">Connexion OK. Redirection...</div>
         <div v-if="error" class="space-y-4">
           <p>La connexion de l'utilisateur n'a pas pu aboutir...</p>
+          <p>Le lien de connexion est a usage unique.</p>
           <p>Merci de recommencer la procédure avec l'envoi du mail de connexion.</p>
           <router-link to="/login" class="text-blue-600 visited:text-purple-600"
             >Aller à la page de connexion</router-link
@@ -37,13 +47,14 @@ const loading = ref(false)
 const success = ref(false)
 const error = ref(false)
 
-onMounted(async () => {
+async function onSubmit(event: any) {
   loading.value = true
   error.value = false
   success.value = false
   try {
     await authStore.login(token)
     success.value = true
+    loading.value = false
     /**
      * Si l'utilisateur est admin, on le renvoie sur la page des événements
      */
@@ -57,7 +68,7 @@ onMounted(async () => {
     }
   } catch {
     error.value = true
+    loading.value = false
   }
-  loading.value = false
-})
+}
 </script>
