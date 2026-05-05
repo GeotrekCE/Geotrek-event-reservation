@@ -9,14 +9,18 @@
     >
       <div class="space-y-12">
         <div class="border-b border-gray-900/10 pb-12">
-          <h2 class="text-base font-medium leading-7 text-gray-900">Informations personnelles</h2>
-          <p class="mt-1 text-sm leading-6 text-gray-600">
+          <h2 class="text-base font-medium leading-7 text-gray-900 dark:text-gray-100">
+            Informations personnelles
+          </h2>
+          <p class="mt-1 text-sm leading-6 text-gray-600 dark:text-gray-400">
             Utilisez une adresse mail sur laquelle vous pouvez vous connecter.
           </p>
 
           <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
             <div class="col-span-1 sm:col-span-3">
-              <label for="prenom" class="block text-sm font-medium leading-6 text-gray-900"
+              <label
+                for="prenom"
+                class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100"
                 >Prénom</label
               >
               <div class="mt-2">
@@ -25,28 +29,34 @@
                   name="prenom"
                   id="prenom"
                   autocomplete="given-name"
-                  class="block w-full rounded-sm border-0 p-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6"
+                  class="block w-full rounded-sm border-0 p-2 text-gray-900 dark:text-gray-100 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6"
                 />
                 <vv-error-message name="prenom" />
               </div>
             </div>
 
             <div class="col-span-1 sm:col-span-3">
-              <label for="nom" class="block text-sm font-medium leading-6 text-gray-900">Nom</label>
+              <label
+                for="nom"
+                class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100"
+                >Nom</label
+              >
               <div class="mt-2">
                 <vv-field
                   type="text"
                   name="nom"
                   id="nom"
                   autocomplete="family-name"
-                  class="block w-full rounded-sm border-0 p-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6"
+                  class="block w-full rounded-sm border-0 p-2 text-gray-900 dark:text-gray-100 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6"
                 />
                 <vv-error-message name="nom" />
               </div>
             </div>
 
             <div class="col-span-1 sm:col-span-2">
-              <label for="email" class="block text-sm font-medium leading-6 text-gray-900"
+              <label
+                for="email"
+                class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100"
                 >Email</label
               >
               <div class="mt-2">
@@ -55,14 +65,16 @@
                   name="email"
                   type="email"
                   autocomplete="email"
-                  class="block w-full rounded-sm border-0 p-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6"
+                  class="block w-full rounded-sm border-0 p-2 text-gray-900 dark:text-gray-100 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6"
                 />
                 <vv-error-message name="email" />
               </div>
             </div>
 
             <div class="col-span-1 sm:col-span-2">
-              <label for="tel" class="block text-sm font-medium leading-6 text-gray-900"
+              <label
+                for="tel"
+                class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100"
                 >Téléphone</label
               >
               <div class="mt-2">
@@ -71,14 +83,16 @@
                   name="tel"
                   id="tel"
                   autocomplete="tel"
-                  class="block w-full rounded-sm border-0 p-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6"
+                  class="block w-full rounded-sm border-0 p-2 text-gray-900 dark:text-gray-100 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6"
                 />
                 <vv-error-message name="tel" />
               </div>
             </div>
 
             <div class="col-span-1 sm:col-span-2">
-              <label for="num_departement" class="block text-sm font-medium leading-6 text-gray-900"
+              <label
+                for="num_departement"
+                class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100"
                 >Lieu d'origine</label
               >
               <div class="mt-2">
@@ -87,7 +101,7 @@
                   name="num_departement"
                   autocomplete="num_departement"
                   as="select"
-                  class="block w-full rounded-sm border-0 p-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 text-sm leading-6 h-10"
+                  class="block w-full rounded-sm border-0 p-2 text-gray-900 dark:text-gray-100 shadow-sm ring-1 ring-inset ring-gray-300 text-sm leading-6 h-10"
                 >
                   <option v-for="o in origins" :key="o.value" :value="o.value">
                     {{ o.label }}
@@ -100,16 +114,18 @@
         </div>
 
         <div class="border-b border-gray-900/10 pb-12">
-          <h2 class="text-base font-medium leading-7 text-gray-900">
+          <h2 class="text-base font-medium leading-7 text-gray-900 dark:text-gray-100">
             Informations sur les participants
           </h2>
-          <p class="mt-1 text-sm leading-6 text-gray-600">
+          <p class="mt-1 text-sm leading-6 text-gray-600 dark:text-gray-400">
             Merci de préciser le nombre de participants par tranche d'âge.
           </p>
 
           <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-10">
             <div class="sm:col-span-2">
-              <label for="nb_adultes" class="block text-sm font-medium leading-6 text-gray-900"
+              <label
+                for="nb_adultes"
+                class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100"
                 >Adulte(s)</label
               >
               <div class="mt-2">
@@ -118,14 +134,16 @@
                   name="nb_adultes"
                   id="nb_adultes"
                   min="0"
-                  class="block w-full rounded-sm border-0 p-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6"
+                  class="block w-full rounded-sm border-0 p-2 text-gray-900 dark:text-gray-100 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6"
                 />
 
                 <vv-error-message name="nb_adultes" />
               </div>
             </div>
             <div class="sm:col-span-2">
-              <label for="nb_moins_6_ans" class="block text-sm font-medium leading-6 text-gray-900"
+              <label
+                for="nb_moins_6_ans"
+                class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100"
                 >Moins de 6 ans</label
               >
               <div class="mt-2">
@@ -134,14 +152,16 @@
                   name="nb_moins_6_ans"
                   id="nb_moins_6_ans"
                   min="0"
-                  class="block w-full rounded-sm border-0 p-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6"
+                  class="block w-full rounded-sm border-0 p-2 text-gray-900 dark:text-gray-100 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6"
                 />
 
                 <vv-error-message name="nb_moins_6_ans" />
               </div>
             </div>
             <div class="sm:col-span-2">
-              <label for="nb_6_8_ans" class="block text-sm font-medium leading-6 text-gray-900"
+              <label
+                for="nb_6_8_ans"
+                class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100"
                 >6 - 8 ans</label
               >
               <div class="mt-2">
@@ -150,14 +170,16 @@
                   name="nb_6_8_ans"
                   id="nb_6_8_ans"
                   min="0"
-                  class="block w-full rounded-sm border-0 p-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6"
+                  class="block w-full rounded-sm border-0 p-2 text-gray-900 dark:text-gray-100 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6"
                 />
 
                 <vv-error-message name="nb_6_8_ans" />
               </div>
             </div>
             <div class="sm:col-span-2">
-              <label for="nb_9_12_ans" class="block text-sm font-medium leading-6 text-gray-900"
+              <label
+                for="nb_9_12_ans"
+                class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100"
                 >9 - 12 ans</label
               >
               <div class="mt-2">
@@ -166,14 +188,16 @@
                   name="nb_9_12_ans"
                   id="nb_9_12_ans"
                   min="0"
-                  class="block w-full rounded-sm border-0 p-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6"
+                  class="block w-full rounded-sm border-0 p-2 text-gray-900 dark:text-gray-100 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6"
                 />
 
                 <vv-error-message name="nb_9_12_ans" />
               </div>
             </div>
             <div class="sm:col-span-2">
-              <label for="nb_plus_12_ans" class="block text-sm font-medium leading-6 text-gray-900"
+              <label
+                for="nb_plus_12_ans"
+                class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100"
                 >Plus de 12 ans</label
               >
               <div class="mt-2">
@@ -182,7 +206,7 @@
                   name="nb_plus_12_ans"
                   id="nb_plus_12_ans"
                   min="0"
-                  class="block w-full rounded-sm border-0 p-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6"
+                  class="block w-full rounded-sm border-0 p-2 text-gray-900 dark:text-gray-100 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6"
                 />
 
                 <vv-error-message name="nb_plus_12_ans" />
@@ -196,16 +220,18 @@
         </div>
 
         <div class="border-b border-gray-900/10 pb-12" v-if="displayAdminFields">
-          <h2 class="text-base font-medium leading-7 text-gray-900">
+          <h2 class="text-base font-medium leading-7 text-gray-900 dark:text-gray-100">
             Informations administrateurs
           </h2>
-          <p class="mt-1 text-sm leading-6 text-gray-600">
+          <p class="mt-1 text-sm leading-6 text-gray-600 dark:text-gray-400">
             Informations saisissables uniquement par les administrateurs.
           </p>
 
           <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-10">
             <div class="sm:col-span-2">
-              <label for="liste_attente" class="block text-sm font-medium leading-6 text-gray-900"
+              <label
+                for="liste_attente"
+                class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100"
                 >En liste d'attente</label
               >
               <div class="mt-2">
@@ -213,7 +239,7 @@
                   name="liste_attente"
                   id="liste_attente"
                   as="select"
-                  class="block w-full rounded-sm border-0 p-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 text-sm leading-6 h-10"
+                  class="block w-full rounded-sm border-0 p-2 text-gray-900 dark:text-gray-100 shadow-sm ring-1 ring-inset ring-gray-300 text-sm leading-6 h-10"
                 >
                   <option :value="true">Sur liste d'attente</option>
                   <option :value="false">Comptabilisée</option>
@@ -223,7 +249,9 @@
               </div>
             </div>
             <div class="sm:col-span-2">
-              <label for="confirmed" class="block text-sm font-medium leading-6 text-gray-900"
+              <label
+                for="confirmed"
+                class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100"
                 >Confirmée par le créateur</label
               >
               <div class="mt-2">
@@ -231,7 +259,7 @@
                   name="confirmed"
                   id="confirmed"
                   as="select"
-                  class="block w-full rounded-sm border-0 p-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 text-sm leading-6 h-10"
+                  class="block w-full rounded-sm border-0 p-2 text-gray-900 dark:text-gray-100 shadow-sm ring-1 ring-inset ring-gray-300 text-sm leading-6 h-10"
                 >
                   <option :value="true">Confirmée</option>
                   <option :value="false">En attente de confirmation</option>
@@ -244,8 +272,10 @@
         </div>
 
         <div class="border-b border-gray-900/10 pb-12">
-          <h2 class="text-base font-medium leading-7 text-gray-900">Commentaire</h2>
-          <p class="mt-1 text-sm leading-6 text-gray-600">
+          <h2 class="text-base font-medium leading-7 text-gray-900 dark:text-gray-100">
+            Commentaire
+          </h2>
+          <p class="mt-1 text-sm leading-6 text-gray-600 dark:text-gray-400">
             Vous souhaitez préciser certains points sur votre réservation, vous pouvez les inscrire
             ici.
           </p>
@@ -257,7 +287,7 @@
                 name="commentaire"
                 rows="3"
                 as="textarea"
-                class="block w-full rounded-sm border-0 p-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6"
+                class="block w-full rounded-sm border-0 p-2 text-gray-900 dark:text-gray-100 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6"
               />
               <vv-error-message name="commentaire" />
             </div>

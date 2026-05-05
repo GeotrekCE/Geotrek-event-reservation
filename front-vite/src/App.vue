@@ -3,7 +3,7 @@
     <template #start>
       <router-link to="/" class="-m-1.5 p-1.5 flex items-center">
         <img class="h-8 w-auto pr-1.5" src="./assets/logo.svg" alt="" />
-        <span class="font-small text-gray-900 m-2">{{ privateEnvVar }}</span>
+        <span class="font-small text-gray-900 dark:text-gray-100 m-2">{{ privateEnvVar }}</span>
       </router-link>
     </template>
     <template #item="{ item, props, hasSubmenu }">
@@ -31,7 +31,7 @@
       <router-link
         @click="isMenuOpened = false"
         :to="isAuth ? '/logout' : '/login'"
-        class="-mx-3 block rounded-lg px-3 text-base font-medium leading-7 text-gray-900 hover:bg-gray-50"
+        class="-mx-3 block rounded-lg px-3 text-base font-medium leading-7 text-gray-900 dark:text-gray-100 hover:bg-gray-50"
       >
         {{ isAuth ? 'Déconnexion (' + user?.email + ')' : 'Connexion' }}
       </router-link>

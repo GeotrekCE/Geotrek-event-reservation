@@ -1,7 +1,9 @@
 <template>
   <div class="flex flex-col justify-center px-6 py-12 lg:px-8">
     <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-      <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+      <h2
+        class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900 dark:text-gray-100"
+      >
         Recevoir mon lien de connexion
       </h2>
     </div>
@@ -9,7 +11,9 @@
     <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm md:max-w-md">
       <form class="space-y-6" @submit.prevent="login">
         <div>
-          <label for="email" class="block text-sm font-medium leading-6 text-gray-900"
+          <label
+            for="email"
+            class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100"
             >Adresse email</label
           >
           <div class="mt-2">
@@ -20,7 +24,7 @@
               autocomplete="email"
               required
               v-model="email"
-              class="block w-full rounded-sm border-0 p-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6"
+              class="block w-full rounded-sm border-0 p-2 text-gray-900 dark:text-gray-100 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6"
             />
           </div>
         </div>

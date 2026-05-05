@@ -1,8 +1,10 @@
 <template>
   <div class="flex min-h-full flex-col">
-    <header class="hidden md:block bg-white shadow">
+    <header class="hidden md:block shadow">
       <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-        <h1 class="text-3xl font-bold tracking-tight text-gray-900">Gestion des animations</h1>
+        <h1 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-100">
+          Gestion des animations
+        </h1>
       </div>
     </header>
 
@@ -131,8 +133,8 @@
                 }"
                 :class="{
                   'bg-red-300 hover:bg-red-100': data.cancelled,
-                  'hover:bg-gray-100': !data.cancelled,
-                  'bg-gray-100 shadow-inner border-r-4 border-solid border-gray-500 border-b-0':
+                  'hover:bg-gray-400 dark:hover:bg-gray-600': !data.cancelled,
+                  'bg-gray-100 dark:bg-gray-900 shadow-inner border-r-4 border-solid border-gray-500 border-b-0':
                     data.id === selectedEventId,
                   'bg-red-200 border-red-500': data.cancelled && data.id === selectedEventId
                 }"
@@ -150,7 +152,7 @@
                     {{ data.name }}
                   </span>
                   <div class="min-w-0 flex-auto">
-                    <p class="text-sm font-medium leading-6 text-gray-900">
+                    <p class="text-sm font-medium leading-6 text-gray-900 dark:text-gray-100">
                       {{ data.type?.type }}
                     </p>
                     <p class="mt-1 truncate text-xs leading-5 text-gray-500">
@@ -190,7 +192,7 @@
                 <a
                   :href="config.URL_GTR + '/event/' + selectedEvent.id"
                   target="_blank"
-                  class="mr-2 bg-cyan-500 text-gray-900 p-2 rounded-sm drop-shadow-md text-black"
+                  class="mr-2 bg-cyan-500 text-gray-900 dark:text-gray-100 p-2 rounded-sm drop-shadow-md text-black"
                   :disabled="selectedEvent.published !== true"
                 >
                   Geotrek <i class="pi pi-external-link" />
@@ -198,7 +200,7 @@
                 <a
                   :href="config.URL_GTA + '/touristicevent/' + selectedEvent.id"
                   target="_blank"
-                  class="bg-green-500 text-gray-900 p-2 rounded-sm drop-shadow-md text-black"
+                  class="bg-green-500 text-gray-900 dark:text-gray-100 p-2 rounded-sm drop-shadow-md text-black"
                 >
                   Geotrek admin <i class="pi pi-external-link" />
                 </a>
@@ -313,16 +315,18 @@
 
                 <TabPanel value="tab-summary">
                   <div>
-                    <h2 class="text-base mt-4 font-medium leading-7 text-gray-900">
+                    <h2
+                      class="text-base mt-4 font-medium leading-7 text-gray-900 dark:text-gray-100"
+                    >
                       Informations pour le rendez-vous
                     </h2>
-                    <p class="mt-1 text-sm leading-6 text-gray-600">
+                    <p class="mt-1 text-sm leading-6 text-gray-600 dark:text-gray-400">
                       Ces informations sont utiles lors de l'envoi de l'email aux utilisateurs. Ces
                       informations n'apparaissent pas dans Geotrek.
                     </p>
 
                     <textarea
-                      class="mt-2 w-full flex-1 overflow-scroll min-h-[6rem] rounded-sm shadow-sm ring-1 ring-inset ring-gray-300 max-h-[10rem] p-2 text-gray-600 sm:text-sm sm:leading-6"
+                      class="mt-2 w-full flex-1 overflow-scroll min-h-[6rem] rounded-sm shadow-sm ring-1 ring-inset ring-gray-300 max-h-[10rem] p-2 text-gray-600 dark:text-gray-400 sm:text-sm sm:leading-6"
                       v-model="selectedEventInfoRDV.info_rdv"
                       :disabled="infosSaving"
                     />
@@ -335,7 +339,7 @@
                     </button>
                   </div>
 
-                  <h2 class="text-base mt-4 font-medium leading-7 text-gray-900">
+                  <h2 class="text-base mt-4 font-medium leading-7 text-gray-900 dark:text-gray-100">
                     Résumé de l'animation
                   </h2>
                   <event-summary :event="selectedEvent" :gtevent="gtevent" />
@@ -360,14 +364,16 @@
                       v-for="(field, index) in fieldsClasseAge"
                       :key="index"
                     >
-                      <label class="block text-sm font-medium leading-6 text-gray-900"
+                      <label
+                        class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100"
                         >{{ field }} :
                       </label>
                       <span>{{ selectedEvent.bilan[index] }}</span>
                     </div>
 
                     <div class="col-span-full">
-                      <label class="block text-sm font-medium leading-6 text-gray-900"
+                      <label
+                        class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100"
                         >Commentaire :
                       </label>
                       <p
@@ -437,7 +443,7 @@
         v-else
       >
         <div class="text-center">
-          <p class="mt-6 text-base leading-7 text-gray-600">
+          <p class="mt-6 text-base leading-7 text-gray-600 dark:text-gray-400">
             Merci de sélectioner une animation dans la liste de gauche.
           </p>
         </div>

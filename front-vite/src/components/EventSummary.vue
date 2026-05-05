@@ -1,10 +1,14 @@
 <template>
   <div class="grid grid-cols-1 sm:grid-cols-6 gap-x-2 gap-y-4 mt-4">
     <div class="col-span-1 sm:col-span-3">
-      <label class="block text-sm font-medium leading-6 text-gray-900"> Événement </label>
+      <label class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100">
+        Événement
+      </label>
       <div class="mt-2">
         <div class="flex rounded-sm sm:max-w-md">
-          <span class="block flex-1 border-0 bg-transparent text-gray-600 sm:text-sm sm:leading-6">
+          <span
+            class="block flex-1 border-0 bg-transparent text-gray-600 dark:text-gray-400 sm:text-sm sm:leading-6"
+          >
             {{ event.name }}
           </span>
         </div>
@@ -12,10 +16,14 @@
     </div>
 
     <div class="col-span-1 sm:col-span-3">
-      <label class="block text-sm font-medium leading-6 text-gray-900"> Type </label>
+      <label class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100">
+        Type
+      </label>
       <div class="mt-2">
         <div class="flex rounded-sm sm:max-w-md">
-          <span class="block flex-1 border-0 bg-transparent text-gray-600 sm:text-sm sm:leading-6">
+          <span
+            class="block flex-1 border-0 bg-transparent text-gray-600 dark:text-gray-400 sm:text-sm sm:leading-6"
+          >
             {{ (event.type && event.type.type) || 'Non renseigné' }}
           </span>
         </div>
@@ -23,30 +31,42 @@
     </div>
 
     <div class="col-span-1 sm:col-span-3">
-      <label class="block text-sm font-medium leading-6 text-gray-900"> Date de début </label>
+      <label class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100">
+        Date de début
+      </label>
       <div class="mt-2">
         <div class="flex rounded-sm sm:max-w-md">
-          <span class="block flex-1 border-0 bg-transparent text-gray-600 sm:text-sm sm:leading-6">
+          <span
+            class="block flex-1 border-0 bg-transparent text-gray-600 dark:text-gray-400 sm:text-sm sm:leading-6"
+          >
             {{ formatDateString(event.begin_date) || 'Non renseigné' }}
           </span>
         </div>
       </div>
     </div>
     <div class="col-span-1 sm:col-span-3">
-      <label class="block text-sm font-medium leading-6 text-gray-900"> Date de fin </label>
+      <label class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100">
+        Date de fin
+      </label>
       <div class="mt-2">
         <div class="flex rounded-sm sm:max-w-md">
-          <span class="block flex-1 border-0 bg-transparent text-gray-600 sm:text-sm sm:leading-6">
+          <span
+            class="block flex-1 border-0 bg-transparent text-gray-600 dark:text-gray-400 sm:text-sm sm:leading-6"
+          >
             {{ formatDateString(event.end_date) || 'Non renseigné' }}
           </span>
         </div>
       </div>
     </div>
     <div class="col-span-1 sm:col-span-3">
-      <label class="block text-sm font-medium leading-6 text-gray-900"> Capacité </label>
+      <label class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100">
+        Capacité
+      </label>
       <div class="mt-2">
         <div class="flex rounded-sm sm:max-w-md">
-          <span class="block flex-1 border-0 bg-transparent text-gray-600 sm:text-sm sm:leading-6">
+          <span
+            class="block flex-1 border-0 bg-transparent text-gray-600 dark:text-gray-400 sm:text-sm sm:leading-6"
+          >
             {{ event.capacity || 'Non renseigné' }}
           </span>
         </div>
@@ -54,10 +74,14 @@
     </div>
 
     <div class="col-span-1 sm:col-span-3">
-      <label class="block text-sm font-medium leading-6 text-gray-900"> Massif </label>
+      <label class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100">
+        Massif
+      </label>
       <div class="mt-2">
         <div class="flex rounded-sm sm:max-w-md">
-          <span class="block flex-1 border-0 bg-transparent text-gray-600 sm:text-sm sm:leading-6">
+          <span
+            class="block flex-1 border-0 bg-transparent text-gray-600 dark:text-gray-400 sm:text-sm sm:leading-6"
+          >
             {{ event.massif || 'Non renseigné' }}
           </span>
         </div>
@@ -65,37 +89,41 @@
     </div>
 
     <div class="col-span-full">
-      <label class="block text-sm font-medium leading-6 text-gray-900">Heure de RDV</label>
+      <label class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100"
+        >Heure de RDV</label
+      >
       <div
-        class="mt-2 flex-1 overflow-scroll min-h-[4rem] max-h-[10rem] p-2 text-gray-600 sm:text-sm sm:leading-6"
+        class="mt-2 flex-1 overflow-scroll min-h-[4rem] max-h-[10rem] p-2 text-gray-600 dark:text-gray-400 sm:text-sm sm:leading-6"
         v-html="event.start_time"
       />
     </div>
 
     <div class="col-span-full">
-      <label class="block text-sm font-medium leading-6 text-gray-900">Lieu de RDV</label>
+      <label class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100"
+        >Lieu de RDV</label
+      >
       <div
-        class="mt-2 flex-1 overflow-scroll min-h-[4rem] rounded-sm shadow-sm ring-1 ring-inset ring-gray-300 cursor-not-allowed max-h-[10rem] p-2 text-gray-600 sm:text-sm sm:leading-6"
+        class="mt-2 flex-1 overflow-scroll min-h-[4rem] rounded-sm shadow-sm ring-1 ring-inset ring-gray-300 cursor-not-allowed max-h-[10rem] p-2 text-gray-600 dark:text-gray-400 sm:text-sm sm:leading-6"
         v-html="event.meeting_point"
       />
     </div>
 
     <div class="col-span-full">
-      <label class="block text-sm font-medium leading-6 text-gray-900"
+      <label class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100"
         >Informations pratiques (fr)</label
       >
       <div
-        class="mt-2 flex-1 overflow-scroll min-h-[4rem] rounded-sm shadow-sm ring-1 ring-inset ring-gray-300 cursor-not-allowed max-h-[10rem] p-2 text-gray-600 sm:text-sm sm:leading-6"
+        class="mt-2 flex-1 overflow-scroll min-h-[4rem] rounded-sm shadow-sm ring-1 ring-inset ring-gray-300 cursor-not-allowed max-h-[10rem] p-2 text-gray-600 dark:text-gray-400 sm:text-sm sm:leading-6"
         v-html="event.practical_info_fr"
       />
     </div>
 
     <div class="col-span-full">
-      <label class="block text-sm font-medium leading-6 text-gray-900"
+      <label class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100"
         >Informations pratiques (en)</label
       >
       <div
-        class="mt-2 flex-1 overflow-scroll min-h-[4rem] rounded-sm shadow-sm ring-1 ring-inset ring-gray-300 cursor-not-allowed max-h-[10rem] p-2 text-gray-600 sm:text-sm sm:leading-6"
+        class="mt-2 flex-1 overflow-scroll min-h-[4rem] rounded-sm shadow-sm ring-1 ring-inset ring-gray-300 cursor-not-allowed max-h-[10rem] p-2 text-gray-600 dark:text-gray-400 sm:text-sm sm:leading-6"
         v-html="event.practical_info_en"
       />
     </div>
@@ -122,7 +150,7 @@
         v-for="(field, index) in getGtFields(true)"
         :key="index"
       >
-        <label class="block text-sm font-medium leading-6 text-gray-900"
+        <label class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100"
           >{{ field.label }} :
         </label>
         <span v-html="getGtFieldValue(index)"></span>
@@ -132,7 +160,7 @@
         v-for="(field, index) in getGtFields(false)"
         :key="index"
       >
-        <label class="block text-sm font-medium leading-6 text-gray-900"
+        <label class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100"
           >{{ field.label }} :
         </label>
         <span v-html="getGtFieldValue(index)"></span>

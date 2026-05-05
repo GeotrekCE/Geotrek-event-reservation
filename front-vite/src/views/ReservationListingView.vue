@@ -1,14 +1,19 @@
 <template>
   <span>
-    <header class="bg-white shadow">
+    <header class="shadow">
       <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-        <h1 class="text-3xl font-bold tracking-tight text-gray-900">Listing des réservations</h1>
+        <h1 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-100">
+          Listing des réservations
+        </h1>
       </div>
     </header>
 
     <main class="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8 px-4 py-6">
       <section class="pb-12">
-        <div v-html="markdownToHTML" class="my-8 text-base leading-7 text-gray-900 space-y-4"></div>
+        <div
+          v-html="markdownToHTML"
+          class="my-8 text-base leading-7 text-gray-900 dark:text-gray-100 space-y-4"
+        ></div>
 
         <div v-if="errorCancellation" class="text-red-500 my-4">
           Une erreur est survenue :
@@ -93,7 +98,7 @@
                 <reservation-field :field="field" :value="data[field.name]" />
               </div>
               <div v-if="data.infos" class="col-span-full">
-                <label class="block text-sm font-medium leading-6 text-gray-900"
+                <label class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100"
                   >Informations de rendez-vous :
                 </label>
                 <template v-if="data.infos.info_rdv">
