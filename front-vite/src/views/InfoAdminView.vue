@@ -9,7 +9,7 @@
   <main class="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8 px-4 py-6">
     <section>
       <div v-if="loading">Loading...</div>
-      <div v-html="markdownToHTML" v-else></div>
+      <div v-html="markdownToHTML" class="prose dark:prose-invert max-w-none" v-else></div>
     </section>
   </main>
 </template>

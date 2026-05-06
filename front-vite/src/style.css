@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@plugin "@tailwindcss/typography";
 @import 'primeicons/primeicons.css';
 @import './assets/base.css';
 
