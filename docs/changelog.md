@@ -4,10 +4,11 @@
 ## 0.4.0 (unreleased)
  
 **🚀 Nouveautés**
- - Le titre de l'application qui s'affiche dans la bare de menu correspond à la valeur de la variable `VITE_APP_TITLE` du fichier .env. (#74)
- - Ajout d'un menu automatique "Évènements" pointant vers les évènements de geotrek-rando. Choix d'afficher/masquer via paramètre `DISPLAY_GTR_EVENTS_MENU`.  (#72)
- - Les réservations des évènements passés sont masquées aux utilisateurs. (#87)
- - Mise en place d'un mécanisme de contournement de l'option Safe Links de Microsoft Defender for Office 365 . (#100)
+ - Le titre de l'application qui s'affiche dans la bare de menu correspond à la valeur de la variable `VITE_APP_TITLE` du fichier `.env` (#74)
+ - Ajout d'un menu automatique "Évènements" pointant vers les évènements de geotrek-rando. Choix d'afficher/masquer via paramètre `DISPLAY_GTR_EVENTS_MENU` (#72)
+ - Les réservations des évènements passés sont masquées aux utilisateurs (#87)
+ - Mise en place d'un mécanisme de contournement de l'option Safe Links de Microsoft Defender for Office 365 (#100)
+ - Ajout d'un paramètre `VITE_BASE_PATH` dans le fichier `.env` permettant de builder le front avec un sous-dossier (#102)
 
 **🐛 Corrections**
  - Menu administration "Animations" renommé en "Gestion" (#73)
