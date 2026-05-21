@@ -1,7 +1,7 @@
 
 # Changelog
  
-## 0.4.0 (unreleased)
+## 0.4.0 (2026-05-21)
  
 **🚀 Nouveautés**
  - Le titre de l'application qui s'affiche dans la bare de menu correspond à la valeur de la variable `VITE_APP_TITLE` du fichier `.env` (#74)
