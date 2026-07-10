@@ -1,8 +1,13 @@
 
 # Changelog
- 
+
+## (2026-07-10)
+
+**🐛 Corrections**
+ - Correction de l'inscription multiple par email sur un évènement (#103)
+
 ## 0.4.0 (2026-05-21)
- 
+
 **🚀 Nouveautés**
  - Le titre de l'application qui s'affiche dans la bare de menu correspond à la valeur de la variable `VITE_APP_TITLE` du fichier `.env` (#74)
  - Ajout d'un menu automatique "Évènements" pointant vers les évènements de geotrek-rando. Choix d'afficher/masquer via paramètre `DISPLAY_GTR_EVENTS_MENU` (#72)
@@ -20,10 +25,10 @@
  - Mise à jour des dépendances backend (#91)
  - Mise à jour des librairies frontend (#92). Notamment primevue 4 et tailwindcss 4.
  - Mise à jour des actions github (#91)
-  
-     
+
+
 ## 0.3.0 (2024-06-24)
- 
+
 **🚀 Nouveautés**
 
 - Mise à jour vers SQLAlchemy 1.4 (#63)P
@@ -31,9 +36,9 @@
 - Utilisation de MenuBar pour la barre de menu (#65)
 - Style page des statistiques (#65)
 - Utilisation de toast pour afficher les messages d'erreur du formulaire d'inscription aux animations (#66)
-- [BACK] Ajout paramètre `NB_PARTICIPANTS_MAX_PER_ANIM_PER_USER` qui permet d'indiquer le nombre maximal de participants que l'on peut enregistrer lors de la création d'une réservation 
+- [BACK] Ajout paramètre `NB_PARTICIPANTS_MAX_PER_ANIM_PER_USER` qui permet d'indiquer le nombre maximal de participants que l'on peut enregistrer lors de la création d'une réservation
 - [BACK] Ajout paramètre `NB_ANIM_MAX_PER_USER` qui permet d'indiquer le nombre maximal d'animations auxquelles un utilisateur peut s'inscrire par an.
- 
+
 
 
 **🐛 Corrections**
