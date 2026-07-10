@@ -19,6 +19,7 @@ from core.exceptions import (
     UserEventNbExcededAdmin,
     NotBookable,
     ParticipantNbExceded,
+    UserEventAlreadyRegistered,
 )
 
 mail = None
@@ -116,6 +117,17 @@ def create_app():
             jsonify(
                 {
                     "error": "Vous ne pouvez pas inscrire autant de personnes sur une animation"
+                }
+            ),
+            422,
+        )
+
+    @app.errorhandler(UserEventAlreadyRegistered)
+    def handle_user_event_already_registered_error(e):
+        return (
+            jsonify(
+                {
+                    "error": "Vous ne pouvez pas vous inscrire plusieurs fois sur une animation"
                 }
             ),
             422,

@@ -81,3 +81,9 @@ export const getGlobalStats = (data: any) =>
 
 export const getGraphStats = (url: string, data: any) =>
   getApiData(CONFIGURATION.URL_APPLICATION, url, data)
+
+/**
+ * Journaux
+ */
+export const getLogs = () =>
+  getApiData(CONFIGURATION.URL_APPLICATION, 'logs')

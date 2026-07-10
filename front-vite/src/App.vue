@@ -92,6 +92,13 @@ const items = ref<MenuItem[]>([
     isAuth: true,
     isAdmin: false,
     route: '/resalisting'
+  },
+  {
+    label: 'Journaux',
+    icon: 'pi pi-file',
+    isAuth: true,
+    isAdmin: true,
+    route: '/logs'
   }
 ])
 

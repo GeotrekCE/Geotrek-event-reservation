@@ -1,6 +1,8 @@
 from datetime import datetime
 from functools import wraps
 import secrets
+import re
+from pathlib import Path
 
 from email_validator import validate_email, EmailNotValidError, EmailSyntaxError
 from flask import jsonify, request, Blueprint, render_template, session, current_app
@@ -820,3 +822,52 @@ def send_event_cancellation_emails(event_id):
         )
     db.session.commit()
     return "", 200
+
+@login_admin_required
+@app_routes.route("/logs", methods=["GET"])
+def get_logs():
+    content = []
+    log_dir = Path("var/log/")
+
+    # Traitement de tous les fichiers du répertoire log
+    for file in log_dir.iterdir():
+        with open(file, "r") as f:
+            f = f.readlines()
+        for line in f:
+            if "Email envoyé " in line:
+                m = re.findall(r'^(\w+) (\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2},\d{3}).*core.utils (.*) \"\[.*\] (.*)\" à \[\'(.*)\'\]', line)
+                log_type = m[0][0]
+                log_date_en = m[0][1]
+                log_info = m[0][2]
+                log_subject = m[0][3]
+                log_email = m[0][4]
+
+                # Ajout du statut selon le contenu du sujet
+                if "connexion" in log_subject:
+                    log_status = "connexion"
+                elif "c'est demain !" in log_subject:
+                    log_status = "rdv"
+                elif "réservation est confirmée" in log_subject:
+                    log_status = "confirmation"
+                elif "Lien pour confirmer" in log_subject:
+                    log_status = "à confirmer"
+                elif "liste d'attente" in log_subject:
+                    log_status = "attente"
+                elif "a bien été annulée" in log_subject:
+                    log_status = "annulation"
+                elif "a été annulée" in log_subject:
+                    log_status = "info admin"
+                else:
+                    log_status = ""
+
+                # Suppression des apostrophes pour email multi-destinataires (aux admins)
+                log_email = log_email.replace("'", "")
+
+                # Ajout des informations de logs
+                content.append({"type":log_type,
+                                "date":log_date_en,
+                                "info":log_info,
+                                "subject":log_subject,
+                                "email":log_email,
+                                "status":log_status})
+    return jsonify(content)

@@ -20,3 +20,7 @@ class UserEventNbExcededUser(Exception):
 
 class ParticipantNbExceded(Exception):
     pass
+
+
+class UserEventAlreadyRegistered(Exception):
+    pass
