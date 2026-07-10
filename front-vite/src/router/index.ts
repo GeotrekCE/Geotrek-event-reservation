@@ -7,6 +7,7 @@ import LoginView from '@/views/LoginView.vue'
 import LoginCallbackView from '@/views/LoginCallbackView.vue'
 import LogoutView from '@/views/LogoutView.vue'
 import InfoAdminView from '@/views/InfoAdminView.vue'
+import LogsView from '@/views/LogsView.vue'
 
 export const ROUTES_NAMES = {
   HOME: 'HOME',
@@ -19,7 +20,8 @@ export const ROUTES_NAMES = {
   RESA_FORM: 'RESA_FORM',
   RESA_LISTING: 'RESA_LISTING',
   RESA_CONFIRM: 'RESA_CONFIRM',
-  INFO_ADMIN: 'INFO_ADMIN'
+  INFO_ADMIN: 'INFO_ADMIN',
+  LOGS: 'LOGS'
 }
 export const ROUTES_PATHS = {
   HOME: '/',
@@ -32,7 +34,8 @@ export const ROUTES_PATHS = {
   RESA_FORM: '/resa/:geotrekid',
   RESA_LISTING: '/resalisting',
   RESA_CONFIRM: '/resaconfirm',
-  INFO_ADMIN: '/info_admin'
+  INFO_ADMIN: '/info_admin',
+  LOGS: '/logs'
 }
 
 const routes = [
@@ -123,6 +126,15 @@ const routes = [
     path: ROUTES_PATHS.INFO_ADMIN,
     name: ROUTES_NAMES.INFO_ADMIN,
     component: InfoAdminView,
+    meta: {
+      requiresAuth: true,
+      requiresAdmin: true
+    }
+  },
+  {
+    path: ROUTES_PATHS.LOGS,
+    name: ROUTES_NAMES.LOGS,
+    component: LogsView,
     meta: {
       requiresAuth: true,
       requiresAdmin: true

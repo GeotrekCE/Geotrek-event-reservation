@@ -3,6 +3,9 @@
 
 ## (2026-07-10)
 
+**🚀 Nouveautés**
+ - Ajout d'un menu "Journaux" pour permettre aux administrateurs de visualiser les emails envoyés (#105)
+
 **🐛 Corrections**
  - Correction de l'inscription multiple par email sur un évènement (#103)
 
