@@ -14,6 +14,7 @@ from core.exceptions import (
     UserEventNbExceded,
     NotBookable,
     ParticipantNbExceded,
+    UserEventAlreadyRegistered,
 )
 
 
@@ -183,6 +184,17 @@ class GTEvents(db.Model):
 
         if not self.bookable:
             raise NotBookable
+
+        # Test si utilisateur n'a pas déjà une inscription sur
+        # l'évènement en cours
+        query = select(func.count(TReservations.id_reservation)).where(
+            TReservations.email == email,
+            TReservations.id_event == self.id,
+        )
+        nb_reservation_current_event = db.session.scalar(query)
+
+        if nb_reservation_current_event:
+            raise UserEventAlreadyRegistered
 
         # Test nombre de reservation par utilisateur
         # Selection animations par utilisateur
